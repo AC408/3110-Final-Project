@@ -1,6 +1,6 @@
 type level = Pawn | Knight | Bishop | Rook | Queen | King
 type color = White | Black
-type position = (char, int)
+type position = (char, int) option
 
 type piece = {
   position : position
