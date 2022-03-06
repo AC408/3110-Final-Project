@@ -15,7 +15,7 @@ let get_position p = p.position
 let place_piece pos c l = {
   position = pos;
   color = c;
-  level = l
+  level = l;
  }
   
 let move_piece p pos =
