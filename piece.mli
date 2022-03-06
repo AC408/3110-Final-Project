@@ -3,19 +3,19 @@
 (** Level of each chess piece *)
 type level = Pawn | Knight | Bishop | Rook | Queen | King
 type color = White | Black
-type position = (char, int)
+type position = (char, int) option
 
 (** Characteristics of each chess piece. *)
 type piece
 
 (** [get_level p] returns the level of the piece [p]. *)
-val get_level (piece -> unknown)
+val get_level (piece -> level)
 
 (** [get_color p] returns the color of the piece [p]. *)
-val get_color (piece -> unknown)
+val get_color (piece -> color)
 
 (** [get_position p] returns the position of the piece [p]. *)
-val get_position (piece -> unknown)
+val get_position (piece -> (char, int) option)
 
 (** [place_piece pos c l] returns the posiiton [pos], color [c] and level [l] of the function. *)
 val place_piece pos c l (unknown -> unknown)
