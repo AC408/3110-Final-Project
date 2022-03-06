@@ -1,4 +1,4 @@
-open piece
+open Piece
 
 type t = piece list
 
