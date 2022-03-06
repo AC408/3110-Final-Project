@@ -2,18 +2,22 @@ type level = Pawn | Knight | Bishop | Rook | Queen | King
 type color = White | Black
 type position = (char, int)
 
-type piece {
+type piece = {
   position : position
   color : color
   level : level
-  unused : bool
  }
 
 let get_level p = p.level
 let get_color p = p.color
 let get_position = p.position
 
-let place_piece =
-
-let move_piece =
+let place_piece pos c l = {
+  position = pos
+  color = c
+  level = l
+ }
+  
+let move_piece p pos =
+  place_piece pos p.c p.l
 
