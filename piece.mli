@@ -5,10 +5,10 @@ type level = Pawn | Knight | Bishop | Rook | Queen | King
 type color = White | Black
 type position = (char, int)
 
-(** Characteristics of each chess piece *)
+(** Characteristics of each chess piece. *)
 type piece
 
-(** Function [get_level p] returns the level of the piece [p]. *)
+(** [get_level p] returns the level of the piece [p]. *)
 val get_level (piece -> unknown)
 
 (** [get_color p] returns the color of the piece [p]. *)
