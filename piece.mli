@@ -8,7 +8,7 @@ type position = (char, int)
 (** Characteristics of each chess piece *)
 type piece
 
-(** [get_level p] returns the level of the piece [p]. *)
+(** Function [get_level p] returns the level of the piece [p]. *)
 val get_level (piece -> unknown)
 
 (** [get_color p] returns the color of the piece [p]. *)
