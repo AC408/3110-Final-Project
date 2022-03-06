@@ -18,7 +18,7 @@ val get_color (piece -> color)
 val get_position (piece -> (char, int) option)
 
 (** [place_piece pos c l] returns the position [pos], color [c] and level [l] of the function. *)
-val place_piece pos c l ( (char, int) option -> color -> level -> piece )
+val place_piece pos c l ((char, int) option -> color -> level -> piece)
 
 (** [move_piece p pos] moves the piece [p] to position [pos]. *)  
-val move_piece p pos 
+val move_piece p pos (piece -> (char, int) option -> piece)
