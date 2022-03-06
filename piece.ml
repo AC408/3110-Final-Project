@@ -13,3 +13,7 @@ let get_level p = p.level
 let get_color p = p.color
 let get_position = p.position
 
+let place_piece =
+
+let move_piece =
+
