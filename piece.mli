@@ -19,6 +19,6 @@ val get_position (piece -> unknown)
 
 (** [place_piece pos c l] returns the posiiton [pos], color [c] and level [l] of the function. *)
 val place_piece pos c l (unknown -> unknown)
- }
+
 (** [move_piece p pos] moves the piece [p] to position [pos]. *)  
 val move_piece p pos 
