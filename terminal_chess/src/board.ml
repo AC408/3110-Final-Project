@@ -29,10 +29,10 @@ let init_board = [
   whiterook2 = { position = ('h', 1) ; color = White; level = Rook}
   whitepawn1 = { position = ('a', 2) ; color = White; level = Pawn}
   whitepawn2 = { position = ('b', 2) ; color = White; level = Pawn}
-  whitwpawn3 = { position = ('c', 3) ; color = White; level = Pawn}
-  whitepawn4 = { position = ('d', 4) ; color = White; level = Pawn}
-  whitepawn5 = { position = ('e', 5) ; color = White; level = Pawn}
-  whitepawn6 = { position = ('f', 6) ; color = White; level = Pawn}
-  whitepawn7 = { position = ('g', 7) ; color = White; level = Pawn}
-  whitepawn8 = { position = ('h', 9) ; color = White; level = Pawn}
+  whitwpawn3 = { position = ('c', 2) ; color = White; level = Pawn}
+  whitepawn4 = { position = ('d', 2) ; color = White; level = Pawn}
+  whitepawn5 = { position = ('e', 2) ; color = White; level = Pawn}
+  whitepawn6 = { position = ('f', 2) ; color = White; level = Pawn}
+  whitepawn7 = { position = ('g', 2) ; color = White; level = Pawn}
+  whitepawn8 = { position = ('h', 2) ; color = White; level = Pawn}
 ]
