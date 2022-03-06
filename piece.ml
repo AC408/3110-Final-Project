@@ -10,7 +10,7 @@ type piece = {
 
 let get_level p = p.level
 let get_color p = p.color
-let get_position = p.position
+let get_position p = p.position
 
 let place_piece pos c l = {
   position = pos
