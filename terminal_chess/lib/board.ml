@@ -8,13 +8,13 @@ type model = {
 }
 
 let model_move = {
-  moves = 1
+  moves = 1;
   turn = White
 }
 
 type change = Change
 
-let update_turn (board :t) (change : change) =
+let update_turn (board : model) (change : change) =
   match change with
   | Change -> 
     let turn = begin
@@ -22,9 +22,9 @@ let update_turn (board :t) (change : change) =
       | Black -> White
       | White -> Black
     end in
-    let moves = model.moves + 1 in {turn = turn; moves = moves}
+    let moves = board.moves + 1 in {turn = turn; moves = moves}
 
- 
+    
 
   let blackrook1 = {position = ('a', 8) ; color = Black ; level = Rook}
   let blackknight1 = { position = ('b', 8) ; color = Black; level = Knight}
