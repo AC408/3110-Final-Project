@@ -2,6 +2,29 @@ open Piece
 
 type t = piece list
 
+type model = {
+ moves : int
+ turn : color
+}
+
+let model_move = {
+  moves = 1
+  turn = White
+}
+
+type change = Change
+
+let update_turn (board : t) (change : change) =
+  match change with
+  | Change -> 
+    let turn =
+      match model.turn with
+      | Black -> White
+      | White -> Black
+    let model.moves = model.moves + 1 in {turn = turn; moves = moves}
+
+ 
+
 let init_board = [
   blackrook1 = { position = ('a', 8) ; color = Black ; level = Rook}
   blackknight1 = { position = ('b', 8) ; color = Black; level = Knight}
