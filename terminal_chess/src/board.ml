@@ -18,7 +18,7 @@ let update_turn (board : t) (change : change) =
   match change with
   | Change -> 
     let turn =
-      match model.turn with
+      match board.turn with
       | Black -> White
       | White -> Black
     let model.moves = model.moves + 1 in {turn = turn; moves = moves}
