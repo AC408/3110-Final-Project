@@ -14,7 +14,7 @@ let model_move = {
 
 type change = Change
 
-let update_turn (board : t) (change : change) =
+let update_turn (board :t) (change : change) =
   match change with
   | Change -> 
     let turn = begin
@@ -58,6 +58,9 @@ let update_turn (board : t) (change : change) =
   let whitepawn6 = { position = ('f', 2) ; color = White; level = Pawn}
   let whitepawn7 = { position = ('g', 2) ; color = White; level = Pawn}
   let whitepawn8 = { position = ('h', 2) ; color = White; level = Pawn}
-let init_board = [
-
-]
+let init_board = [ blackrook1; blackrook2; blackbishop1; blackbishop2; 
+blackknight1; blackknight2; blackqueen; blackking; blackpawn1; blackpawn2;
+blackpawn3; blackpawn4; blackpawn5; blackpawn6; blackpawn7; blackpawn8; 
+whiterook1; whiterook2; whitebishop1; whitebishop2; whiteknight1; whiteknight2; 
+whitequeen; whiteking; whitepawn1; whitepawn2; whitepawn3; whitepawn4; 
+whitepawn5; whitepawn6; whitepawn7; whitepawn8; ]
