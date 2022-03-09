@@ -4,10 +4,10 @@ build:
 	dune build
 
 test:
-	OCAMLRUNPARAM=b dune exec test/main.exe
+	OCAMLRUNPARAM=b dune exec test/terminal_chess.exe
 
 play:
-	OCAMLRUNPARAM=b dune exec src/main.exe
+	OCAMLRUNPARAM=b dune exec bin/main.exe
 
 zip:
 
