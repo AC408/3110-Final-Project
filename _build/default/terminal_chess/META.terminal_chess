@@ -1,6 +1,0 @@
-description = ""
-requires = ""
-archive(byte) = "terminal_chess.cma"
-archive(native) = "terminal_chess.cmxa"
-plugin(byte) = "terminal_chess.cma"
-plugin(native) = "terminal_chess.cmxs"

@@ -78,14 +78,34 @@ d5 = div; c_e = " "; d6 = div; c_f = " ";
 d7 = div; c_g = " "; d8 = div; c_h = " ";
 d9 = div;  }
 
-let row2 = {d1 = div; c_a = blackpawn1.rep; d2 = div; c_b = blackpawn2.rep;
-d3 = div; c_c = blackpawn3.rep; d4 = div; c_d = blackpawn4.rep;
-d5 = div; c_e = blackpawn5.rep; d6 = div; c_f = blackpawn6.rep;
-d7 = div; c_g = blackpawn7.rep; d8 = div; c_h = blackpawn8.rep;
+let row2 = {d1 = div; c_a = whitepawn1.rep; d2 = div; c_b = whitepawn2.rep;
+d3 = div; c_c = whitepawn3.rep; d4 = div; c_d = whitepawn4.rep;
+d5 = div; c_e = whitepawn5.rep; d6 = div; c_f = whitepawn6.rep;
+d7 = div; c_g = whitepawn7.rep; d8 = div; c_h = whitepawn8.rep;
 d9 = div;  }
 
-let row1 = {d1 = div; c_a = blackrook1.rep; d2 = div; c_b = blackknight1.rep;
-d3 = div; c_c = blackbishop1.rep; d4 = div; c_d = blackqueen.rep;
-d5 = div; c_e = blackking.rep; d6 = div; c_f = blackbishop2.rep;
-d7 = div; c_g = blackknight2.rep; d8 = div; c_h = blackrook2.rep;
+let row1 = {d1 = div; c_a = whiterook1.rep; d2 = div; c_b = whiteknight1.rep;
+d3 = div; c_c = whitebishop1.rep; d4 = div; c_d = whitequeen.rep;
+d5 = div; c_e = whiteking.rep; d6 = div; c_f = whitebishop2.rep;
+d7 = div; c_g = whiteknight2.rep; d8 = div; c_h = whiterook2.rep;
 d9 = div;  }
+
+let start_board = {
+  l1= "---------------------------------------";
+  r8= row8;
+  l2= "---------------------------------------";
+  r7= row7;
+  l3= "---------------------------------------";
+  r6= row6;
+  l4= "---------------------------------------";
+  r5= row5;
+  l5= "---------------------------------------";
+  r4= row4;
+  l6= "---------------------------------------";
+  r3= row3;
+  l7= "---------------------------------------";
+  r2= row2;
+  l8= "---------------------------------------";
+  r1= row1;
+  l9= "---------------------------------------";
+}
