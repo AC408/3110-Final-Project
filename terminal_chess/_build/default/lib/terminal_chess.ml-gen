@@ -1,0 +1,14 @@
+(** @canonical Terminal_chess.Author *)
+module Author = Terminal_chess__Author
+
+
+(** @canonical Terminal_chess.Board *)
+module Board = Terminal_chess__Board
+
+
+(** @canonical Terminal_chess.Display *)
+module Display = Terminal_chess__Display
+
+
+(** @canonical Terminal_chess.Piece *)
+module Piece = Terminal_chess__Piece
