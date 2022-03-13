@@ -1,5 +1,4 @@
 
-
 type piecerow = {
   d1: string;
   c_a: string;
@@ -40,4 +39,11 @@ type board = {
   l9: string
 }
 
+val row8 : piecerow
+val row7 : piecerow
+val row6 : piecerow
+val row5 : piecerow
+val row4 : piecerow
+val row3 : piecerow
+val row2 : piecerow
 val row1 : piecerow

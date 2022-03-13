@@ -42,6 +42,48 @@ type board = {
 }
 
 let div = "|"
+let row8 = {d1 = div; c_a = blackrook1.rep; d2 = div; c_b = blackknight1.rep;
+d3 = div; c_c = blackbishop1.rep; d4 = div; c_d = blackqueen.rep;
+d5 = div; c_e = blackking.rep; d6 = div; c_f = blackbishop2.rep;
+d7 = div; c_g = blackknight2.rep; d8 = div; c_h = blackrook2.rep;
+d9 = div;  }
+
+let row7 = {d1 = div; c_a = blackpawn1.rep; d2 = div; c_b = blackpawn2.rep;
+d3 = div; c_c = blackpawn3.rep; d4 = div; c_d = blackpawn4.rep;
+d5 = div; c_e = blackpawn5.rep; d6 = div; c_f = blackpawn6.rep;
+d7 = div; c_g = blackpawn7.rep; d8 = div; c_h = blackpawn8.rep;
+d9 = div;  }
+
+let row6 = {d1 = div; c_a = " "; d2 = div; c_b = " ";
+d3 = div; c_c = " "; d4 = div; c_d = " ";
+d5 = div; c_e = " "; d6 = div; c_f = " ";
+d7 = div; c_g = " "; d8 = div; c_h = " ";
+d9 = div;  }
+
+let row5 = {d1 = div; c_a = " "; d2 = div; c_b = " ";
+d3 = div; c_c = " "; d4 = div; c_d = " ";
+d5 = div; c_e = " "; d6 = div; c_f = " ";
+d7 = div; c_g = " "; d8 = div; c_h = " ";
+d9 = div;  }
+
+let row4 = {d1 = div; c_a = " "; d2 = div; c_b = " ";
+d3 = div; c_c = " "; d4 = div; c_d = " ";
+d5 = div; c_e = " "; d6 = div; c_f = " ";
+d7 = div; c_g = " "; d8 = div; c_h = " ";
+d9 = div;  }
+
+let row3 = {d1 = div; c_a = " "; d2 = div; c_b = " ";
+d3 = div; c_c = " "; d4 = div; c_d = " ";
+d5 = div; c_e = " "; d6 = div; c_f = " ";
+d7 = div; c_g = " "; d8 = div; c_h = " ";
+d9 = div;  }
+
+let row2 = {d1 = div; c_a = blackpawn1.rep; d2 = div; c_b = blackpawn2.rep;
+d3 = div; c_c = blackpawn3.rep; d4 = div; c_d = blackpawn4.rep;
+d5 = div; c_e = blackpawn5.rep; d6 = div; c_f = blackpawn6.rep;
+d7 = div; c_g = blackpawn7.rep; d8 = div; c_h = blackpawn8.rep;
+d9 = div;  }
+
 let row1 = {d1 = div; c_a = blackrook1.rep; d2 = div; c_b = blackknight1.rep;
 d3 = div; c_c = blackbishop1.rep; d4 = div; c_d = blackqueen.rep;
 d5 = div; c_e = blackking.rep; d6 = div; c_f = blackbishop2.rep;
