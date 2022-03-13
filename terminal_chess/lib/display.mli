@@ -1,5 +1,4 @@
-open Piece
-open Board
+
 
 type piecerow = {
   d1: string;
@@ -41,9 +40,4 @@ type board = {
   l9: string
 }
 
-let div = "|"
-let row1 = {d1 = div; c_a = blackrook1.rep; d2 = div; c_b = blackknight1.rep;
-d3 = div; c_c = blackbishop1.rep; d4 = div; c_d = blackqueen.rep;
-d5 = div; c_e = blackking.rep; d6 = div; c_f = blackbishop2.rep;
-d7 = div; c_g = blackknight2.rep; d8 = div; c_h = blackrook2.rep;
-d9 = div;  }
+val row1 : piecerow
