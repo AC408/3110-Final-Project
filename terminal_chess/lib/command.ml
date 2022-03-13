@@ -9,7 +9,7 @@ let rec remove_blank str =
   | [] -> []
   | h :: t -> if h = "" then remove_blank t else h :: remove_blank t
 
-  let invalid_move = "Incorrect command. There is more than 4 characters typed. Please do not include + for check, x for take, = for promotion, and ++ for checkmate"
+  let invalid_move = "Incorrect command. There is more than 4 characters typed. Please do not include + for check, x for take, = for promotion, and ++ or # for checkmate"
   let check_valid_move str = 
     match str with 
     | h::m1::m2::m3::t::[] -> if (h = "O" && m1 = "-" && m2 = "O" && m3 = "-" && t = "O") then "queen side castle" else invalid_move
