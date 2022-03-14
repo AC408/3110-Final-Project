@@ -11,7 +11,7 @@ exception Quit
   | h :: t -> if h = "" then remove_blank else h :: remove_blank t 
   (*won't this yield a list? edited the beginning, not sure what to do about the end if we want a string*)
   feel free to go back to original if this train of thought doesn't make sense *)
-    
+
 (* let invalid_move = "Incorrect command. There is more than 4 characters typed. Please do not include + for check, x for take, = for promotion, and ++ or # for checkmate"
   let check_valid_move str = 
     match str with (* this also implies that str is a list, not a string?*)
