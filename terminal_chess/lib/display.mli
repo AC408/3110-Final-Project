@@ -47,3 +47,8 @@ val row4 : piecerow
 val row3 : piecerow
 val row2 : piecerow
 val row1 : piecerow
+
+val start_board : board
+
+val print_piecerow : piecerow -> unit
+val print_board : board -> unit
