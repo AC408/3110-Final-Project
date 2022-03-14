@@ -7,7 +7,13 @@ open Piece
 type t = string
 
 exception Quit
+<<<<<<< HEAD
 exception InputProblem
+=======
+exception InvalidInput
+exception EmptyCommand
+exception InvalidQuit
+>>>>>>> b8e475083cfe266670e189718b5ce8001674f140
 
 (* let rec remove_blank (str : string) =
   let strlist = [str] in
@@ -23,15 +29,41 @@ exception InputProblem
     | h::m1::m2::m3::t::[] -> if (h = "O" && m1 = "-" && m2 = "O" && m3 = "-" && t = "O") then "queen side castle" else invalid_move
     | h::m1::t::[] -> if (h = "O" && m1 = "-" && t = "O") then "queen side castling" else invalid_move
     | rank::curr_col::col::row::_ -> "do some more pattern matching. remember promotion and checking whether king will be in check and if next square is movable and not same color"^rank^curr_col^col^row
+<<<<<<< HEAD
     | _ -> invalid_move
+=======
+    | _ -> invalid_move *)
+
+let rec explode str = 
+  match str with
+  | "" -> []
+  | st -> (String.get str 0)::(explode (String.sub st 1 ((String.length str) -1)))
+
+let check_format str = 
+  match str with
+  | h::m1::m2::m3::t::[] -> if (h = '(' && m2 = ',' && t = ')') then (Char.escaped m1)^(Char.escaped m3) else raise InvalidInput
+  | _ -> raise InvalidInput
+
+let check_valid_move str = 
+  match str with
+  | [] -> raise EmptyCommand
+  | curr::next::[] -> (check_format (explode curr))^(check_format (explode next))
+  | _ -> "Incorrect number of letters, please try again."
+>>>>>>> b8e475083cfe266670e189718b5ce8001674f140
 
   let check_quit str = 
     match str with
-    | [] -> "No command found, please try again."
+    | [] -> raise EmptyCommand
     | h::t -> begin 
       match h with
+<<<<<<< HEAD
       | "quit" -> if t = [] then raise Quit else "Incorrect command. Did you mean <quit>?"
       | _ -> check_valid_move str
+=======
+      | "quit" -> if t = [] then raise Quit else raise InvalidQuit
+      | "move" -> check_valid_move t
+      | _ -> raise InvalidInput
+>>>>>>> b8e475083cfe266670e189718b5ce8001674f140
     end
 
     (* somehow have to pass in color type *)
