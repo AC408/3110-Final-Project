@@ -1,28 +1,27 @@
 let in_game = false (* used to toggle between parsing from main_menu and command *)
-
 open Terminal_chess
 open Display
+open Command
+
+let () = print_board start_board
+
+let matcher str = 
+  try Command.check2 (str) with 
+  | InvalidInput -> print_endline "Invalid Command, please try again."; 
+  try Command.check4 (str) with 
+  | InvalidInput -> print_endline "Invalid Command, please try again."; 
+
 
 let rec request_command s= 
-  print_string "Please enter a move.\n";
+  print_string ("Please enter a move.\n");
   try match Command.parse(read_line()) with
-  | x -> print_endline x (* here is where the new board is returned and where you reprint *)
-  with 
+  | x -> matcher x
+  with
   | Command.InvalidInput -> print_endline "Invalid Command, please try again.\n"
   | Command.Quit -> print_endline "\nGoodbye \n"; exit 0
   | Command.EmptyCommand -> print_endline "No command found, please try again.\n"
   | Command.InvalidQuit -> print_endline "Incorrect command. Did you mean <quit>?\n";
   request_command s
 
-let () = print_board start_board;
-<<<<<<< HEAD
 
-print_string "please enter a move\n";
-try match Command.parse(read_line()) with
-| x -> print_endline x
-with 
-| Command.InvalidInput -> print_endline "invalid command"
-| Command.Quit -> print_endline "\n goodbye \n"; exit 0
-=======
-request_command ""
->>>>>>> b8e475083cfe266670e189718b5ce8001674f140
+
