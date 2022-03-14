@@ -1,5 +1,6 @@
 type t
 
 exception Quit
-(* 
-val parse : string -> string *)
+exception InvalidInput
+
+val parse : string -> string
