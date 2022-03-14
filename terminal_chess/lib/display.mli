@@ -1,22 +1,23 @@
+open Piece;
 
 type piecerow = {
   d1: string;
-  c_a: string;
+  c_a: piece option;
   d2: string;
-  c_b: string;
+  c_b: piece option;
   d3: string;
-  c_c: string;
+  c_c: piece option;
   d4: string;
-  c_d: string;
+  c_d: piece option;
   d5: string;
-  c_e: string;
+  c_e: piece option;
   d6: string;
-  c_f: string;
+  c_f: piece option;
   d7: string;
-  c_g: string;
+  c_g: piece option;
   d8: string;
-  c_h: string;
-  d9: string
+  c_h: piece option;
+  d9: string;
 }
 
 type board = {

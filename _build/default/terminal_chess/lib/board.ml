@@ -22,8 +22,6 @@ let update_turn (board : model) (change : change) =
     end in
     let moves = board.moves + 1 in {turn = turn; moves = moves}
   
-
-
     let blackrook1 = place_piece (Some ('a', 8)) Black Rook "♜"
     let blackknight1 = place_piece (Some ('b', 8)) Black Knight "♞"
     let blackbishop1 = place_piece (Some ('c', 8)) Black Bishop "♝"
