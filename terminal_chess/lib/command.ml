@@ -4,6 +4,8 @@ type t = string
 
 exception Quit
 exception InvalidInput
+exception EmptyCommand
+exception InvalidQuit
 
  let rec remove_blank str_lst =
   match str_lst with 
@@ -30,16 +32,16 @@ let check_format str =
 
 let check_valid_move str = 
   match str with
-  | [] -> "No command found, please try again."
+  | [] -> raise EmptyCommand
   | curr::next::[] -> (check_format (explode curr))^(check_format (explode next))
-  | _ -> "incorrect number of letters"
+  | _ -> "Incorrect number of letters, please try again."
 
   let check_quit str = 
     match str with
-    | [] -> "No command found, please try again."
+    | [] -> raise EmptyCommand
     | h::t -> begin 
       match h with
-      | "quit" -> if t = [] then raise Quit else "Incorrect command. Did you mean <quit>?"
+      | "quit" -> if t = [] then raise Quit else raise InvalidQuit
       | "move" -> check_valid_move t
       | _ -> raise InvalidInput
     end

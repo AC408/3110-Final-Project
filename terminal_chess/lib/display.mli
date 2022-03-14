@@ -1,4 +1,4 @@
-open Piece;
+open Piece
 
 type piecerow = {
   d1: string;
