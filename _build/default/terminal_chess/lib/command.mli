@@ -1,5 +1,5 @@
 type t
 
 exception Quit
-
-val parse : string -> string
+(* 
+val parse : string -> string *)

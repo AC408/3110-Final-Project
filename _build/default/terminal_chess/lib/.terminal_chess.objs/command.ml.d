@@ -1,1 +1,1 @@
-terminal_chess/lib/command.ml: String
+terminal_chess/lib/command.ml:
