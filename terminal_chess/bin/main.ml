@@ -4,6 +4,7 @@ open Terminal_chess
 open Display
 
 let () = print_board start_board;
+
 print_string "please enter a move\n";
 try match Command.parse(read_line()) with
 | x -> print_endline x
