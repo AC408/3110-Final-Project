@@ -109,3 +109,52 @@ let start_board = {
   r1= row1;
   l9= "---------------------------------------";
 }
+
+let print_piecerow (elt : piecerow) =
+  match elt with
+  | {d1=d1; c_a=c_a; d2=d2; c_b=c_b; 
+  d3=d3; c_c=c_c; d4=d4; c_d=c_d;
+  d5=d5; c_e=c_e; d6=d6; c_f=c_f;
+  d7=d7; c_g=c_g; d8=d8; c_h=c_h; d9=d9} -> 
+    Printf.printf "%s\n%!" d1
+    Printf.printf "%s\n%!" c_a
+    Printf.printf "%s\n%!" d2
+    Printf.printf "%s\n%!" c_b
+    Printf.printf "%s\n%!" d3
+    Printf.printf "%s\n%!" c_c
+    Printf.printf "%s\n%!" d4
+    Printf.printf "%s\n%!" c_d
+    Printf.printf "%s\n%!" d5
+    Printf.printf "%s\n%!" c_e
+    Printf.printf "%s\n%!" row1.d6
+    Printf.printf "%s\n%!" c_f
+    Printf.printf "%s\n%!" d7
+    Printf.printf "%s\n%!" c_g
+    Printf.printf "%s\n%!" d8
+    Printf.printf "%s\n%!" c_h
+    Printf.printf "%s\n%!" d9
+  | _ -> ()
+
+let print_board (ex : board) =
+  match ex with
+  | {l1=l1; r8=r8; l2=l2; r7=r7; l3=l3; r6=r6; l4=l4; r5=r5; l5=l5; r4=r4; 
+  l6=l6; r3=r3; l7=l7; r2=r2; l8=l8; r1=r1; l9=l9} -> 
+    Printf.printf "%s\n%!" l1
+    print_piecerow r8
+    Printf.printf "%s\n%!" l2
+    print_piecerow r7
+    Printf.printf "%s\n%!" l3
+    print_piecerow r6
+    Printf.printf "%s\n%!" l4
+    print_piecerow r5
+    Printf.printf "%s\n%!" l5
+    print_piecerow r4
+    Printf.printf "%s\n%!" l6
+    print_piecerow r3
+    Printf.printf "%s\n%!" l7
+    print_piecerow r2
+    Printf.printf "%s\n%!" l8
+    print_piecerow r1
+    Printf.printf "%s\n%!" l9
+
+  print_board start_board
