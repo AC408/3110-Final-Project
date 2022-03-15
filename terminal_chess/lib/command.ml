@@ -38,7 +38,8 @@ let check_valid_move str =
     | h::t -> begin 
       match h with
       | "quit" -> if t = [] then raise Quit else raise InvalidQuit
-      | _ -> check_valid_move str
+      | "move" -> check_valid_move t
+      | _ -> raise InvalidInput
     end
 
     (* somehow have to pass in color type *)
