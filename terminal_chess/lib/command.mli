@@ -13,6 +13,6 @@ raises Quit if the player types <quit>. raises InvalidQuit if the player types <
   An input is invalid if it is not <quit> or <move (a,b) (c,d)> where a, b, c, and d are one character elements. There can be as many spaces in front and after every command and between move and ( and between ) and ( *)
 val parse : string -> string
 val check1 : string -> piecerow
-val check2 : string -> piece
+val check2 : string -> piece option
 val check3 : string -> piecerow
-val check4 : string -> piece
+val check4 : string -> piece option

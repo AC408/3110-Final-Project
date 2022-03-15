@@ -30,14 +30,14 @@ let check_valid_move str =
   match str with
   | [] -> raise EmptyCommand
   | curr::next::[] -> (check_format (explode curr))^(check_format (explode next))
-  | _ -> "Incorrect number of letters, please try again."
+  | _ -> raise InvalidInput
 
   let check_quit str = 
     match str with
     | [] -> raise EmptyCommand
     | h::t -> begin 
       match h with
-      | "quit" -> if t = [] then raise Quit else "Incorrect command. Did you mean <quit>?"
+      | "quit" -> if t = [] then raise Quit else raise InvalidQuit
       | _ -> check_valid_move str
     end
 
