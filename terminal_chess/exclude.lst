@@ -1,0 +1,4 @@
+_build/*
+lib/main_menu.ml
+lib/main_menu.mli
+.DS_Store

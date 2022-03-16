@@ -10,6 +10,7 @@ play:
 	OCAMLRUNPARAM=b dune exec bin/main.exe
 
 zip:
+	zip -r ms1.zip . -x@exclude.lst
 
 clean:
 	dune clean
