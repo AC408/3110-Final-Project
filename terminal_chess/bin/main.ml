@@ -62,7 +62,7 @@ and mover_init board =
         let i_pr = Command.check1 input in (*input piecerow*)
         let o_pr = Command.check3 input in (*output piecerow*)
         let o_p = Array.get o_pr ((Char.code input.[3]) - 97) in (*output piece*)
-        let new_board = (if o_p <> None then {board with graveyard = (*rep o_p :: *) board.graveyard} else board) in
+        let new_board = (if o_p <> None then {board with graveyard = rep o_p ::  board.graveyard} else board) in
         (Array.set o_pr ((Char.code input.[3]) - 97) (Array.get i_pr ((Char.code input.[1]) - 97));
         Array.set i_pr ((Char.code input.[1]) - 97) None);
         (let new_board2 = {new_board with model = update_turn new_board.model Board.Change} in
