@@ -27,7 +27,6 @@ let check_format str =
 let check_valid_move str = 
   match str with
   | [] -> raise EmptyCommand
-<<<<<<< HEAD
   | _::curr::next::[] -> (check_format (explode curr))^(check_format (explode next))
   | _ -> raise InvalidInput
 
@@ -35,20 +34,6 @@ let check_quit t =
     if t = "quit" then true else false
 
 let parse str = String.split_on_char ' ' str |> remove_blank 
-=======
-  | curr::next::[] -> (check_format (explode curr))^(check_format (explode next))
-  | _ -> raise InvalidInput
-
-  let check_quit str = 
-    match str with
-    | [] -> raise EmptyCommand
-    | h::t -> begin 
-      match h with
-      | "quit" -> if t = [] then raise Quit else raise InvalidQuit
-      | "move" -> check_valid_move t
-      | _ -> raise InvalidInput
-    end
->>>>>>> bb3f582bd794488e640e73582a84ba4fd9c22424
 
 let parse_mod str = String.split_on_char ' ' str |> remove_blank |> check_valid_move
 

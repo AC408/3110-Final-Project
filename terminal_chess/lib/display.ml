@@ -98,28 +98,28 @@ end
 let print_board (ex : board) = begin
   print_endline ex.l1; 
   print_piecerow ex.r8 ;
-  print_endline "|  1";
+  print_endline "|  8";
   print_endline ex.l2;
   print_piecerow ex.r7;
-  print_endline "|  2";
+  print_endline "|  7";
   print_endline ex.l3;
   print_piecerow ex.r6;
-  print_endline "|  3";
+  print_endline "|  6";
   print_endline ex.l4;
   print_piecerow ex.r5;
-  print_endline "|  4";
+  print_endline "|  5";
   print_endline ex.l5;
   print_piecerow ex.r4;
-  print_endline "|  5";
+  print_endline "|  4";
   print_endline ex.l6;
   print_piecerow ex.r3;
-  print_endline "|  6";
+  print_endline "|  3";
   print_endline ex.l7;
   print_piecerow ex.r2;
-  print_endline "|  7";
+  print_endline "|  2";
   print_endline ex.l8;
   print_piecerow ex.r1;
-  print_endline "|  8";
+  print_endline "|  1";
   print_endline ex.l9;
   print_endline lett;
 end
