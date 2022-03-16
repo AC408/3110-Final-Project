@@ -8,36 +8,42 @@ exception InvalidInput
 exception EmptyCommand
 exception InvalidQuit
 
+(* given a list of string, removes empty string element *)
 let rec remove_blank (strlist : string list) =
   match strlist with 
   | [] -> []
   | h :: t -> if h = "" then remove_blank t else h :: remove_blank t 
 
-
+(* given a string, returns a list of chars equivalent to string *)
 let rec explode str = 
   match str with
   | "" -> []
   | st -> (String.get str 0)::(explode (String.sub st 1 ((String.length str) -1)))
 
-let check_format str = 
+(* checks whether the 2 element from check_valid_move is in the format (a,b) and returns ab *)
+  let check_format str = 
   match str with
   | h::m1::m2::m3::t::[] -> if (h = '(' && m2 = ',' && t = ')') then (Char.escaped m1)^(Char.escaped m3) else raise InvalidInput
   | _ -> raise InvalidInput
 
-let check_valid_move str = 
+(* if string list started with move, check whether it has 2 more element for curr pos and next pos. 
+  Returns the 4 letter representation of a move from concating 2 2 letter strings. Ex, (2,b) (3,b) -> 2b3b *)
+  let check_valid_move str = 
   match str with
   | [] -> raise EmptyCommand
   | _::curr::next::[] -> (check_format (explode curr))^(check_format (explode next))
   | _ -> raise InvalidInput
 
-let check_quit t = 
+(* returns true if the string list starts with "quit" else false *)
+  let check_quit t = 
     if t = "quit" then true else false
 
+(* The string is split based on empty space and all empty space removed*)
 let parse str = String.split_on_char ' ' str |> remove_blank 
 
-let parse_mod str = String.split_on_char ' ' str |> remove_blank |> check_valid_move
+(* The string is split based on empty space and all empty space removed and then checked to see if it is a valid move*)
+let parse_mod str = parse str |> check_valid_move
 
-(** abstract out check1 and check3*)
 let check1 (str : string) =
   match str.[0] with
   | '1' -> row1

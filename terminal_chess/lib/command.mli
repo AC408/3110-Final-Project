@@ -1,8 +1,6 @@
 open Display
 
 type t
-(* 
-exception Quit *)
 exception InvalidInput
 exception EmptyCommand
 exception InvalidQuit
