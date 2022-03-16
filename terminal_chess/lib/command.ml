@@ -1,11 +1,9 @@
-(** TODO: this is the place to parse strings unrelated to main menu -> interact with backend (board, piece, etc) -> passed to frontend (display). There's a lot of placeholders here. *)
+ (**TODO: this is the place to parse strings unrelated to main menu -> interact with backend (board, piece, etc) -> passed to frontend (display). There's a lot of placeholders here. *)
 open Display
-open Board
-open Piece
 
 type t = string
 
-exception Quit
+
 exception InvalidInput
 exception EmptyCommand
 exception InvalidQuit
@@ -29,20 +27,17 @@ let check_format str =
 let check_valid_move str = 
   match str with
   | [] -> raise EmptyCommand
-  | curr::next::[] -> (check_format (explode curr))^(check_format (explode next))
-  | _ -> "Incorrect number of letters, please try again."
+  | _::curr::next::[] -> (check_format (explode curr))^(check_format (explode next))
+  | _ -> raise InvalidInput
 
-  let check_quit str = 
-    match str with
-    | [] -> raise EmptyCommand
-    | h::t -> begin 
-      match h with
-      | "quit" -> if t = [] then raise Quit else "Incorrect command. Did you mean <quit>?"
-      | _ -> check_valid_move str
-    end
+let check_quit t = 
+    if t = "quit" then true else false
 
-    (* somehow have to pass in color type *)
-let parse str = check_quit (String.split_on_char ' ' str |> remove_blank)  
+let parse str = String.split_on_char ' ' str |> remove_blank 
+
+let parse_mod str = String.split_on_char ' ' str |> remove_blank |> check_valid_move
+
+(** abstract out check1 and check3*)
 let check1 (str : string) =
   match str.[0] with
   | '1' -> row1
@@ -54,21 +49,6 @@ let check1 (str : string) =
   | '7' -> row7
   | '8' -> row8
   | _ -> raise InvalidInput
-
-(** in larger function, try with when calling check2 *)
-
-let check2 str =
-  match str.[1] with 
-  |'a' -> (check1 str).c_a
-  |'b' -> (check1 str).c_b
-  |'c' -> (check1 str).c_c
-  |'d' -> (check1 str).c_d
-  |'e' -> (check1 str).c_e
-  |'f' -> (check1 str).c_f
-  |'g' -> (check1 str).c_g
-  |'h' -> (check1 str).c_h
-  | _ -> raise InvalidInput
-
 
 let check3 str =
   match str.[2] with
@@ -82,15 +62,5 @@ let check3 str =
   | '8' ->  row8
   | _ -> raise InvalidInput
 
-let check4 str =
-  match str.[3] with 
-  |'a' -> (check3 str).c_a
-  |'b' -> (check3 str).c_b
-  |'c' -> (check3 str).c_c
-  |'d' -> (check3 str).c_d
-  |'e' -> (check3 str).c_e
-  |'f' -> (check3 str).c_f
-  |'g' -> (check3 str).c_g
-  |'h' -> (check3 str).c_h
-  | _ -> raise InvalidInput
+
   

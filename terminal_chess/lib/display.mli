@@ -1,24 +1,6 @@
 open Piece
 
-type piecerow = {
-  d1: string;
-  c_a: piece option;
-  d2: string;
-  c_b: piece option;
-  d3: string;
-  c_c: piece option;
-  d4: string;
-  c_d: piece option;
-  d5: string;
-  c_e: piece option;
-  d6: string;
-  c_f: piece option;
-  d7: string;
-  c_g: piece option;
-  d8: string;
-  c_h: piece option;
-  d9: string;
-}
+type piecerow = piece option array
 
 type board = {
   l1: string;
@@ -37,7 +19,9 @@ type board = {
   r2: piecerow;
   l8: string;
   r1: piecerow;
-  l9: string
+  l9: string;
+  graveyard : string list;
+  model : Board.model
 }
 
 val row8 : piecerow
@@ -51,5 +35,6 @@ val row1 : piecerow
 
 val start_board : board
 
+val print_piece: piece option -> unit
 val print_piecerow : piecerow -> unit
 val print_board : board -> unit
