@@ -5,10 +5,36 @@ exception InvalidInput
 exception EmptyCommand
 exception InvalidQuit
 
+(**[remove_blank] takes in a list of strings [strlist] and removes empty string elements.*)
+val remove_blank : t list -> t list
 
+(**[explode] takes in a string [str] and returns a list of chars equivalent to it.*)
+val explode : t -> char list
+
+(**[check_format] takes in a str and checks whether the 2 elements from check_valid_move is in the format
+(a, b) and returns ab.*)
+val check_format : char list -> t
+
+(**[check_valid_move] takes in a string list [str] and if it started with move, it checks whether it has 2 more
+elements for curr pos and next pos. It returns the 4-letter representation of a move from concating two
+2-letter strings. Ex: (2,b) (3,b) -> 2b3b.*)
+val check_valid_move : t list -> t
+
+(**[check_quit] returns true if the string list [t] starts with “quit “ else false.*)
+val check_quit : t -> bool 
+
+(**[parse] takes in a string [str] and returns the string split based on empty space, and all empty space
+removed.*)
 val parse : string -> string list
+
+(**[parse_mod] str takes in a string [str] and returns the string split based on empty space, with all empty
+space removed, and then checks to see if it is a valid move.*)
 val parse_mod : string -> string
+
+(**[check1] is the row that corresponds to the input piece that the user selects.*)
 val check1 : string -> piecerow
+
+(**[check3] is the row that corresponds to the output space that the user selects.*)
 val check3 : string -> piecerow
-val check_quit : string -> bool
+
 
