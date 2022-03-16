@@ -1,0 +1,5 @@
+Dear User: to install and build your system, you must run the following commands: 
+make build (build the directory)
+make play (initiate the terminal game of chess)
+quit (quit the game)
+move (move places)
