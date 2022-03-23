@@ -44,6 +44,7 @@ let parse str = String.split_on_char ' ' str |> remove_blank
 (* The string is split based on empty space and all empty space removed and then checked to see if it is a valid move*)
 let parse_mod str = parse str |> check_valid_move
 
+(*This is the row that corresponds to the input piece that the user selects*)
 let check1 (str : string) =
   match str.[0] with
   | '1' -> row1
@@ -56,6 +57,7 @@ let check1 (str : string) =
   | '8' -> row8
   | _ -> raise InvalidInput
 
+(*This is the row that corresponds to the output space that the user selects*)
 let check3 str =
   match str.[2] with
   | '1' ->  row1
