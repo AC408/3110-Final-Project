@@ -2,7 +2,8 @@ let in_game = false (* used to toggle between parsing from main_menu and command
 open Chess
 open Piece
 open Board
-open Display      
+open Display
+open Command      
 
 
 exception NoPiece
@@ -61,17 +62,22 @@ and mover_init board =
         ((let input = Command.parse_mod (in_command) in 
         let i_pr = Command.check1 input in (*input piecerow*)
         let o_pr = Command.check3 input in (*output piecerow*)
+        let i_p = Array.get i_pr ((Char.code input.[1]) - 97) in (*input piece*)
         let o_p = Array.get o_pr ((Char.code input.[3]) - 97) in (*output piece*)
-        let new_board = (if o_p <> None then {board with graveyard = rep o_p ::  board.graveyard} else board) in
-        (Array.set o_pr ((Char.code input.[3]) - 97) (Array.get i_pr ((Char.code input.[1]) - 97));
-        Array.set i_pr ((Char.code input.[1]) - 97) None);
-        (let new_board2 = {new_board with model = update_turn new_board.model Board.Change} in
-        Display.print_board new_board2;
-        print_newline ();
-        print_endline "Here are your captured pieces:";
-        print_list new_board2.graveyard;
-        print_newline ();
-        mover_init new_board2))) end
+        if check_piece i_p input = false then (
+          (print_endline "Sorry, this piece doesn't move that way.");
+          mover_init board )
+        else 
+          let new_board = (if o_p <> None then {board with graveyard = rep o_p ::  board.graveyard} else board) in (* new_board checks if output position is occupied *)
+          (Array.set o_pr ((Char.code input.[3]) - 97) (Array.get i_pr ((Char.code input.[1]) - 97));
+          Array.set i_pr ((Char.code input.[1]) - 97) None);
+          (let new_board2 = {new_board with model = update_turn new_board.model Board.Change} in
+          Display.print_board new_board2;
+          print_newline ();
+          print_endline "Here are your captured pieces:";
+          print_list new_board2.graveyard;
+          print_newline ();
+          mover_init new_board2))) end
 
 let () = Display.print_board Display.start_board
 let _ = mover_init Display.start_board

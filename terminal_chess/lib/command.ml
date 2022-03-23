@@ -70,21 +70,57 @@ let check3 str =
   | '8' ->  row8
   | _ -> raise InvalidInput
 
-let check_horizontal str = 
-  int_of_char (str.[3]) - int_of_char (str.[1]) = 0
-
-let check_vertical str = 
-  Char.code str.[2] - Char.code str.[0] = 0
-
-let check_diagonal str = 
-int_of_char str.[3] - int_of_char str.[1] = Char.code str.[2] - Char.code str.[0] || int_of_char str.[3] - int_of_char str.[1] = - (Char.code str.[2] - Char.code str.[0])
-
-let rook_check input = check_vertical input || check_horizontal input
-
-let bishop_check input = check_diagonal input
-
-let queen_check input = check_diagonal input || check_horizontal input || check_vertical input
-
-let king_check input = (check_horizontal input && (Char.code input.[2] - Char.code input.[0] = 1)) || (check_vertical input && int_of_char input.[3] - int_of_char input.[0] = 1))
-
-abs
+  let check_horizontal str = 
+    int_of_char (str.[2]) - int_of_char (str.[0]) = 0
+  
+  let check_vertical str = 
+    Char.code str.[3] - Char.code str.[1] = 0
+  
+  let check_diagonal str = 
+  abs(int_of_char str.[2] - int_of_char str.[0]) = abs (Char.code str.[3] - Char.code str.[1])
+  
+  let rook_check input = check_vertical input || check_horizontal input
+  
+  let bishop_check input = check_diagonal input
+  
+  let queen_check input = check_diagonal input || check_horizontal input || check_vertical input
+  
+  let king_check input = (check_horizontal input && abs(Char.code input.[3] - Char.code input.[1]) = 1) || 
+  (check_vertical input && abs (int_of_char input.[2] - int_of_char input.[1]) = 1) || 
+  (check_diagonal input && (abs(Char.code(input.[3]) - Char.code(input.[1])) = 1) || 
+  (abs(int_of_char input.[2] - int_of_char input.[0]) = 1))
+  
+  let knight_check input = ((abs(Char.code input.[3]-Char.code input.[1]) = 2) && 
+  abs(int_of_char input.[2] - int_of_char input.[0]) = 1) || 
+  ((abs(int_of_char input.[2] - int_of_char input.[0]) = 2) && 
+  abs(Char.code input.[3] - Char.code input.[1]) = 1)
+  
+  let pawn_check input = 
+    if (int_of_char input.[2] - int_of_char input.[0] = 1 && 
+      abs(Char.code input.[3] - Char.code input.[1]) <= 1) then 
+        let get_element = Array.get (check3 input) ((Char.code input.[3]) - 97) in 
+          match get_element with
+          | None -> check_vertical input (* this means that the element is none -> can't go diagonally *)
+          | Some _ -> (check_diagonal input) 
+      else false
+  
+  let pawn_check2 input = 
+    if (int_of_char input.[2] - int_of_char input.[0] = -1 && abs(Char.code input.[3] - Char.code input.[1]) <= 1) then 
+        let get_element = Array.get (check3 input) ((Char.code input.[3]) - 97) in 
+          match get_element with
+          | None -> check_vertical input (* this means that the element is none -> can't go diagonally *)
+          | Some _ -> (check_diagonal input) 
+      else false
+  
+  let check_piece pc str =
+    match pc with
+    | None -> false
+    | Some pc -> 
+    if get_level pc = Pawn then 
+      if get_color pc = White then pawn_check str
+      else pawn_check2 str
+    else if get_level pc = Rook then rook_check str
+    else if get_level pc = Bishop then bishop_check str
+    else if get_level pc = Knight then knight_check str
+    else if get_level pc = Queen then queen_check str
+    else king_check str
