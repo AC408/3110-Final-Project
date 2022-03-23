@@ -68,5 +68,21 @@ let check3 str =
   | '8' ->  row8
   | _ -> raise InvalidInput
 
+let check_horizontal str = 
+  int_of_char (str.[3]) - int_of_char (str.[1]) = 0
 
-  
+let check_vertical str = 
+  Char.code str.[2] - Char.code str.[0] = 0
+
+let check_diagonal str = 
+int_of_char str.[3] - int_of_char str.[1] = Char.code str.[2] - Char.code str.[0] || int_of_char str.[3] - int_of_char str.[1] = - (Char.code str.[2] - Char.code str.[0])
+
+let rook_check input = check_vertical input || check_horizontal input
+
+let bishop_check input = check_diagonal input
+
+let queen_check input = check_diagonal input || check_horizontal input || check_vertical input
+
+let king_check input = (check_horizontal input && (Char.code input.[2] - Char.code input.[0] = 1)) || (check_vertical input && int_of_char input.[3] - int_of_char input.[0] = 1))
+
+abs
