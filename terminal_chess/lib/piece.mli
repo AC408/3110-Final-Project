@@ -28,5 +28,5 @@ val place_piece : (char * int) option -> color -> level -> string -> piece
 (** [move_piece p pos] moves the piece [p] to position [pos]. *)  
 val move_piece : piece -> (char* int) option -> piece
 
-(* *[capture_piece p] changes the position of the piece after it has been captured.
+(** [capture_piece p] changes the position of the piece after it has been captured. 
 val capture_piece : piece -> piece *)

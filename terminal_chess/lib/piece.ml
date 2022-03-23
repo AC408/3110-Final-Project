@@ -1,4 +1,4 @@
-type level = Pawn | Knight | Bishop | Rook | Queen | King
+ type level = Pawn | Knight | Bishop | Rook | Queen | King
 type color = White | Black
 type position = (char * int) option
 

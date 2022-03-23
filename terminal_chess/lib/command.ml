@@ -1,8 +1,6 @@
  (**TODO: this is the place to parse strings unrelated to main menu -> interact with backend (board, piece, etc) -> passed to frontend (display). There's a lot of placeholders here. *)
 open Display
-
-type t = string
-
+open Piece
 
 exception InvalidInput
 exception EmptyCommand

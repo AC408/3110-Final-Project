@@ -1,6 +1,6 @@
 open Piece
 
-type model = {
+ type model = {
  moves : int;
  turn : Piece.color
 }
@@ -53,4 +53,4 @@ let update_turn (board : model) (change : change) =
     let whitepawn5 = place_piece (Some ('e', 2)) White Pawn "|  ♙   "
     let whitepawn6 = place_piece (Some ('f', 2)) White Pawn "|  ♙   "
     let whitepawn7 = place_piece (Some ('g', 2)) White Pawn "|  ♙   "
-    let whitepawn8 = place_piece (Some ('h', 2)) White Pawn "|  ♙   "
+    let whitepawn8 = place_piece (Some ('h', 2)) White Pawn "|  ♙   " 
