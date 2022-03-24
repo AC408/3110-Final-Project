@@ -5,17 +5,9 @@ open Board
 open Display
 open Command      
 
-
-exception NoPiece
-
 let rec print_list = function 
 | [] -> ()
 | e::l -> print_string e ; print_string " " ; print_list l
-
-let rep space =
-  match space with 
-  | None -> raise NoPiece
-  | Some space -> space.rep
 
 let color_matcher board = function
   | None -> raise NoPiece
@@ -34,8 +26,8 @@ and wrong_input str =
       "wrong move"
 
 and char_in_range str =
-  ((Char.code str.[1]) > 104 || (Char.code str.[1]) < 97 ||
-    (Char.code str.[3]) > 104 || (Char.code str.[3]) < 97)
+  ((Char.code str.[1]) > Char.code 'h' || (Char.code str.[1]) < Char.code 'a' ||
+    (Char.code str.[3]) > Char.code 'h' || (Char.code str.[3]) < Char.code 'a')
 
 and mover_init board =
   print_newline ();

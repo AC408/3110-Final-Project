@@ -1,6 +1,8 @@
- type level = Pawn | Knight | Bishop | Rook | Queen | King
+type level = Pawn | Knight | Bishop | Rook | Queen | King
 type color = White | Black
 type position = (char * int) option
+
+exception NoPiece
 
 type piece = {
   position : position;
@@ -8,6 +10,11 @@ type piece = {
   level : level;
   rep : string;
  }
+
+let rep space =
+  match space with 
+  | None -> raise NoPiece
+  | Some space -> space.rep
 
 let get_level p = p.level
 let get_color p = p.color

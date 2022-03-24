@@ -21,3 +21,6 @@
 
 val hours_worked : int
 (** [hours_worked] is the number of hours you worked on this assignment. *)
+
+
+(*task?: 1) make sure pieces cant take pieces of the same color, 2) make sure that piece cant jump other pieces (unless you’re a knight), 3) after parsing command, check to see if king will be in check after moving. if so, throw err and revert to prev position, 4) for checkmate, are we checking all possible paths and seeing if the king can escape (in which case, we should have a list of available moves) or just have the players declare they’re checkmated when they see they have no legal moves?, 5) stalemate -> same as 4*)

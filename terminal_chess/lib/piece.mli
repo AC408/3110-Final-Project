@@ -5,6 +5,8 @@ type level = Pawn | Knight | Bishop | Rook | Queen | King
 type color = White | Black
 type position = (char * int) option
 
+exception NoPiece
+
 (** Characteristics of each chess piece. *)
 type piece = {
   position : position;
@@ -12,6 +14,8 @@ type piece = {
   level : level;
   rep : string;
  }
+
+val rep : piece option -> string
 
 (** [get_level p] returns the level of the piece [p]. *)
 val get_level : piece -> level
