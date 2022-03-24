@@ -100,7 +100,6 @@ let new_str = str |> explode in
       | _  -> false
 
 let rec go_up_right str gate gate2= 
-Printf.printf "%s\n%!" str;
 if(gate) then
     if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_up_right str false true
   else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
@@ -123,7 +122,6 @@ if(gate) then
         | _  -> false
 
 let rec go_down_right str gate gate2= 
-Printf.printf "%s\n%!" str;
 if(gate) then
     if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_down_right str false true
   else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
@@ -145,7 +143,6 @@ if(gate) then
         | _  -> false
   
 let rec go_up_left str gate gate2= 
-Printf.printf "%s\n%!" str;
 if(gate) then
     if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_up_left str false true
   else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
@@ -168,7 +165,6 @@ if(gate) then
       | _  -> false
 
 let rec go_down_left str gate gate2= 
-Printf.printf "%s\n%!" str;
 if(gate) then
     if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_down_left str false true
   else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
