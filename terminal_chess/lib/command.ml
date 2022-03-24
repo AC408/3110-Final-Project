@@ -122,3 +122,13 @@ let check3 str =
     else if get_level pc = Knight then knight_check str
     else if get_level pc = Queen then queen_check str
     else king_check str
+
+  let color_checker i_p o_p =
+    match o_p with 
+    | None -> true
+    | Some op -> 
+      match i_p with 
+      | None -> false
+      | Some ip ->
+      if get_color op = get_color ip then false
+      else true 

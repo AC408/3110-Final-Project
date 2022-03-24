@@ -67,6 +67,9 @@ and mover_init board =
         if check_piece i_p input = false then (
           (print_endline "Sorry, this piece doesn't move that way.");
           mover_init board )
+        else if color_checker i_p o_p = false then (
+          (print_endline "Sorry, you can't capture one of your own pieces!");
+          mover_init board )
         else 
           let new_board = (if o_p <> None then {board with graveyard = rep o_p ::  board.graveyard} else board) in (* new_board checks if output position is occupied *)
           (Array.set o_pr ((Char.code input.[3]) - 97) (Array.get i_pr ((Char.code input.[1]) - 97));
