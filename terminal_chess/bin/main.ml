@@ -5,6 +5,7 @@ open Board
 open Display
 open Command      
 
+
 let rec print_list = function 
 | [] -> ()
 | e::l -> print_string e ; print_string " " ; print_list l
