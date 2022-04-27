@@ -42,6 +42,6 @@ val bishop_check : string -> bool
 val queen_check : string -> bool
 val king_check : string -> bool
 val knight_check : string -> bool
-val pawn_check : string -> bool
+val pawn_check : string -> bool -> Piece.color -> bool
 val check_piece : piece option -> string -> bool 
 val color_checker : piece option -> piece option -> bool

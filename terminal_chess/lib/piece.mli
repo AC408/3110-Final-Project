@@ -13,6 +13,7 @@ type piece = {
   color : color;
   level : level;
   rep : string;
+  moved : bool;
  }
 
 val rep : piece option -> string
@@ -26,11 +27,11 @@ val get_color : piece -> color
 (** [get_position p] returns the position of the piece [p]. *)
 val get_position : piece -> (char * int) option
 
+(** [get_rep p] returns the rep of the piece [p] *)
+val get_rep : piece -> string
+
 (** [place_piece pos c l] returns the position [pos], color [c], level [l], and representation [rep] of the function. *)
-val place_piece : (char * int) option -> color -> level -> string -> piece
+val place_piece : (char * int) option -> color -> level -> string -> bool -> piece
 
-(** [move_piece p pos] moves the piece [p] to position [pos]. *)  
-val move_piece : piece -> (char* int) option -> piece
-
-(** [capture_piece p] changes the position of the piece after it has been captured. 
-val capture_piece : piece -> piece *)
+(** [have_moved p] returns the true if the piece [p] have been moved and false otherwise. *)
+val have_moved : piece -> bool

@@ -9,6 +9,7 @@ type piece = {
   color : color;
   level : level;
   rep : string;
+  moved : bool;
  }
 
 let rep space =
@@ -21,15 +22,16 @@ let get_color p = p.color
 
 let get_position p = p.position
 
-let place_piece pos c l rep = {
+let get_rep p = p.rep
+
+let place_piece pos c l rep move = {
   position = pos;
   color = c;
   level = l;
   rep = rep;
+  moved = move;
  } 
-  
-let move_piece p pos =
-  place_piece pos p.color p.level p.rep
 
+let have_moved p = p.moved
 
 

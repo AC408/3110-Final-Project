@@ -219,30 +219,27 @@ abs(int_of_char input.[2] - int_of_char input.[0]) = 1) ||
 ((abs(int_of_char input.[2] - int_of_char input.[0]) = 2) && 
 abs(Char.code input.[3] - Char.code input.[1]) = 1)
 
-let pawn_check input = 
-  if (int_of_char input.[2] - int_of_char input.[0] = 1 && 
+let pawn_check input moved color = 
+  let sign = if color = White then 1 else -1 in
+  if (int_of_char input.[2] - int_of_char input.[0] = 1*sign && 
     abs(Char.code input.[3] - Char.code input.[1]) <= 1) then 
       let get_element = Array.get (check3 input) ((Char.code input.[3]) - 97) in 
-        match get_element with
-        | None -> check_vertical input (* this means that the element is none -> can't go diagonally *)
-        | Some _ -> (check_diagonal input) 
-    else false
-
-let pawn_check2 input = 
-  if (int_of_char input.[2] - int_of_char input.[0] = -1 && abs(Char.code input.[3] - Char.code input.[1]) <= 1) then 
-      let get_element = Array.get (check3 input) ((Char.code input.[3]) - 97) in 
-        match get_element with
-        | None -> check_vertical input (* this means that the element is none -> can't go diagonally *)
-        | Some _ -> (check_diagonal input) 
-    else false
+      match get_element with
+      | None -> check_vertical input (* this means that the element is none -> can't go diagonally *)
+      | Some _ -> (check_diagonal input) 
+  else if ((int_of_char input.[2] - int_of_char input.[0] = 2*sign) && (Char.code input.[3] = Char.code input.[1])) && (moved = false) then
+    let get_elt = Array.get (check3 input) ((Char.code input.[3]) - 97) in
+    match get_elt with
+    | None -> true
+    | Some _ -> false
+  else false
 
 let check_piece pc str =
   match pc with
   | None -> false
   | Some pc -> 
   if get_level pc = Pawn then 
-    if get_color pc = White then pawn_check str
-    else pawn_check2 str
+    pawn_check str pc.moved (get_color pc)
   else if get_level pc = Rook then rook_check str
   else if get_level pc = Bishop then bishop_check str
   else if get_level pc = Knight then knight_check str
