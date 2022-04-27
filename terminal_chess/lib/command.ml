@@ -99,95 +99,22 @@ let new_str = str |> explode in
         else go_down ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped col2)) (false)false
       | _  -> false
 
-let rec go_up_right str gate gate2= 
-if(gate) then
-    if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_up_right str false true
-  else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
-    if(gate2 = true) then
-      if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
-      else let new_str = str |> explode in 
-        match new_str with 
-        | row1::col1::row2::col2::[] -> 
-          if (row1 < row2) then go_up_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
-          else go_up_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
-        | _  -> false
-    else 
-      if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> None then false
-      else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
-      else let new_str = str |> explode in 
-        match new_str with 
-        | row1::col1::row2::col2::[] -> 
-          if (row1 < row2) then go_up_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
-          else go_up_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
-        | _  -> false
-
-let rec go_down_right str gate gate2= 
-if(gate) then
-    if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_down_right str false true
-  else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
-    if(gate2 = true) then
-      if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
-      else let new_str = str |> explode in 
-        match new_str with 
-        | row1::col1::row2::col2::[] -> 
-          if (row2 < row1) then go_down_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
-          else go_down_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
-        | _  -> false
-    else if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> None then false
-      else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
-      else let new_str = str |> explode in 
-        match new_str with 
-        | row1::col1::row2::col2::[] -> 
-          if (row2 < row1) then go_down_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
-          else go_down_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
-        | _  -> false
-  
-let rec go_up_left str gate gate2= 
-if(gate) then
-    if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_up_left str false true
-  else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
-    if(gate2) then
-   if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
-    else let new_str = str |> explode in 
+let rec go_diagonal direction str gate gate2 =
+  let diagonal_direction = if(direction = "up_right") then 1 else -1 in
+  let row_diff = int_of_char str.[2] - int_of_char str.[0] in
+  let col_diff = Char.code str.[3] - Char.code str.[1] in
+  if(gate) then
+    if (abs(row_diff) = 1 || abs(col_diff) = 1) then true else go_diagonal direction str false true
+  else if (abs(row_diff) <= 1 || abs(col_diff) <= 1) then true
+  else if ((Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> None) && (gate2 == false)) then false
+  else let new_str = str |> explode in 
       match new_str with 
       | row1::col1::row2::col2::[] -> 
-        if (row1 < row2) then go_up_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 +1)))) (false) false
-        else go_up_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2-1)))) (false)false
+        if (row2 < row1) then go_diagonal direction ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2 +(diagonal_direction))))) (false)false
+        else go_diagonal direction ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 +(diagonal_direction))))) (false)false
       | _  -> false
 
-  else if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> None then false
-    else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
-    else let new_str = str |> explode in 
-      match new_str with 
-      | row1::col1::row2::col2::[] -> 
-        if (row1 < row2) then go_up_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 +1)))) (false)false
-        else go_up_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2-1)))) (false)false
-      | _  -> false
-
-let rec go_down_left str gate gate2= 
-if(gate) then
-    if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_down_left str false true
-  else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
-    if(gate2) then
-     if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
-    else let new_str = str |> explode in 
-      match new_str with 
-      | row1::col1::row2::col2::[] -> 
-        if (row2 < row1) then go_down_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2 +1)))) (false)false
-        else go_down_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false)false
-      | _  -> false
-
-  else if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> None then false
-    else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
-    else let new_str = str |> explode in 
-      match new_str with 
-      | row1::col1::row2::col2::[] -> 
-        if (row2 < row1) then go_down_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2 +1)))) (false)false
-        else go_down_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false)false
-      | _  -> false
-
-      
-let check_horizontal str = 
+      let check_horizontal str = 
   (int_of_char (str.[2]) - int_of_char (str.[0]) = 0) && (go_left (get_lower_col str) (get_upper_col str) (check1 str))
 
 let check_vertical str = 
@@ -196,12 +123,12 @@ let check_vertical str =
 let check_diagonal str = 
   if(abs(int_of_char str.[2] - int_of_char str.[0]) = abs (Char.code str.[3] - Char.code str.[1])) <> true then false else 
   if((int_of_char str.[2] > int_of_char str.[0]) && (Char.code str.[3] > Char.code str.[1])) then
-    (go_up_right str true) true
+    (go_diagonal "up_right" str true) true
   else if((int_of_char str.[2] > int_of_char str.[0]) && (Char.code str.[3] < Char.code str.[1])) then 
-      (go_up_left str true) true
+      (go_diagonal "up_left" str true) true
   else if((int_of_char str.[2] < int_of_char str.[0]) && (Char.code str.[3] > Char.code str.[1])) then 
-    (go_down_right str true) true
-  else (go_down_left str true) true
+    (go_diagonal "up_left" str true) true
+  else (go_diagonal "up_right" str true) true
 
 let rook_check input = check_vertical input || check_horizontal input
 
