@@ -23,7 +23,7 @@ let rec filled_input board space =
 and wrong_input str =
     try Command.parse_mod str with 
     | Command.InvalidInput -> 
-      (print_endline "Sorry, that's not a valid move. Try again!");
+      (print_endline "Sorry, you haven't entered a valid move. Check your formatting!");
       "wrong move"
 
 and char_in_range str =
@@ -58,13 +58,13 @@ and mover_init board =
         let i_p = Array.get i_pr ((Char.code input.[1]) - 97) in (*input piece*)
         let o_p = Array.get o_pr ((Char.code input.[3]) - 97) in (*output piece*)
         if check_piece i_p input o_p = false then (
-          (print_endline "Sorry, this piece doesn't move that way.");
+          (print_endline "Sorry, either this piece doesn't move that way or that's not a valid castling");
           mover_init board )
-        else if color_checker i_p o_p = false then (
-          (print_endline "Sorry, you can't capture one of your own pieces! (or you can't castle with another player's piece)");
+        else if color_checker i_p o_p input = false then (
+          (print_endline "Sorry, you can't capture one of your own pieces! (or that's not a valid castling, sorry.)");
           mover_init board )
         else 
-          let new_board = (if o_p <> None then {board with graveyard = rep o_p ::  board.graveyard} else board) in (* new_board checks if output position is occupied *)
+          let new_board = (if (o_p <> None && Command.castle i_p input o_p = false) then {board with graveyard = rep o_p ::  board.graveyard} else board) in (* new_board checks if output position is occupied *)
           let moved_piece = 
             match (Array.get i_pr ((Char.code input.[1]) - 97)) with
             | None -> None
@@ -76,7 +76,7 @@ and mover_init board =
             | Some piece -> Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Piece.get_level piece) (Piece.get_rep piece) true)
           in
           (Array.set o_pr ((Char.code input.[3]) - 97) moved_piece;
-          if Command.castle i_p o_p = false then
+          if Command.castle i_p input o_p = false then
           Array.set i_pr ((Char.code input.[1]) - 97) None
           else Array.set i_pr ((Char.code input.[1]) - 97) moved_piece2);
           (let new_board2 = {new_board with model = update_turn new_board.model Board.Change} in
