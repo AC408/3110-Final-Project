@@ -1,0 +1,22 @@
+(** @canonical Chess.Author *)
+module Author = Chess__Author
+
+
+(** @canonical Chess.Board *)
+module Board = Chess__Board
+
+
+(** @canonical Chess.Command *)
+module Command = Chess__Command
+
+
+(** @canonical Chess.Display *)
+module Display = Chess__Display
+
+
+(** @canonical Chess.Main_menu *)
+module Main_menu = Chess__Main_menu
+
+
+(** @canonical Chess.Piece *)
+module Piece = Chess__Piece
