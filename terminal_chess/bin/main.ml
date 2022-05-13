@@ -1,67 +1,106 @@
-let in_game = false (* used to toggle between parsing from main_menu and command *)
+let in_game = false (*toggle between parsing from main menu and command*)
+
 open Chess
 open Piece
 open Board
 open Display
-open Command      
+open Command
 
-let rec print_avail_p lst = match lst with
-| [] -> ""
-| h::t -> h.rep ^ print_avail_p t
+let rec print_avail_p lst =
+  match lst with
+  | [] -> ""
+  | h :: t -> h.rep ^ print_avail_p t
 
-let rec print_list = function 
-| [] -> ()
-| e::l -> print_string e ; print_string " " ; print_list l
+let rec print_list = function
+  | [] -> ()
+  | e :: l ->
+      print_string e;
+      print_string " ";
+      print_list l
 
 let color_matcher board = function
   | None -> raise NoPiece
-  | Some space -> board.model.turn <> (space).color
+  | Some space -> board.model.turn <> space.color
 
-let rec promote_check input piece1=
-match piece1 with
-| None -> print_endline "Sorry, you can't promote an empty space. Try again!";
-promote_check input piece1
-| Some piece ->
-  let prom_command = read_line () in  
-  match prom_command with 
-  | "Queen" -> 
-    if Piece.get_color piece = White then
-      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Queen) ("|  ♕   ") true)
-    else 
-      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Queen) ("|  ♛   ") true)
-  | "Bishop" -> 
-    if Piece.get_color piece = White then
-      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Bishop) ("|  ♗   ") true)
-    else 
-      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Bishop) ("|  ♝   ") true)
-  | "Knight" -> 
-    if Piece.get_color piece = White then
-      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Knight) ("|  ♘   ") true)
-    else 
-      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Knight) ("|  ♞   ") true)
-  | "Rook" -> 
-    if Piece.get_color piece = White then
-      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Rook) ("|  ♖   ") true)
-    else 
-      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Rook) ("|  ♜   ") true)
-  | _ -> print_endline "Sorry, that's not a valid rank to promote your pawn to. Try again!";
-        promote_check input piece1
+let rec promote_check input piece1 =
+  match piece1 with
+  | None ->
+      print_endline
+        "Sorry, you can't promote an empty space. Try again!";
+      promote_check input piece1
+  | Some piece -> (
+      let prom_command = read_line () in
+      match prom_command with
+      | "Queen" ->
+          if Piece.get_color piece = White then
+            Some
+              (Piece.place_piece
+                 (Piece.get_position piece)
+                 (Piece.get_color piece) Queen "|  ♕   " true)
+          else
+            Some
+              (Piece.place_piece
+                 (Piece.get_position piece)
+                 (Piece.get_color piece) Queen "|  ♛   " true)
+      | "Bishop" ->
+          if Piece.get_color piece = White then
+            Some
+              (Piece.place_piece
+                 (Piece.get_position piece)
+                 (Piece.get_color piece) Bishop "|  ♗   " true)
+          else
+            Some
+              (Piece.place_piece
+                 (Piece.get_position piece)
+                 (Piece.get_color piece) Bishop "|  ♝   " true)
+      | "Knight" ->
+          if Piece.get_color piece = White then
+            Some
+              (Piece.place_piece
+                 (Piece.get_position piece)
+                 (Piece.get_color piece) Knight "|  ♘   " true)
+          else
+            Some
+              (Piece.place_piece
+                 (Piece.get_position piece)
+                 (Piece.get_color piece) Knight "|  ♞   " true)
+      | "Rook" ->
+          if Piece.get_color piece = White then
+            Some
+              (Piece.place_piece
+                 (Piece.get_position piece)
+                 (Piece.get_color piece) Rook "|  ♖   " true)
+          else
+            Some
+              (Piece.place_piece
+                 (Piece.get_position piece)
+                 (Piece.get_color piece) Rook "|  ♜   " true)
+      | _ ->
+          print_endline
+            "Sorry, that's not a valid rank to promote your pawn to. \
+             Try again!";
+          promote_check input piece1)
 
 let rec filled_input board space =
   try color_matcher board space with
-  | NoPiece -> 
-    print_endline "Sorry, there's no piece there. Check your input and try again.";
-    mover_init board
+  | NoPiece ->
+      print_endline
+        "Sorry, there's no piece there. Check your input and try again.";
+      mover_init board
 
 and wrong_input str =
-    try Command.parse_mod str with 
-    | Command.InvalidInput -> 
-      (print_endline "Sorry, you haven't entered a valid move. Check your formatting!");
+  try Command.parse_mod str with
+  | Command.InvalidInput ->
+      print_endline
+        "Sorry, you haven't entered a valid move. Check your \
+         formatting!";
       "wrong move"
 
 and char_in_range str =
-  ((Char.code str.[1]) > Char.code 'h' || (Char.code str.[1]) < Char.code 'a' ||
-    (Char.code str.[3]) > Char.code 'h' || (Char.code str.[3]) < Char.code 'a')
+  Char.code str.[1] > Char.code 'h'
+  || Char.code str.[1] < Char.code 'a'
+  || Char.code str.[3] > Char.code 'h'
+  || Char.code str.[3] < Char.code 'a'
 
 and mover_init board =
   let avail_wp = ref [] in let avail_bp = ref [] in let w_k = ref whiteking in let b_k = ref blackking in
@@ -91,14 +130,14 @@ and mover_init board =
         let o_pr = Command.check3 input in (*output piecerow*)
         let i_p = Array.get i_pr ((Char.code input.[1]) - 97) in (*input piece*)
         let o_p = Array.get o_pr ((Char.code input.[3]) - 97) in (*output piece*)
-        if check_piece i_p input o_p = false then (
+        if check_piece i_p input o_p true row1 row2 row3 row4 row5 row6 row7 row8 = false then (
           (print_endline "Sorry, either this piece doesn't move that way or that's not a valid castling");
           mover_init board )
         else if color_checker i_p o_p input = false then (
           (print_endline "Sorry, you can't capture one of your own pieces! (or that's not a valid castling, sorry.)");
           mover_init board )
         else 
-          let new_board = (if (o_p <> None && Command.castle i_p input o_p = false) then {board with graveyard = rep o_p ::  board.graveyard} else board) in (* new_board checks if output position is occupied *)
+          let new_board = (if (o_p <> None && Command.castle i_p input o_p = false) then {board with graveyard = rep o_p ::  board.graveyard} else board) in (*new board checks if output position is occupied*)
           let moved_piece = 
             match (Array.get i_pr ((Char.code input.[1]) - 97)) with
             | None -> None
@@ -142,15 +181,16 @@ and mover_init board =
           print_list new_board2.graveyard;
           print_newline ();
           if (board.model.turn = White) then 
-            if (Command.checkmated !avail_wp !avail_bp !b_k new_board2.r1 new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5 new_board2.r6 new_board2.r7 new_board2.r8)
+            (* (if (Command.incheck !avail_bp !w_k) then print_endline "White Player Now In Check!" else (); *)
+            (if (Command.checkmated !avail_wp !avail_bp !b_k new_board2.r1 new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5 new_board2.r6 new_board2.r7 new_board2.r8)
               then (print_endline "Checkmate!"; false)
-            else mover_init new_board2
+            else mover_init new_board2)
           else 
-            if (Command.checkmated !avail_bp !avail_wp !w_k new_board2.r1 new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5 new_board2.r6 new_board2.r7 new_board2.r8)
+            ((* (if (Command.incheck !avail_wp !b_k) then print_endline "Black Player Now In Check!" else (); *)
+              if (Command.checkmated !avail_bp !avail_wp !w_k new_board2.r1 new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5 new_board2.r6 new_board2.r7 new_board2.r8)
               then (print_endline "Checkmate!"; false)
-             else mover_init new_board2))) end
-
+             else mover_init new_board2)))) end
+             
 let () = Display.print_board Display.start_board
-let _ = mover_init Display.start_board
 
- 
+let _ = mover_init Display.start_board
