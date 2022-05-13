@@ -433,7 +433,6 @@ let check_vertical str is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   && (go_down str true) true is_sim r1 r2 r3 r4 r5 r6 r7 r8
 
 let check_diagonal str is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
-  print_endline "check diagonal";
   if
     abs (int_of_char str.[2] - int_of_char str.[0])
     = abs (Char.code str.[3] - Char.code str.[1])
@@ -446,10 +445,7 @@ let check_diagonal str is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   else if
     int_of_char str.[2] > int_of_char str.[0]
     && Char.code str.[3] < Char.code str.[1]
-  then
-    (print_endline "goingupleft";
-     (go_up_left str true) true)
-      is_sim r1 r2 r3 r4 r5 r6 r7 r8
+  then (go_up_left str true) true is_sim r1 r2 r3 r4 r5 r6 r7 r8
   else if
     int_of_char str.[2] < int_of_char str.[0]
     && Char.code str.[3] > Char.code str.[1]
@@ -553,9 +549,8 @@ let check_piece ipc str opc is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
       else if get_level pc = Bishop then
         bishop_check str is_sim r1 r2 r3 r4 r5 r6 r7 r8
       else if get_level pc = Knight then knight_check str
-      else if get_level pc = Queen then (
-        print_endline "queen";
-        queen_check str is_sim r1 r2 r3 r4 r5 r6 r7 r8)
+      else if get_level pc = Queen then
+        queen_check str is_sim r1 r2 r3 r4 r5 r6 r7 r8
       else king_check str is_sim r1 r2 r3 r4 r5 r6 r7 r8)
       || castle ipc str opc
 
@@ -605,23 +600,9 @@ let rec loopy x y p ppos r1 r2 r3 r4 r5 r6 r7 r8 =
         check_piece (Some p) string_cmd o_p false r1 r2 r3 r4 r5 r6 r7
           r8
         && color_checker (Some p) o_p string_cmd
-      then (
-        print_endline "loopy";
-        print_endline p.rep;
-        let chr, num =
-          match p.position with
-          | None -> failwith "p no pos"
-          | Some (chr1, num1) -> (chr1, num1)
-        in
-        print_endline (Char.escaped chr);
-        print_endline (string_of_int num);
-        (match o_p with
-        | None -> print_endline ""
-        | Some pe ->
-            print_endline pe.rep;
-            print_endline string_cmd);
+      then
         (p, string_cmd)
-        :: loopy x (curry + 1) p ppos r1 r2 r3 r4 r5 r6 r7 r8)
+        :: loopy x (curry + 1) p ppos r1 r2 r3 r4 r5 r6 r7 r8
       else loopy x (curry + 1) p ppos r1 r2 r3 r4 r5 r6 r7 r8
 
 let rec loopx x y p ppos r1 r2 r3 r4 r5 r6 r7 r8 =
@@ -644,22 +625,9 @@ let rec has_move plist r1 r2 r3 r4 r5 r6 r7 r8 =
       loopx 1 0 p ppos r1 r2 r3 r4 r5 r6 r7 r8
       @ has_move t r1 r2 r3 r4 r5 r6 r7 r8
 
-(*This is the row that corresponds to the output space that the user
-  selects*)
-let rec print_lst lst =
-  match lst with
-  | [] -> ""
-  | (p, cmd) :: t -> p.rep ^ cmd ^ print_lst t
-
-let rec print_p lst =
-  match lst with
-  | [] -> ""
-  | p :: t -> p.rep ^ print_p t
-
 (* given moves, try executing moves and seeing if king is still in
    check. if not, return false, else recurse*)
 let rec has_legal_move plist king r1 r2 r3 r4 r5 r6 r7 r8 =
-  print_endline (print_lst plist);
   match plist with
   | [] -> false
   | (p, cmd) :: t -> (
@@ -748,15 +716,11 @@ let rec has_legal_move plist king r1 r2 r3 r4 r5 r6 r7 r8 =
         arr8;
       match Piece.get_color king with
       | White ->
-          print_endline "a_bp";
-          print_endline (print_p !a_bp);
           if
             incheck !a_bp !k false arr1 arr2 arr3 arr4 arr5 arr6 arr7
               arr8
             <> true
-          then (
-            print_endline "not in check";
-            true)
+          then true
           else has_legal_move t king r1 r2 r3 r4 r5 r6 r7 r8
       | Black ->
           (*simulating black moves to see if black has any legal moves -
@@ -765,9 +729,7 @@ let rec has_legal_move plist king r1 r2 r3 r4 r5 r6 r7 r8 =
             incheck !a_wp !k false arr1 arr2 arr3 arr4 arr5 arr6 arr7
               arr8
             <> true
-          then (
-            print_endline "not in check";
-            true)
+          then true
           else has_legal_move t king r1 r2 r3 r4 r5 r6 r7 r8)
 
 and incheck plist king is_real r1 r2 r3 r4 r5 r6 r7 r8 =
@@ -788,17 +750,11 @@ and incheck plist king is_real r1 r2 r3 r4 r5 r6 r7 r8 =
       in
       let o_pr =
         if is_real then check3 (ppos ^ kpos)
-        else (
-          print_endline "checkn3";
-          checkn3 (ppos ^ kpos) r1 r2 r3 r4 r5 r6 r7 r8)
+        else checkn3 (ppos ^ kpos) r1 r2 r3 r4 r5 r6 r7 r8
       in
       (*output piecerow*)
       let o_p = Array.get o_pr (Char.code (ppos ^ kpos).[3] - 97) in
       (*output piece*)
-      print_endline "p";
-      print_endline p.rep;
-      print_endline "cmd";
-      print_endline (ppos ^ kpos);
       let check_check = if is_real then false else true in
       if
         check_piece (Some p) (ppos ^ kpos) o_p check_check r1 r2 r3 r4
