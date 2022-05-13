@@ -35,7 +35,8 @@ let check_quit str =
   | [] -> "No command found, please try again."
   | h::t -> begin 
     match h with
-    | "quit" -> if t = [] then raise Quit else "Incorrect command. Did you mean <quit>?"
+    | "quit" -> if t = [] then raise Quit else 
+      "Incorrect command. Did you mean <quit>?"
     | _ -> pawn_rules
   end
 

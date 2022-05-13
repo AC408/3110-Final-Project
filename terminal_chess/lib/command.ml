@@ -1,4 +1,6 @@
- (**TODO: this is the place to parse strings unrelated to main menu -> interact with backend (board, piece, etc) -> passed to frontend (display). There's a lot of placeholders here. *)
+ (**TODO: this is the place to parse strings unrelated to main menu -> interact 
+     with backend (board, piece, etc) -> passed to frontend (display). There's 
+     a lot of placeholders here. *)
 open Display
 open Piece
 
@@ -16,20 +18,25 @@ let rec remove_blank (strlist : string list) =
 let rec explode str = 
   match str with
   | "" -> []
-  | st -> (String.get str 0)::(explode (String.sub st 1 ((String.length str) -1)))
+  | st -> (String.get str 0)::(explode 
+  (String.sub st 1 ((String.length str) -1)))
 
-(* checks whether the 2 element from check_valid_move is in the format (a,b) and returns ab *)
+(* checks whether the 2 element from check_valid_move is in the format (a,b) 
+   and returns ab *)
   let check_format str = 
   match str with
-  | h::m1::m2::m3::t::[] -> if (h = '(' && m2 = ',' && t = ')') then (Char.escaped m1)^(Char.escaped m3) else raise InvalidInput
+  | h::m1::m2::m3::t::[] -> if (h = '(' && m2 = ',' && t = ')') then 
+    (Char.escaped m1)^(Char.escaped m3) else raise InvalidInput
   | _ -> raise InvalidInput
 
-(* if string list started with move, check whether it has 2 more element for curr pos and next pos. 
-  Returns the 4 letter representation of a move from concating 2 2 letter strings. Ex, (2,b) (3,b) -> 2b3b *)
+(* if string list started with move, check whether it has 2 more element for 
+  curr pos and next pos. Returns the 4 letter representation of a move from 
+  concatenating 2 2 letter strings. Ex, (2,b) (3,b) -> 2b3b *)
   let check_valid_move str = 
   match str with
   | [] -> raise EmptyCommand
-  | _::curr::next::[] -> (check_format (explode curr))^(check_format (explode next))
+  | _::curr::next::[] -> (check_format (explode curr))^(check_format 
+  (explode next))
   | _ -> raise InvalidInput
 
 (* returns true if the string list starts with "quit" else false *)
@@ -39,7 +46,8 @@ let rec explode str =
 (* The string is split based on empty space and all empty space removed*)
 let parse str = String.split_on_char ' ' str |> remove_blank 
 
-(* The string is split based on empty space and all empty space removed and then checked to see if it is a valid move*)
+(* The string is split based on empty space and all empty space removed and 
+   then checked to see if it is a valid move*)
 let parse_mod str = parse str |> check_valid_move
 
 (*This is the row that corresponds to the input piece that the user selects*)
@@ -69,10 +77,12 @@ let check3 str =
   | _ -> raise InvalidInput
 
 let get_upper_col str = 
-  if (Char.code str.[3] > Char.code str.[1]) then (Char.code str.[3] - Char.code 'a') else (Char.code str.[1] - Char.code 'a')
+  if (Char.code str.[3] > Char.code str.[1]) then 
+  (Char.code str.[3] - Char.code 'a') else (Char.code str.[1] - Char.code 'a')
 
 let get_lower_col str = 
-  if (Char.code str.[3] > Char.code str.[1]) then (Char.code str.[1] - Char.code 'a') else (Char.code str.[3] - Char.code 'a')
+  if (Char.code str.[3] > Char.code str.[1]) then 
+  (Char.code str.[1] - Char.code 'a') else (Char.code str.[3] - Char.code 'a')
     
 let rec go_left lower_col upper_col row = 
   if lower_col = (upper_col-1) || lower_col = upper_col then true else 
@@ -81,135 +91,216 @@ let rec go_left lower_col upper_col row =
   
 let rec go_down str gate gate2= 
   if(gate) then
-    if (int_of_char str.[2] = (int_of_char str.[0])-1) || (int_of_char str.[2] = (int_of_char str.[0])+1) then true else go_down str false true
+    if (int_of_char str.[2] = (int_of_char str.[0])-1) || (int_of_char str.[2] 
+      = (int_of_char str.[0])+1) then true else go_down str false true
   else if (int_of_char str.[2] = int_of_char str.[0]) then true else
     if(gate2) then
 let new_str = str |> explode in 
         match new_str with 
         | row1::col1::row2::col2::[] -> 
-          if (row2 < row1) then go_down ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped col2)) (false)  false
-          else go_down ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped col2)) (false)false
+          if (row2 < row1) then go_down 
+            ((Char.escaped row1)^(Char.escaped col1)^
+          (string_of_int((Char.code row2 - Char.code '0') +1))^
+          (Char.escaped col2)) (false)  false
+          else go_down ((Char.escaped row1)^(Char.escaped col1)^
+          (string_of_int((Char.code row2 - Char.code '0') -1))^
+          (Char.escaped col2)) (false)false
         | _  -> false
   
-        else if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> None then false
+        else if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> 
+          None then false
     else let new_str = str |> explode in 
       match new_str with 
       | row1::col1::row2::col2::[] -> 
-        if (row2 < row1) then go_down ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped col2)) (false) false
-        else go_down ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped col2)) (false)false
+        if (row2 < row1) then go_down ((Char.escaped row1)^(Char.escaped col1)^
+          (string_of_int((Char.code row2 - Char.code '0') +1))^
+          (Char.escaped col2)) (false) false
+        else go_down ((Char.escaped row1)^(Char.escaped col1)^
+        (string_of_int((Char.code row2 - Char.code '0') -1))^
+        (Char.escaped col2)) (false)false
       | _  -> false
 
       let rec go_up_right str gate gate2= 
       if(gate) then
-          if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_up_right str false true
-        else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
+          if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+            abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else 
+              go_up_right str false true
+        else if (int_of_char str.[2] = int_of_char str.[0]) && 
+          (Char.code str.[3] = Char.code str.[1]) then true else
           if(gate2 = true) then
-            if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
+            if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+              abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
             else let new_str = str |> explode in 
               match new_str with 
               | row1::col1::row2::col2::[] -> 
-                if (row1 < row2) then go_up_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
-                else go_up_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
+                if (row1 < row2) then go_up_right ((Char.escaped row1)^
+                  (Char.escaped col1)^
+                  (string_of_int((Char.code row2 - Char.code '0') -1))^
+                  (Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
+                else go_up_right ((Char.escaped row1)^(Char.escaped col1)^
+                (string_of_int((Char.code row2 - Char.code '0') +1))^
+                (Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
               | _  -> false
           else 
-            if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> None then false
-            else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
+            if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> 
+              None then false
+            else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+              abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
             else let new_str = str |> explode in 
               match new_str with 
               | row1::col1::row2::col2::[] -> 
-                if (row1 < row2) then go_up_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
-                else go_up_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
+                if (row1 < row2) then go_up_right ((Char.escaped row1)^
+                  (Char.escaped col1)^
+                  (string_of_int((Char.code row2 - Char.code '0') -1))^
+                  (Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
+                else go_up_right ((Char.escaped row1)^(Char.escaped col1)^
+                (string_of_int((Char.code row2 - Char.code '0') +1))^
+                (Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
               | _  -> false
       
       let rec go_down_right str gate gate2= 
       if(gate) then
-          if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_down_right str false true
-        else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
+          if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+            abs(Char.code str.[3] - Char.code str.[1]) = 1) then true 
+            else go_down_right str false true
+        else if (int_of_char str.[2] = int_of_char str.[0]) && 
+          (Char.code str.[3] = Char.code str.[1]) then true else
           if(gate2 = true) then
-            if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
+            if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+              abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
             else let new_str = str |> explode in 
               match new_str with 
               | row1::col1::row2::col2::[] -> 
-                if (row2 < row1) then go_down_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
-                else go_down_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
+                if (row2 < row1) then go_down_right ((Char.escaped row1)^
+                  (Char.escaped col1)^
+                  (string_of_int((Char.code row2 - Char.code '0') +1))^
+                  (Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
+                else go_down_right ((Char.escaped row1)^(Char.escaped col1)^
+                (string_of_int((Char.code row2 - Char.code '0') -1))^
+                (Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
               | _  -> false
-          else if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> None then false
-            else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
+          else if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> 
+            None then false
+            else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+              abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
             else let new_str = str |> explode in 
               match new_str with 
               | row1::col1::row2::col2::[] -> 
-                if (row2 < row1) then go_down_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
-                else go_down_right ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
+                if (row2 < row1) then go_down_right ((Char.escaped row1)^
+                  (Char.escaped col1)^
+                  (string_of_int((Char.code row2 - Char.code '0') +1))^
+                  (Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
+                else go_down_right ((Char.escaped row1)^(Char.escaped col1)^
+                (string_of_int((Char.code row2 - Char.code '0') -1))^
+                (Char.escaped (Char.chr(int_of_char col2+1)))) (false) false
               | _  -> false
         
       let rec go_up_left str gate gate2= 
       if(gate) then
-          if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_up_left str false true
-        else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
+          if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+            abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else 
+              go_up_left str false true
+        else if (int_of_char str.[2] = int_of_char str.[0]) && 
+          (Char.code str.[3] = Char.code str.[1]) then true else
           if(gate2) then
-         if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
+         if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+          abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
           else let new_str = str |> explode in 
             match new_str with 
             | row1::col1::row2::col2::[] -> 
-              if (row1 < row2) then go_up_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 +1)))) (false) false
-              else go_up_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2-1)))) (false)false
+              if (row1 < row2) then go_up_left ((Char.escaped row1)^
+                (Char.escaped col1)^
+              (string_of_int((Char.code row2 - Char.code '0') -1))^
+              (Char.escaped (Char.chr(int_of_char col2 +1)))) (false) false
+              else go_up_left ((Char.escaped row1)^(Char.escaped col1)^
+              (string_of_int((Char.code row2 - Char.code '0') +1))^
+              (Char.escaped (Char.chr(int_of_char col2-1)))) (false)false
             | _  -> false
       
-        else if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> None then false
-          else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
+        else if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> 
+          None then false
+          else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+            abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
           else let new_str = str |> explode in 
             match new_str with 
             | row1::col1::row2::col2::[] -> 
-              if (row1 < row2) then go_up_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 +1)))) (false)false
-              else go_up_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2-1)))) (false)false
+              if (row1 < row2) then go_up_left ((Char.escaped row1)^
+                (Char.escaped col1)^
+                (string_of_int((Char.code row2 - Char.code '0') -1))^
+                (Char.escaped (Char.chr(int_of_char col2 +1)))) (false) false
+              else go_up_left ((Char.escaped row1)^(Char.escaped col1)^
+                (string_of_int((Char.code row2 - Char.code '0') +1))^
+                (Char.escaped (Char.chr(int_of_char col2-1)))) (false)false
             | _  -> false
             let rec go_down_left str gate gate2= 
 if(gate) then
-    if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else go_down_left str false true
-  else if (int_of_char str.[2] = int_of_char str.[0]) && (Char.code str.[3] = Char.code str.[1]) then true else
+    if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+      abs(Char.code str.[3] - Char.code str.[1]) = 1) then true else 
+        go_down_left str false true
+  else if (int_of_char str.[2] = int_of_char str.[0]) && 
+    (Char.code str.[3] = Char.code str.[1]) then true else
     if(gate2) then
-     if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
+     if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+      abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
     else let new_str = str |> explode in 
       match new_str with 
       | row1::col1::row2::col2::[] -> 
-        if (row2 < row1) then go_down_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2 +1)))) (false)false
-        else go_down_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false)false
+        if (row2 < row1) then go_down_left ((Char.escaped row1)^
+          (Char.escaped col1)^
+        (string_of_int((Char.code row2 - Char.code '0') +1))^
+        (Char.escaped (Char.chr(int_of_char col2 +1)))) (false) false
+        else go_down_left ((Char.escaped row1)^(Char.escaped col1)^
+        (string_of_int((Char.code row2 - Char.code '0') -1))^
+        (Char.escaped (Char.chr(int_of_char col2 -1)))) (false) false
       | _  -> false
 
-  else if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> None then false
-    else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
+  else if Array.get (check3 str) (Char.code str.[3] - Char.code 'a') <> 
+    None then false
+    else if (abs(int_of_char str.[2] - int_of_char str.[0]) = 1 || 
+      abs(Char.code str.[3] - Char.code str.[1]) = 1) then true
     else let new_str = str |> explode in 
     match new_str with 
       | row1::col1::row2::col2::[] -> 
-        if (row2 < row1) then go_down_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') +1))^(Char.escaped (Char.chr(int_of_char col2 +1)))) (false)false
-        else go_down_left ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 -1)))) (false)false
+        if (row2 < row1) then go_down_left ((Char.escaped row1)^
+          (Char.escaped col1)^
+          (string_of_int((Char.code row2 - Char.code '0') +1))^
+          (Char.escaped (Char.chr(int_of_char col2 +1)))) (false) false
+        else go_down_left ((Char.escaped row1)^(Char.escaped col1)^
+        (string_of_int((Char.code row2 - Char.code '0') -1))^
+        (Char.escaped (Char.chr(int_of_char col2 -1)))) (false)false
         | _  -> false
 
-      let check_horizontal str = 
-  (int_of_char (str.[2]) - int_of_char (str.[0]) = 0) && (go_left (get_lower_col str) (get_upper_col str) (check1 str))
+let check_horizontal str = 
+  (int_of_char (str.[2]) - int_of_char (str.[0]) = 0) && 
+  (go_left (get_lower_col str) (get_upper_col str) (check1 str))
 
 let check_vertical str = 
   (Char.code str.[3] - Char.code str.[1] = 0) && (go_down str true) true
 
 let check_diagonal str = 
-  if(abs(int_of_char str.[2] - int_of_char str.[0]) = abs (Char.code str.[3] - Char.code str.[1])) <> true then false else 
-  if((int_of_char str.[2] > int_of_char str.[0]) && (Char.code str.[3] > Char.code str.[1])) then
-    (go_up_right str true) true
-  else if((int_of_char str.[2] > int_of_char str.[0]) && (Char.code str.[3] < Char.code str.[1])) then 
-    (go_up_left str true) true
-  else if((int_of_char str.[2] < int_of_char str.[0]) && (Char.code str.[3] > Char.code str.[1])) then 
-    (go_down_right str true) true
+  if(abs(int_of_char str.[2] - int_of_char str.[0]) = 
+    abs (Char.code str.[3] - Char.code str.[1])) <> true then false else 
+  if((int_of_char str.[2] > int_of_char str.[0]) && 
+    (Char.code str.[3] > Char.code str.[1])) then (go_up_right str true) true
+  else if((int_of_char str.[2] > int_of_char str.[0]) && 
+    (Char.code str.[3] < Char.code str.[1])) then (go_up_left str true) true
+  else if((int_of_char str.[2] < int_of_char str.[0]) && 
+    (Char.code str.[3] > Char.code str.[1])) then (go_down_right str true) true
   else (go_down_left str true) true
 
 let rook_check input = check_vertical input || check_horizontal input
 
 let bishop_check input = check_diagonal input
 
-let queen_check input = check_diagonal input || check_horizontal input || check_vertical input
+let queen_check input = check_diagonal input || check_horizontal input || 
+check_vertical input
 
-let king_check input = (check_horizontal input && abs(Char.code input.[3] - Char.code input.[1]) = 1) || 
-(check_vertical input && abs (int_of_char input.[2] - int_of_char input.[1]) = 1) || 
-(check_diagonal input && (abs(Char.code(input.[3]) - Char.code(input.[1])) = 1) || 
+let king_check input = (check_horizontal input && 
+abs(Char.code input.[3] - Char.code input.[1]) = 1) || 
+(check_vertical input && 
+abs (int_of_char input.[2] - int_of_char input.[1]) = 1) || 
+(check_diagonal input && 
+(abs(Char.code(input.[3]) - Char.code(input.[1])) = 1) || 
 (abs(int_of_char input.[2] - int_of_char input.[0]) = 1))
 
 let knight_check input = ((abs(Char.code input.[3]-Char.code input.[1]) = 2) && 
@@ -223,9 +314,10 @@ let pawn_check input moved color =
     abs(Char.code input.[3] - Char.code input.[1]) <= 1) then 
       let get_element = Array.get (check3 input) ((Char.code input.[3]) - 97) in 
       match get_element with
-      | None -> check_vertical input (* this means that the element is none -> can't go diagonally *)
+      | None -> check_vertical input
       | Some _ -> (check_diagonal input) 
-  else if ((int_of_char input.[2] - int_of_char input.[0] = 2*sign) && (Char.code input.[3] = Char.code input.[1])) && (moved = false) then
+  else if ((int_of_char input.[2] - int_of_char input.[0] = 2*sign) && 
+    (Char.code input.[3] = Char.code input.[1])) && (moved = false) then
     let get_elt = Array.get (check3 input) ((Char.code input.[3]) - 97) in
     match get_elt with
     | None -> true
@@ -276,8 +368,10 @@ let castle i_p input o_p =
       match i_p with 
       | None -> false
       | Some ip ->
-      if (castle i_p input o_p = false && get_color op = get_color ip) then false
-      else if (castle i_p input o_p = true && get_color op <> get_color ip) then false
+      if (castle i_p input o_p = false && get_color op = get_color ip) 
+        then false
+      else if (castle i_p input o_p = true && get_color op <> get_color ip) 
+        then false
       else true 
 
     let promote_pawn input i_p =
@@ -302,10 +396,12 @@ let castle i_p input o_p =
         match y with
         | 8 -> []
         | curry ->  
-          let string_cmd = (ppos^(string_of_int x)^(Char.escaped (Char.chr (y + Char.code 'a')))) in
+          let string_cmd = (ppos^(string_of_int x)^
+          (Char.escaped (Char.chr (y + Char.code 'a')))) in
           let o_pr = check3 string_cmd in (*output piecerow*)
-          let o_p = Array.get o_pr ((Char.code string_cmd.[3]) - 97) in (*output piece*)
-          if check_piece (Some p) string_cmd o_p then (p, string_cmd)::(loopy x (curry+1) p ppos) else (loopy x (curry+1) p ppos)
+          let o_p = Array.get o_pr ((Char.code string_cmd.[3]) - 97) in (*op*)
+          if check_piece (Some p) string_cmd o_p then (p, string_cmd)::
+            (loopy x (curry+1) p ppos) else (loopy x (curry+1) p ppos)
       
       let rec loopx x y p ppos =
         match x with
@@ -319,11 +415,12 @@ let castle i_p input o_p =
           let ppos = 
             match p.position with
             | None -> failwith "p has no position"
-            | Some (col, row) -> (string_of_int row)^(Char.escaped (Char.chr (Char.code col)))
+            | Some (col, row) -> (string_of_int row)^
+            (Char.escaped (Char.chr (Char.code col)))
           in
           loopx 1 0 p ppos @ has_move t
       
-      (*This is the row that corresponds to the output space that the user selects*)
+(*This is the row that corresponds to the output space that the user selects*)
       let checkn3 (str : string) r1 r2 r3 r4 r5 r6 r7 r8 =
         match str.[2] with
         | '1' -> r1
@@ -336,7 +433,7 @@ let castle i_p input o_p =
         | '8' -> r8
         | _ -> raise InvalidInput
       
-            (* given moves, try executing moves and seeing if king is still in check. if not, return false, else recurse*)
+(* given moves, try executing moves and seeing if king is still in check. if not, return false, else recurse*)
       let rec has_legal_move plist king r1 r2 r3 r4 r5 r6 r7 r8= 
         match plist with
         | [] -> false
@@ -348,17 +445,32 @@ let castle i_p input o_p =
             Some (Piece.place_piece (Some (cmd.[3], (int_of_char cmd.[2] - int_of_char '0'))) (Piece.get_color p) (Piece.get_level p) (Piece.get_rep p) true)
           in
             Array.set o_r ((Char.code cmd.[3]) - 97) moved_piece;
-            Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then a_wp:=x::!a_wp else a_bp := x::!a_bp)) arr1;
-            Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then a_wp:=x::!a_wp else a_bp := x::!a_bp)) arr2;
-            Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then a_wp:=x::!a_wp else a_bp := x::!a_bp)) arr3;
-            Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then a_wp:=x::!a_wp else a_bp := x::!a_bp)) arr4;
-            Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then a_wp:=x::!a_wp else a_bp := x::!a_bp)) arr5;
-            Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then a_wp:=x::!a_wp else a_bp := x::!a_bp)) arr6;
-            Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then a_wp:=x::!a_wp else a_bp := x::!a_bp)) arr7;
-            Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then a_wp:=x::!a_wp else a_bp := x::!a_bp)) arr8;
-          if (incheck !a_wp king <> true) then true else has_legal_move t king r1 r2 r3 r4 r5 r6 r7 r8
-      
-      
+            Array.iter (fun y -> match y with | None -> () 
+            | Some x -> (if x.color = White then a_wp:=x::
+              !a_wp else a_bp := x::!a_bp)) arr1;
+            Array.iter (fun y -> match y with | None -> () 
+            | Some x -> (if x.color = White then a_wp:=x::
+              !a_wp else a_bp := x::!a_bp)) arr2;
+            Array.iter (fun y -> match y with | None -> () 
+            | Some x -> (if x.color = White then a_wp:=x::
+              !a_wp else a_bp := x::!a_bp)) arr3;
+            Array.iter (fun y -> match y with | None -> () 
+            | Some x -> (if x.color = White then a_wp:=x::
+              !a_wp else a_bp := x::!a_bp)) arr4;
+            Array.iter (fun y -> match y with | None -> () 
+            | Some x -> (if x.color = White then a_wp:=x::
+              !a_wp else a_bp := x::!a_bp)) arr5;
+            Array.iter (fun y -> match y with | None -> () 
+            | Some x -> (if x.color = White then a_wp:=x::
+              !a_wp else a_bp := x::!a_bp)) arr6;
+            Array.iter (fun y -> match y with | None -> () 
+            | Some x -> (if x.color = White then a_wp:=x::
+              !a_wp else a_bp := x::!a_bp)) arr7;
+            Array.iter (fun y -> match y with | None -> () 
+            | Some x -> (if x.color = White then a_wp:=x::
+              !a_wp else a_bp := x::!a_bp)) arr8;
+          if (incheck !a_wp king <> true) then true else has_legal_move t king 
+          r1 r2 r3 r4 r5 r6 r7 r8
       
       and incheck plist king = 
         let check = ref false in
@@ -368,16 +480,21 @@ let castle i_p input o_p =
           let ppos = 
             match p.position with
             | None -> failwith "p has no position"
-            | Some (col, row) -> (string_of_int row)^(Char.escaped (Char.chr (Char.code col)))
+            | Some (col, row) -> (string_of_int row)^
+            (Char.escaped (Char.chr (Char.code col)))
           in let kpos = match king.position with      
             | None -> failwith "p has no position"
-            | Some (col, row) -> (string_of_int row)^(Char.escaped (Char.chr (Char.code col)))
+            | Some (col, row) -> (string_of_int row)^
+            (Char.escaped (Char.chr (Char.code col)))
           in 
           let o_pr = check3 (ppos^kpos) in (*output piecerow*)
-          let o_p = Array.get o_pr ((Char.code (ppos^kpos).[3]) - 97) in (*output piece*)
+          let o_p = Array.get o_pr ((Char.code (ppos^kpos).[3]) - 97) in (*op*)
           if 
             check_piece (Some p) (ppos^kpos) o_p
           then check:= true else ());
           if !check <> true then incheck t king else true
       
-          let checkmated opp_side_list same_side_list king r1 r2 r3 r4 r5 r6 r7 r8= (incheck opp_side_list king) && ((has_legal_move (has_move same_side_list) king r1 r2 r3 r4 r5 r6 r7 r8) <> true)
+          let checkmated opp_side_list same_side_list king 
+          r1 r2 r3 r4 r5 r6 r7 r8= (incheck opp_side_list king) && 
+          ((has_legal_move (has_move same_side_list) king 
+          r1 r2 r3 r4 r5 r6 r7 r8) <> true)
