@@ -208,3 +208,21 @@ let castle i_p input o_p =
       if (castle i_p input o_p = false && get_color op = get_color ip) then false
       else if (castle i_p input o_p = true && get_color op <> get_color ip) then false
       else true 
+
+    let promote_pawn input i_p =
+      match i_p with
+      | Some i_p -> if get_level i_p = Pawn then (
+        if input.[0] = '7' then
+          if get_color i_p = White then
+            if input.[2] = '8' then true
+            else false
+          else false
+        else if input.[0] = '2' then
+          if get_color i_p = Black then
+            if input.[2] = '1' then true
+            else false
+          else false
+        else false
+      )
+      else false
+      | None -> false

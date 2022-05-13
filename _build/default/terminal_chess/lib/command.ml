@@ -114,7 +114,7 @@ let rec go_diagonal direction str gate gate2 =
         else go_diagonal direction ((Char.escaped row1)^(Char.escaped col1)^(string_of_int((Char.code row2 - Char.code '0') -1))^(Char.escaped (Char.chr(int_of_char col2 +(diagonal_direction))))) (false)false
       | _  -> false
 
-      let check_horizontal str = 
+  let check_horizontal str = 
   (int_of_char (str.[2]) - int_of_char (str.[0]) = 0) && (go_left (get_lower_col str) (get_upper_col str) (check1 str))
 
 let check_vertical str = 
@@ -161,20 +161,24 @@ let pawn_check input moved color =
     | Some _ -> false
   else false
 
-let castle i_p o_p =
+let castle i_p input o_p =
   match i_p, o_p with
   | Some i_p, Some o_p -> 
     if get_level i_p = King then (
       if get_level o_p = Rook then (
         if (have_moved i_p || have_moved o_p) then false
-        else true
-      )
-      else false
+        else if (input.[3]) = 'h' then check_horizontal input
+        else if (input.[3]) = 'a' then check_horizontal input
+        else false
+        )
+        else false
       )
     else if get_level i_p = Rook then (
       if get_level o_p = King then (
         if (have_moved i_p || have_moved o_p) then false
-        else true
+        else if (input.[1]) = 'h' then check_horizontal input
+        else if (input.[1]) = 'a' then check_horizontal input
+        else false
       )
       else false
     )
@@ -192,15 +196,15 @@ let castle i_p o_p =
     else if get_level pc = Bishop then bishop_check str
     else if get_level pc = Knight then knight_check str
     else if get_level pc = Queen then queen_check str
-    else king_check str) || (castle ipc opc)
+    else king_check str) || (castle ipc str opc)
 
-  let color_checker i_p o_p =
+  let color_checker i_p o_p input =
     match o_p with 
     | None -> true
     | Some op -> 
       match i_p with 
       | None -> false
       | Some ip ->
-      if (castle i_p o_p = false && get_color op = get_color ip) then false
-      else if (castle i_p o_p = true && get_color op <> get_color ip) then false
+      if (castle i_p input o_p = false && get_color op = get_color ip) then false
+      else if (castle i_p input o_p = true && get_color op <> get_color ip) then false
       else true 

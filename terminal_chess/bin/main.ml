@@ -14,6 +14,36 @@ let color_matcher board = function
   | None -> raise NoPiece
   | Some space -> board.model.turn <> (space).color
 
+let rec promote_check input piece1=
+match piece1 with
+| None -> print_endline "Sorry, you can't promote an empty space. Try again!";
+promote_check input piece1
+| Some piece ->
+  let prom_command = read_line () in  
+  match prom_command with 
+  | "Queen" -> 
+    if Piece.get_color piece = White then
+      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Queen) ("|  ♕   ") true)
+    else 
+      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Queen) ("|  ♛   ") true)
+  | "Bishop" -> 
+    if Piece.get_color piece = White then
+      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Bishop) ("|  ♗   ") true)
+    else 
+      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Bishop) ("|  ♝   ") true)
+  | "Knight" -> 
+    if Piece.get_color piece = White then
+      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Knight) ("|  ♘   ") true)
+    else 
+      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Knight) ("|  ♞   ") true)
+  | "Rook" -> 
+    if Piece.get_color piece = White then
+      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Rook) ("|  ♖   ") true)
+    else 
+      Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Rook) ("|  ♜   ") true)
+  | _ -> print_endline "Sorry, that's not a valid rank to promote your pawn to. Try again!";
+        promote_check input piece1
+
 let rec filled_input board space =
   try color_matcher board space with
   | NoPiece -> 
@@ -79,13 +109,28 @@ and mover_init board =
           if Command.castle i_p input o_p = false then
           Array.set i_pr ((Char.code input.[1]) - 97) None
           else Array.set i_pr ((Char.code input.[1]) - 97) moved_piece2);
+          if Command.promote_pawn input moved_piece then (
+          print_newline ();
+          print_endline "Congrats! Your pawn has reached the end of the board! What would you like to promote it to?";
+          print_endline "Your options are Queen, Bishop, Knight, or Rook. Please use the following format:";
+          print_endline "Example format: Queen";
+          Array.set o_pr ((Char.code input.[3]) - 97) (promote_check input moved_piece);
           (let new_board2 = {new_board with model = update_turn new_board.model Board.Change} in
           Display.print_board new_board2;
           print_newline ();
           print_endline "Here are your captured pieces:";
           print_list new_board2.graveyard;
           print_newline ();
-          mover_init new_board2))) end
+          mover_init new_board2)) 
+          else (
+          (let new_board2 = {new_board with model = update_turn new_board.model Board.Change} in
+          Display.print_board new_board2;
+          print_newline ();
+          print_endline "Here are your captured pieces:";
+          print_list new_board2.graveyard;
+          print_newline ();
+          mover_init new_board2)))) 
+        end
 
 let () = Display.print_board Display.start_board
 let _ = mover_init Display.start_board
