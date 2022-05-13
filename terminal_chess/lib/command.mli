@@ -47,3 +47,6 @@ val castle: piece option -> string -> piece option -> bool
 val check_piece : piece option -> string -> piece option -> bool 
 val color_checker : piece option -> piece option -> string -> bool
 val promote_pawn : string -> piece option -> bool
+
+val incheck : piece list -> piece -> bool
+val checkmated : piece list -> piece list -> piece -> piecerow -> piecerow -> piecerow -> piecerow -> piecerow -> piecerow -> piecerow -> piecerow -> bool

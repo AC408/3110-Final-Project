@@ -5,6 +5,9 @@ open Board
 open Display
 open Command      
 
+let rec print_avail_p lst = match lst with
+| [] -> ""
+| h::t -> h.rep ^ print_avail_p t
 
 let rec print_list = function 
 | [] -> ()
@@ -61,6 +64,7 @@ and char_in_range str =
     (Char.code str.[3]) > Char.code 'h' || (Char.code str.[3]) < Char.code 'a')
 
 and mover_init board =
+  let avail_wp = ref [] in let avail_bp = ref [] in let w_k = ref whiteking in let b_k = ref blackking in
   print_newline ();
   print_endline "Please enter a move. Example format: move (3,b) (4,c) ";
   let in_command = read_line () in
@@ -82,7 +86,7 @@ and mover_init board =
         (print_endline "Sorry, it's not your turn. Try again later!.";
         mover_init board)
       else 
-        ((let input = Command.parse_mod (in_command) in 
+        (let input = Command.parse_mod (in_command) in 
         let i_pr = Command.check1 input in (*input piecerow*)
         let o_pr = Command.check3 input in (*output piecerow*)
         let i_p = Array.get i_pr ((Char.code input.[1]) - 97) in (*input piece*)
@@ -98,7 +102,7 @@ and mover_init board =
           let moved_piece = 
             match (Array.get i_pr ((Char.code input.[1]) - 97)) with
             | None -> None
-            | Some piece -> Some (Piece.place_piece (Piece.get_position piece) (Piece.get_color piece) (Piece.get_level piece) (Piece.get_rep piece) true)
+            | Some piece -> Some (Piece.place_piece (Some (input.[3], (int_of_char input.[2] - int_of_char '0'))) (Piece.get_color piece) (Piece.get_level piece) (Piece.get_rep piece) true)
           in
           let moved_piece2 =
             match (Array.get o_pr ((Char.code input.[3]) - 97)) with
@@ -125,12 +129,26 @@ and mover_init board =
           else (
           (let new_board2 = {new_board with model = update_turn new_board.model Board.Change} in
           Display.print_board new_board2;
+          Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then avail_wp:=x::!avail_wp else avail_bp := x::!avail_bp); if x = whiteking then w_k:= x else if x = blackking then b_k:=x) new_board2.r1;
+          Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then avail_wp:=x::!avail_wp else avail_bp := x::!avail_bp); if x = whiteking then w_k:= x else if x = blackking then b_k:=x) new_board2.r2;
+          Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then avail_wp:=x::!avail_wp else avail_bp := x::!avail_bp); if x = whiteking then w_k:= x else if x = blackking then b_k:=x) new_board2.r3;
+          Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then avail_wp:=x::!avail_wp else avail_bp := x::!avail_bp); if x = whiteking then w_k:= x else if x = blackking then b_k:=x) new_board2.r4;
+          Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then avail_wp:=x::!avail_wp else avail_bp := x::!avail_bp); if x = whiteking then w_k:= x else if x = blackking then b_k:=x) new_board2.r5;
+          Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then avail_wp:=x::!avail_wp else avail_bp := x::!avail_bp); if x = whiteking then w_k:= x else if x = blackking then b_k:=x) new_board2.r6;
+          Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then avail_wp:=x::!avail_wp else avail_bp := x::!avail_bp); if x = whiteking then w_k:= x else if x = blackking then b_k:=x) new_board2.r7;
+          Array.iter (fun y -> match y with | None -> () | Some x -> (if x.color = White then avail_wp:=x::!avail_wp else avail_bp := x::!avail_bp); if x = whiteking then w_k:= x else if x = blackking then b_k:=x) new_board2.r8;
           print_newline ();
           print_endline "Here are your captured pieces:";
           print_list new_board2.graveyard;
           print_newline ();
-          mover_init new_board2)))) 
-        end
+          if (board.model.turn = White) then 
+            if (Command.checkmated !avail_wp !avail_bp !b_k new_board2.r1 new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5 new_board2.r6 new_board2.r7 new_board2.r8)
+              then (print_endline "Checkmate!"; false)
+            else mover_init new_board2
+          else 
+            if (Command.checkmated !avail_bp !avail_wp !w_k new_board2.r1 new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5 new_board2.r6 new_board2.r7 new_board2.r8)
+              then (print_endline "Checkmate!"; false)
+             else mover_init new_board2))) end
 
 let () = Display.print_board Display.start_board
 let _ = mover_init Display.start_board
