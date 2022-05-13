@@ -139,7 +139,11 @@ and mover_init board =
       (*ip*)
       let o_p = Array.get o_pr (Char.code input.[3] - 97) in
       (*op*)
-      if check_piece i_p input o_p = false then (
+      if
+        check_piece i_p input o_p true row1 row2 row3 row4 row5 row6
+          row7 row8
+        = false
+      then (
         print_endline
           "Sorry, either this piece doesn't move that way or that's \
            not a valid castling";
