@@ -302,9 +302,18 @@ and mover_init board =
           print_endline "Here are your captured pieces:";
           print_list new_board2.graveyard;
           print_newline ();
-          if board.model.turn = White then
-            (* (if (Command.incheck !avail_bp !w_k) then print_endline
-               "White Player Now In Check!" else (); *)
+          if board.model.turn = White then (
+            if
+              Command.incheck !avail_wp !b_k false row1 row2 row3 row4
+                row5 row6 row7 row8
+            then print_endline "Black Player Now In Check!"
+            else ();
+            if
+              Command.has_move !avail_bp row1 row2 row3 row4 row5 row6
+                row7 row8
+              = []
+            then print_endline "Black Player Now In Stalemate!"
+            else ();
             if
               Command.checkmated !avail_wp !avail_bp !b_k new_board2.r1
                 new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5
@@ -312,17 +321,27 @@ and mover_init board =
             then (
               print_endline "Checkmate!";
               false)
-            else mover_init new_board2
-          else if
-            (* (if (Command.incheck !avail_wp !b_k) then print_endline
-               "Black Player Now In Check!" else (); *)
-            Command.checkmated !avail_bp !avail_wp !w_k new_board2.r1
-              new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5
-              new_board2.r6 new_board2.r7 new_board2.r8
-          then (
-            print_endline "Checkmate!";
-            false)
-          else mover_init new_board2
+            else mover_init new_board2)
+          else (
+            if
+              Command.incheck !avail_bp !w_k false row1 row2 row3 row4
+                row5 row6 row7 row8
+            then print_endline "White Player Now In Check!"
+            else ();
+            if
+              Command.has_move !avail_wp row1 row2 row3 row4 row5 row6
+                row7 row8
+              = []
+            then print_endline "White Player Now In Stalemate!"
+            else ();
+            if
+              Command.checkmated !avail_bp !avail_wp !w_k new_board2.r1
+                new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5
+                new_board2.r6 new_board2.r7 new_board2.r8
+            then (
+              print_endline "Checkmate!";
+              false)
+            else mover_init new_board2)
 
 let () = Display.print_board Display.start_board
 
