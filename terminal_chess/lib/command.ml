@@ -223,30 +223,16 @@ let check_vertical str is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   && (go_down str true) true is_sim r1 r2 r3 r4 r5 r6 r7 r8
 
 let check_diagonal str is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
-  if
-    abs (int_of_char str.[2] - int_of_char str.[0])
-    = abs (Char.code str.[3] - Char.code str.[1])
-    <> true
-  then false
-  else if
-    int_of_char str.[2] > int_of_char str.[0]
-    && Char.code str.[3] > Char.code str.[1]
+  let col_dif = Char.code str.[3] - Char.code str.[1] in
+  let row_diff = int_of_char str.[2] - int_of_char str.[0] in
+  if abs row_diff = abs col_dif <> true then false
+  else if (row_diff > 0 && col_dif > 0) || (row_diff < 0 && col_dif < 0)
   then
-    (go_diagonal "up_right" str true)
-      true is_sim r1 r2 r3 r4 r5 r6 r7 r8
-  else if
-    int_of_char str.[2] > int_of_char str.[0]
-    && Char.code str.[3] < Char.code str.[1]
+    go_diagonal "up_right" str true true is_sim r1 r2 r3 r4 r5 r6 r7 r8
+  else if (row_diff > 0 && col_dif < 0) || (row_diff < 0 && col_dif > 0)
   then
-    (go_diagonal "up_left" str true) true is_sim r1 r2 r3 r4 r5 r6 r7 r8
-  else if
-    int_of_char str.[2] < int_of_char str.[0]
-    && Char.code str.[3] > Char.code str.[1]
-  then
-    (go_diagonal "up_left" str true) true is_sim r1 r2 r3 r4 r5 r6 r7 r8
-  else
-    (go_diagonal "up_right" str true)
-      true is_sim r1 r2 r3 r4 r5 r6 r7 r8
+    go_diagonal "up_left" str true true is_sim r1 r2 r3 r4 r5 r6 r7 r8
+  else false
 
 let rook_check input is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   check_vertical input is_sim r1 r2 r3 r4 r5 r6 r7 r8
