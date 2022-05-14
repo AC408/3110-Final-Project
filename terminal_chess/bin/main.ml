@@ -109,15 +109,17 @@ and mover_init board =
   let w_k = ref whiteking in
   let b_k = ref blackking in
   print_newline ();
-  let whoseturn = "Currently it is " ^ (Board.get_turn board.model) ^ "'s turn." in
+  let whoseturn =
+    "Currently it is " ^ Board.get_turn board.model ^ "'s turn."
+  in
   print_endline whoseturn;
   print_endline "Please enter a move. Example format: move (3,b) (4,c) ";
   let in_command = read_line () in
   if Command.check_quit in_command then Stdlib.exit 0
   else if wrong_input in_command = "wrong move" then mover_init board
   else if
-    List.hd (Command.parse in_command) <> "move"
-    || char_in_range (Command.parse_mod in_command)
+    Command.parse in_command |> List.hd <> "move"
+    || Command.parse_mod in_command |> char_in_range
   then (
     print_endline
       "Sorry, that doesn't work. Check your input and try again.";
@@ -125,9 +127,10 @@ and mover_init board =
   else if wrong_input in_command = "wrong move" then mover_init board
   else
     let input = Command.parse_mod in_command in
+    let oc_rel_a = Char.code input.[3] - Char.code 'a' in
+    let ic_rel_a = Char.code input.[1] - Char.code 'a' in
     if
-      filled_input board
-        (Array.get (Command.check1 input) (Char.code input.[1] - 97))
+      ic_rel_a |> Array.get (Command.check1 input) |> filled_input board
     then (
       print_endline "Sorry, it's not your turn. Try again later!.";
       mover_init board)
@@ -137,9 +140,9 @@ and mover_init board =
       (*input piecerow*)
       let o_pr = Command.check3 input in
       (*output piecerow*)
-      let i_p = Array.get i_pr (Char.code input.[1] - 97) in
+      let i_p = Array.get i_pr ic_rel_a in
       (*ip*)
-      let o_p = Array.get o_pr (Char.code input.[3] - 97) in
+      let o_p = Array.get o_pr oc_rel_a in
       (*op*)
       if
         check_piece i_p input o_p true row1 row2 row3 row4 row5 row6
@@ -163,7 +166,7 @@ and mover_init board =
         in
         (* new_board checks if output position is occupied *)
         let moved_piece =
-          match Array.get i_pr (Char.code input.[1] - 97) with
+          match Array.get i_pr ic_rel_a with
           | None -> None
           | Some piece ->
               Some
@@ -175,7 +178,7 @@ and mover_init board =
                    (Piece.get_rep piece) true)
         in
         let moved_piece2 =
-          match Array.get o_pr (Char.code input.[3] - 97) with
+          match Array.get o_pr oc_rel_a with
           | None -> None
           | Some piece ->
               Some
@@ -184,10 +187,10 @@ and mover_init board =
                    (Piece.get_color piece) (Piece.get_level piece)
                    (Piece.get_rep piece) true)
         in
-        Array.set o_pr (Char.code input.[3] - 97) moved_piece;
+        Array.set o_pr oc_rel_a moved_piece;
         if Command.castle i_p input o_p = false then
-          Array.set i_pr (Char.code input.[1] - 97) None
-        else Array.set i_pr (Char.code input.[1] - 97) moved_piece2;
+          Array.set i_pr ic_rel_a None
+        else Array.set i_pr ic_rel_a moved_piece2;
         if Command.promote_pawn input moved_piece then (
           print_newline ();
           print_endline
@@ -197,9 +200,7 @@ and mover_init board =
             "Your options are Queen, Bishop, Knight, or Rook. Please \
              use the following format:";
           print_endline "Example format: Queen";
-          Array.set o_pr
-            (Char.code input.[3] - 97)
-            (promote_check input moved_piece);
+          promote_check input moved_piece |> Array.set o_pr oc_rel_a;
           let new_board2 =
             {
               new_board with

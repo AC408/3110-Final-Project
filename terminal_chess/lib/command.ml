@@ -23,7 +23,7 @@ let rec explode str =
   | "" -> []
   | st ->
       String.get str 0
-      :: explode (String.sub st 1 (String.length str - 1))
+      :: (String.length str - 1 |> String.sub st 1 |> explode)
 
 (* checks whether the 2 element from check_valid_move is in the format
    (a,b) and returns ab *)
@@ -42,7 +42,8 @@ let check_valid_move str =
   match str with
   | [] -> raise EmptyCommand
   | [ _; curr; next ] ->
-      check_format (explode curr) ^ check_format (explode next)
+      explode curr |> check_format
+      |> ( ^ ) (explode next |> check_format)
   | _ -> raise InvalidInput
 
 (* returns true if the string list starts with "quit" else false *)
@@ -102,13 +103,11 @@ let rec go_left lower_col upper_col row =
   else go_left lower_col (upper_col - 1) row
 
 let rec go_down str gate gate2 is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
+  let row_diff = int_of_char str.[2] - int_of_char str.[0] in
   if gate then
-    if
-      int_of_char str.[2] = int_of_char str.[0] - 1
-      || int_of_char str.[2] = int_of_char str.[0] + 1
-    then true
+    if row_diff |> abs = 1 then true
     else go_down str false true is_sim r1 r2 r3 r4 r5 r6 r7 r8
-  else if int_of_char str.[2] = int_of_char str.[0] then true
+  else if row_diff = 0 then true
   else if gate2 then
     let new_str = str |> explode in
     match new_str with
@@ -174,7 +173,6 @@ let rec go_diagonal
   let check_fun =
     if is_sim then checkn3 str r1 r2 r3 r4 r5 r6 r7 r8 else check3 str
   in
-
   if gate then
     if abs row_diff = 1 || abs col_diff = 1 then true
     else
@@ -182,7 +180,7 @@ let rec go_diagonal
         r8
   else if abs row_diff <= 1 || abs col_diff <= 1 then true
   else if
-    Array.get check_fun (Char.code str.[3] - Char.code 'a') <> None
+    Char.code str.[3] - Char.code 'a' |> Array.get check_fun <> None
     && gate2 == false
   then false
   else
@@ -192,33 +190,32 @@ let rec go_diagonal
         if row2 < row1 then
           go_diagonal direction
             (Char.escaped row1 ^ Char.escaped col1
-            ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-            ^ Char.escaped
-                (Char.chr (int_of_char col2 + diagonal_direction)))
+            ^ (Char.code row2 - Char.code '0' + 1 |> string_of_int)
+            ^ (int_of_char col2 + diagonal_direction
+              |> Char.chr |> Char.escaped))
             false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
         else
           go_diagonal direction
             (Char.escaped row1 ^ Char.escaped col1
-            ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-            ^ Char.escaped
-                (Char.chr (int_of_char col2 - diagonal_direction)))
+            ^ (Char.code row2 - Char.code '0' - 1 |> string_of_int)
+            ^ (int_of_char col2 + diagonal_direction
+              |> Char.chr |> Char.escaped))
             false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
     | _ -> false
 
 let check_horizontal str =
   let int_a = Char.code 'a' in
   let o_gt_i = Char.code str.[3] > Char.code str.[1] in
-  let get_upper_col str =
+  let get_upper_col =
     if o_gt_i then Char.code str.[3] - int_a
     else Char.code str.[1] - int_a
   in
-  let get_lower_col str =
-    if Char.code str.[3] > Char.code str.[1] then
-      Char.code str.[1] - int_a
+  let get_lower_col =
+    if o_gt_i then Char.code str.[1] - int_a
     else Char.code str.[3] - int_a
   in
   int_of_char str.[2] - int_of_char str.[0] = 0
-  && go_left (get_lower_col str) (get_upper_col str) (check1 str)
+  && go_left get_lower_col get_upper_col (check1 str)
 
 let check_vertical str is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   Char.code str.[3] - Char.code str.[1] = 0
@@ -249,17 +246,17 @@ let queen_check input is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   || check_vertical input is_sim r1 r2 r3 r4 r5 r6 r7 r8
 
 let king_check input is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
-  abs (Char.code input.[3] - Char.code input.[1]) = 1
-  && abs (int_of_char input.[2] - int_of_char input.[0]) = 1
+  Char.code input.[3] - Char.code input.[1] |> abs = 1
+  && int_of_char input.[2] - int_of_char input.[0] |> abs = 1
   && (check_horizontal input
      || check_vertical input is_sim r1 r2 r3 r4 r5 r6 r7 r8
      || check_diagonal input is_sim r1 r2 r3 r4 r5 r6 r7 r8)
 
 let knight_check input =
-  abs (Char.code input.[3] - Char.code input.[1]) = 2
-  && abs (int_of_char input.[2] - int_of_char input.[0]) = 1
-  || abs (int_of_char input.[2] - int_of_char input.[0]) = 2
-     && abs (Char.code input.[3] - Char.code input.[1]) = 1
+  Char.code input.[3] - Char.code input.[1] |> abs = 2
+  && int_of_char input.[2] - int_of_char input.[0] |> abs = 1
+  || int_of_char input.[2] - int_of_char input.[0] |> abs = 2
+     && Char.code input.[3] - Char.code input.[1] |> abs = 1
 
 let pawn_check input moved color is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   let sign = if color = White then 1 else -1 in
@@ -352,20 +349,22 @@ let rec loop_y x y p ppos r1 r2 r3 r4 r5 r6 r7 r8 =
   | curr_y ->
       let string_cmd =
         ppos ^ string_of_int x
-        ^ Char.escaped (Char.chr (y + Char.code 'a'))
+        ^ (y + Char.code 'a' |> Char.chr |> Char.escaped)
       in
       let o_pr = check3 string_cmd in
       (*output piecerow*)
-      let o_p = Array.get o_pr (Char.code string_cmd.[3] - 97) in
+      let o_p =
+        Char.code string_cmd.[3] - Char.code 'a' |> Array.get o_pr
+      in
       (*output piece*)
+      let new_y = curr_y + 1 in
       if
         check_piece (Some p) string_cmd o_p false r1 r2 r3 r4 r5 r6 r7
           r8
         && color_checker (Some p) o_p string_cmd
       then
-        (p, string_cmd)
-        :: loop_y x (curr_y + 1) p ppos r1 r2 r3 r4 r5 r6 r7 r8
-      else loop_y x (curr_y + 1) p ppos r1 r2 r3 r4 r5 r6 r7 r8
+        (p, string_cmd) :: loop_y x new_y p ppos r1 r2 r3 r4 r5 r6 r7 r8
+      else loop_y x new_y p ppos r1 r2 r3 r4 r5 r6 r7 r8
 
 let rec loop_x x y p ppos r1 r2 r3 r4 r5 r6 r7 r8 =
   match x with
@@ -406,7 +405,8 @@ let rec has_legal_move plist king r1 r2 r3 r4 r5 r6 r7 r8 =
           (Piece.get_color p) (Piece.get_level p) (Piece.get_rep p) true
       in
       if p = king then k := moved_piece;
-      Array.set o_r (Char.code cmd.[3] - 97) (Some moved_piece);
+      Some moved_piece
+      |> Array.set o_r (Char.code cmd.[3] - Char.code 'a');
       Array.iter
         (fun y ->
           match y with
@@ -499,7 +499,7 @@ and incheck plist king is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
         else check3 cmd
       in
       (*output piecerow*)
-      let o_p = Array.get o_pr (Char.code cmd.[3] - 97) in
+      let o_p = Char.code cmd.[3] - Char.code 'a' |> Array.get o_pr in
       (*output piece*)
       if check_piece (Some p) cmd o_p is_sim r1 r2 r3 r4 r5 r6 r7 r8
       then false
