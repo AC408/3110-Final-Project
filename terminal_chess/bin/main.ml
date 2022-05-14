@@ -109,6 +109,8 @@ and mover_init board =
   let w_k = ref whiteking in
   let b_k = ref blackking in
   print_newline ();
+  let whoseturn = "Currently it is " ^ (Board.get_turn board.model) ^ "'s turn." in
+  print_endline whoseturn;
   print_endline "Please enter a move. Example format: move (3,b) (4,c) ";
   let in_command = read_line () in
   if Command.check_quit in_command then Stdlib.exit 0
