@@ -17,6 +17,8 @@ type position = (char * int) option
 
 exception NoPiece
 
+exception NoPosition
+
 type piece = {
   position : position;
   color : color;
@@ -36,6 +38,10 @@ val get_color : piece -> color
 
 val get_position : piece -> (char * int) option
 (** [get_position p] returns the position of the piece [p]. *)
+
+val string_of_pos : piece -> string
+(** [get_position p] returns the position of the piece [p]. Raises
+    NoPosition if position is None *)
 
 val get_rep : piece -> string
 (** [get_rep p] returns the rep of the piece [p] *)
