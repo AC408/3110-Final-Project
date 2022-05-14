@@ -50,11 +50,8 @@ let row7 =
   |]
 
 let row6 = [| None; None; None; None; None; None; None; None |]
-
 let row5 = [| None; None; None; None; None; None; None; None |]
-
 let row4 = [| None; None; None; None; None; None; None; None |]
-
 let row3 = [| None; None; None; None; None; None; None; None |]
 
 let row2 =
@@ -82,7 +79,6 @@ let row1 =
   |]
 
 let sep = "----------------------------------------------------------"
-
 let lett = "    a      b      c      d      e      f      g      h    "
 
 let start_board =

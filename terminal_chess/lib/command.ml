@@ -6,9 +6,7 @@ open Display
 open Piece
 
 exception InvalidInput
-
 exception EmptyCommand
-
 exception InvalidQuit
 
 (* given a list of string, removes empty string element *)

@@ -39,23 +39,14 @@ let blackknight2 =
   place_piece (Some ('g', 8)) Black Knight "|  ♞   " false
 
 let blackrook2 = place_piece (Some ('h', 8)) Black Rook "|  ♜   " false
-
 let blackpawn1 = place_piece (Some ('a', 7)) Black Pawn "|  ♟   " false
-
 let blackpawn2 = place_piece (Some ('b', 7)) Black Pawn "|  ♟   " false
-
 let blackpawn3 = place_piece (Some ('c', 7)) Black Pawn "|  ♟   " false
-
 let blackpawn4 = place_piece (Some ('d', 7)) Black Pawn "|  ♟   " false
-
 let blackpawn5 = place_piece (Some ('e', 7)) Black Pawn "|  ♟   " false
-
 let blackpawn6 = place_piece (Some ('f', 7)) Black Pawn "|  ♟   " false
-
 let blackpawn7 = place_piece (Some ('g', 7)) Black Pawn "|  ♟   " false
-
 let blackpawn8 = place_piece (Some ('h', 7)) Black Pawn "|  ♟   " false
-
 let whiterook1 = place_piece (Some ('a', 1)) White Rook "|  ♖   " false
 
 let whiteknight1 =
@@ -75,19 +66,11 @@ let whiteknight2 =
   place_piece (Some ('g', 1)) White Knight "|  ♘   " false
 
 let whiterook2 = place_piece (Some ('h', 1)) White Rook "|  ♖   " false
-
 let whitepawn1 = place_piece (Some ('a', 2)) White Pawn "|  ♙   " false
-
 let whitepawn2 = place_piece (Some ('b', 2)) White Pawn "|  ♙   " false
-
 let whitepawn3 = place_piece (Some ('c', 2)) White Pawn "|  ♙   " false
-
 let whitepawn4 = place_piece (Some ('d', 2)) White Pawn "|  ♙   " false
-
 let whitepawn5 = place_piece (Some ('e', 2)) White Pawn "|  ♙   " false
-
 let whitepawn6 = place_piece (Some ('f', 2)) White Pawn "|  ♙   " false
-
 let whitepawn7 = place_piece (Some ('g', 2)) White Pawn "|  ♙   " false
-
 let whitepawn8 = place_piece (Some ('h', 2)) White Pawn "|  ♙   " false

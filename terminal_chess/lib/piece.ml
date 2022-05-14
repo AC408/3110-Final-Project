@@ -28,11 +28,8 @@ let rep space =
   | Some space -> space.rep
 
 let get_level p = p.level
-
 let get_color p = p.color
-
 let get_position p = p.position
-
 let get_rep p = p.rep
 
 let place_piece pos c l rep move =
