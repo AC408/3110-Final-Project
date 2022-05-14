@@ -246,14 +246,6 @@ let queen_check input is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   || check_horizontal input
   || check_vertical input is_sim r1 r2 r3 r4 r5 r6 r7 r8
 
-(* let king_check input is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
-   check_horizontal input && abs (Char.code input.[3] - Char.code
-   input.[1]) = 1 || check_vertical input is_sim r1 r2 r3 r4 r5 r6 r7 r8
-   && abs (int_of_char input.[2] - int_of_char input.[1]) = 1 ||
-   check_diagonal input is_sim r1 r2 r3 r4 r5 r6 r7 r8 && abs (Char.code
-   input.[3] - Char.code input.[1]) = 1 || abs (int_of_char input.[2] -
-   int_of_char input.[0]) = 1 *)
-
 let king_check input is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   abs (Char.code input.[3] - Char.code input.[1]) = 1
   && abs (int_of_char input.[2] - int_of_char input.[0]) = 1
@@ -398,12 +390,7 @@ let rec has_move plist r1 r2 r3 r4 r5 r6 r7 r8 =
   match plist with
   | [] -> []
   | p :: t ->
-      let ppos =
-        match p.position with
-        | None -> failwith "p has no position"
-        | Some (col, row) ->
-            string_of_int row ^ Char.escaped (Char.chr (Char.code col))
-      in
+      let ppos = string_of_pos p in
       loopx 1 0 p ppos r1 r2 r3 r4 r5 r6 r7 r8
       @ has_move t r1 r2 r3 r4 r5 r6 r7 r8
 
@@ -518,18 +505,8 @@ and incheck plist king is_real r1 r2 r3 r4 r5 r6 r7 r8 =
   match plist with
   | [] -> false
   | p :: t ->
-      let ppos =
-        match p.position with
-        | None -> failwith "p has no position"
-        | Some (col, row) ->
-            string_of_int row ^ Char.escaped (Char.chr (Char.code col))
-      in
-      let kpos =
-        match king.position with
-        | None -> failwith "p has no position"
-        | Some (col, row) ->
-            string_of_int row ^ Char.escaped (Char.chr (Char.code col))
-      in
+      let ppos = string_of_pos p in
+      let kpos = string_of_pos king in
       let o_pr =
         if is_real then check3 (ppos ^ kpos)
         else checkn3 (ppos ^ kpos) r1 r2 r3 r4 r5 r6 r7 r8
