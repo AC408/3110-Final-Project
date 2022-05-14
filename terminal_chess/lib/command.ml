@@ -6,7 +6,9 @@ open Display
 open Piece
 
 exception InvalidInput
+
 exception EmptyCommand
+
 exception InvalidQuit
 
 (* given a list of string, removes empty string element *)
@@ -162,263 +164,53 @@ let rec go_down str gate gate2 is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
             false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
     | _ -> false
 
-let rec go_up_right str gate gate2 is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
+let rec go_diagonal
+    direction
+    str
+    gate
+    gate2
+    is_sim
+    r1
+    r2
+    r3
+    r4
+    r5
+    r6
+    r7
+    r8 =
+  let diagonal_direction = if direction = "up_right" then 1 else -1 in
+  let row_diff = int_of_char str.[2] - int_of_char str.[0] in
+  let col_diff = Char.code str.[3] - Char.code str.[1] in
+  let check_fun =
+    if is_sim then checkn3 str r1 r2 r3 r4 r5 r6 r7 r8 else check3 str
+  in
   if gate then
-    if
-      abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-      || abs (Char.code str.[3] - Char.code str.[1]) = 1
-    then true
-    else go_up_right str false true is_sim r1 r2 r3 r4 r5 r6 r7 r8
-  else if
-    int_of_char str.[2] = int_of_char str.[0]
-    && Char.code str.[3] = Char.code str.[1]
-  then true
-  else if gate2 = true then
-    if
-      abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-      || abs (Char.code str.[3] - Char.code str.[1]) = 1
-    then true
+    if abs row_diff = 1 || abs col_diff = 1 then true
     else
-      let new_str = str |> explode in
-      match new_str with
-      | [ row1; col1; row2; col2 ] ->
-          if row1 < row2 then
-            go_up_right
-              (Char.escaped row1 ^ Char.escaped col1
-              ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-              ^ Char.escaped (Char.chr (int_of_char col2 - 1)))
-              false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-          else
-            go_up_right
-              (Char.escaped row1 ^ Char.escaped col1
-              ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-              ^ Char.escaped (Char.chr (int_of_char col2 + 1)))
-              false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-      | _ -> false
+      go_diagonal direction str false true is_sim r1 r2 r3 r4 r5 r6 r7
+        r8
+  else if abs row_diff <= 1 || abs col_diff <= 1 then true
   else if
-    let checkarr =
-      if is_sim then
-        Array.get
-          (checkn3 str r1 r2 r3 r4 r5 r6 r7 r8)
-          (Char.code str.[3] - Char.code 'a')
-      else Array.get (check3 str) (Char.code str.[3] - Char.code 'a')
-    in
-    checkarr <> None
+    Array.get check_fun (Char.code str.[3] - Char.code 'a') <> None
+    && gate2 == false
   then false
-  else if
-    abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-    || abs (Char.code str.[3] - Char.code str.[1]) = 1
-  then true
-  else
-    let new_str = str |> explode in
-    match new_str with
-    | [ row1; col1; row2; col2 ] ->
-        if row1 < row2 then
-          go_up_right
-            (Char.escaped row1 ^ Char.escaped col1
-            ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-            ^ Char.escaped (Char.chr (int_of_char col2 - 1)))
-            false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-        else
-          go_up_right
-            (Char.escaped row1 ^ Char.escaped col1
-            ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-            ^ Char.escaped (Char.chr (int_of_char col2 + 1)))
-            false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-    | _ -> false
-
-let rec go_down_right str gate gate2 is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
-  if gate then
-    if
-      abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-      || abs (Char.code str.[3] - Char.code str.[1]) = 1
-    then true
-    else go_down_right str false true is_sim r1 r2 r3 r4 r5 r6 r7 r8
-  else if
-    int_of_char str.[2] = int_of_char str.[0]
-    && Char.code str.[3] = Char.code str.[1]
-  then true
-  else if gate2 = true then
-    if
-      abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-      || abs (Char.code str.[3] - Char.code str.[1]) = 1
-    then true
-    else
-      let new_str = str |> explode in
-      match new_str with
-      | [ row1; col1; row2; col2 ] ->
-          if row2 < row1 then
-            go_down_right
-              (Char.escaped row1 ^ Char.escaped col1
-              ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-              ^ Char.escaped (Char.chr (int_of_char col2 - 1)))
-              false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-          else
-            go_down_right
-              (Char.escaped row1 ^ Char.escaped col1
-              ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-              ^ Char.escaped (Char.chr (int_of_char col2 + 1)))
-              false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-      | _ -> false
-  else if
-    let checkarr =
-      if is_sim then
-        Array.get
-          (checkn3 str r1 r2 r3 r4 r5 r6 r7 r8)
-          (Char.code str.[3] - Char.code 'a')
-      else Array.get (check3 str) (Char.code str.[3] - Char.code 'a')
-    in
-    checkarr <> None
-  then false
-  else if
-    abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-    || abs (Char.code str.[3] - Char.code str.[1]) = 1
-  then true
   else
     let new_str = str |> explode in
     match new_str with
     | [ row1; col1; row2; col2 ] ->
         if row2 < row1 then
-          go_down_right
+          go_diagonal direction
             (Char.escaped row1 ^ Char.escaped col1
             ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-            ^ Char.escaped (Char.chr (int_of_char col2 - 1)))
+            ^ Char.escaped
+                (Char.chr (int_of_char col2 + diagonal_direction)))
             false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
         else
-          go_down_right
+          go_diagonal direction
             (Char.escaped row1 ^ Char.escaped col1
             ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-            ^ Char.escaped (Char.chr (int_of_char col2 + 1)))
-            false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-    | _ -> false
-
-let rec go_up_left str gate gate2 is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
-  if gate then
-    if
-      abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-      || abs (Char.code str.[3] - Char.code str.[1]) = 1
-    then true
-    else go_up_left str false true is_sim r1 r2 r3 r4 r5 r6 r7 r8
-  else if
-    int_of_char str.[2] = int_of_char str.[0]
-    && Char.code str.[3] = Char.code str.[1]
-  then true
-  else if gate2 then
-    if
-      abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-      || abs (Char.code str.[3] - Char.code str.[1]) = 1
-    then true
-    else
-      let new_str = str |> explode in
-      match new_str with
-      | [ row1; col1; row2; col2 ] ->
-          if row1 < row2 then
-            go_up_left
-              (Char.escaped row1 ^ Char.escaped col1
-              ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-              ^ Char.escaped (Char.chr (int_of_char col2 + 1)))
-              false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-          else
-            go_up_left
-              (Char.escaped row1 ^ Char.escaped col1
-              ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-              ^ Char.escaped (Char.chr (int_of_char col2 - 1)))
-              false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-      | _ -> false
-  else if
-    let checkarr =
-      if is_sim then
-        Array.get
-          (checkn3 str r1 r2 r3 r4 r5 r6 r7 r8)
-          (Char.code str.[3] - Char.code 'a')
-      else Array.get (check3 str) (Char.code str.[3] - Char.code 'a')
-    in
-    checkarr <> None
-  then false
-  else if
-    abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-    || abs (Char.code str.[3] - Char.code str.[1]) = 1
-  then true
-  else
-    let new_str = str |> explode in
-    match new_str with
-    | [ row1; col1; row2; col2 ] ->
-        if row1 < row2 then
-          go_up_left
-            (Char.escaped row1 ^ Char.escaped col1
-            ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-            ^ Char.escaped (Char.chr (int_of_char col2 + 1)))
-            false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-        else
-          go_up_left
-            (Char.escaped row1 ^ Char.escaped col1
-            ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-            ^ Char.escaped (Char.chr (int_of_char col2 - 1)))
-            false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-    | _ -> false
-
-let rec go_down_left str gate gate2 is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
-  if gate then
-    if
-      abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-      || abs (Char.code str.[3] - Char.code str.[1]) = 1
-    then true
-    else go_down_left str false true is_sim r1 r2 r3 r4 r5 r6 r7 r8
-  else if
-    int_of_char str.[2] = int_of_char str.[0]
-    && Char.code str.[3] = Char.code str.[1]
-  then true
-  else if gate2 then
-    if
-      abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-      || abs (Char.code str.[3] - Char.code str.[1]) = 1
-    then true
-    else
-      let new_str = str |> explode in
-      match new_str with
-      | [ row1; col1; row2; col2 ] ->
-          if row2 < row1 then
-            go_down_left
-              (Char.escaped row1 ^ Char.escaped col1
-              ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-              ^ Char.escaped (Char.chr (int_of_char col2 + 1)))
-              false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-          else
-            go_down_left
-              (Char.escaped row1 ^ Char.escaped col1
-              ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-              ^ Char.escaped (Char.chr (int_of_char col2 - 1)))
-              false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-      | _ -> false
-  else if
-    let checkarr =
-      if is_sim then
-        Array.get
-          (checkn3 str r1 r2 r3 r4 r5 r6 r7 r8)
-          (Char.code str.[3] - Char.code 'a')
-      else Array.get (check3 str) (Char.code str.[3] - Char.code 'a')
-    in
-    checkarr <> None
-  then false
-  else if
-    abs (int_of_char str.[2] - int_of_char str.[0]) = 1
-    || abs (Char.code str.[3] - Char.code str.[1]) = 1
-  then true
-  else
-    let new_str = str |> explode in
-    match new_str with
-    | [ row1; col1; row2; col2 ] ->
-        if row2 < row1 then
-          go_down_left
-            (Char.escaped row1 ^ Char.escaped col1
-            ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-            ^ Char.escaped (Char.chr (int_of_char col2 + 1)))
-            false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
-        else
-          go_down_left
-            (Char.escaped row1 ^ Char.escaped col1
-            ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-            ^ Char.escaped (Char.chr (int_of_char col2 - 1)))
+            ^ Char.escaped
+                (Char.chr (int_of_char col2 - diagonal_direction)))
             false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
     | _ -> false
 
@@ -439,16 +231,22 @@ let check_diagonal str is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   else if
     int_of_char str.[2] > int_of_char str.[0]
     && Char.code str.[3] > Char.code str.[1]
-  then (go_up_right str true) true is_sim r1 r2 r3 r4 r5 r6 r7 r8
+  then
+    (go_diagonal "up_right" str true)
+      true is_sim r1 r2 r3 r4 r5 r6 r7 r8
   else if
     int_of_char str.[2] > int_of_char str.[0]
     && Char.code str.[3] < Char.code str.[1]
-  then (go_up_left str true) true is_sim r1 r2 r3 r4 r5 r6 r7 r8
+  then
+    (go_diagonal "up_left" str true) true is_sim r1 r2 r3 r4 r5 r6 r7 r8
   else if
     int_of_char str.[2] < int_of_char str.[0]
     && Char.code str.[3] > Char.code str.[1]
-  then (go_down_right str true) true is_sim r1 r2 r3 r4 r5 r6 r7 r8
-  else (go_down_left str true) true is_sim r1 r2 r3 r4 r5 r6 r7 r8
+  then
+    (go_diagonal "up_left" str true) true is_sim r1 r2 r3 r4 r5 r6 r7 r8
+  else
+    (go_diagonal "up_right" str true)
+      true is_sim r1 r2 r3 r4 r5 r6 r7 r8
 
 let rook_check input is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   check_vertical input is_sim r1 r2 r3 r4 r5 r6 r7 r8
