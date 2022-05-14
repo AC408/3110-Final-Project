@@ -299,7 +299,7 @@ and mover_init board =
                   else if x = blackking then b_k := x)
             new_board2.r8;
           print_newline ();
-          print_endline "Here are your captured pieces:";
+          print_endline "Here are all of the captured pieces:";
           print_list new_board2.graveyard;
           print_newline ();
           if board.model.turn = White then (
@@ -312,9 +312,10 @@ and mover_init board =
               Command.has_move !avail_bp row1 row2 row3 row4 row5 row6
                 row7 row8
               = []
-            then print_endline "Black Player Now In Stalemate!"
-            else ();
-            if
+            then (
+              print_endline "Black Player Now In Stalemate!";
+              false)
+            else if
               Command.checkmated !avail_wp !avail_bp !b_k new_board2.r1
                 new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5
                 new_board2.r6 new_board2.r7 new_board2.r8
@@ -332,9 +333,10 @@ and mover_init board =
               Command.has_move !avail_wp row1 row2 row3 row4 row5 row6
                 row7 row8
               = []
-            then print_endline "White Player Now In Stalemate!"
-            else ();
-            if
+            then (
+              print_endline "White Player Now In Stalemate!";
+              false)
+            else if
               Command.checkmated !avail_bp !avail_wp !w_k new_board2.r1
                 new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5
                 new_board2.r6 new_board2.r7 new_board2.r8
