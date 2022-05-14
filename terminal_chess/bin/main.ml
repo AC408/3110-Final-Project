@@ -346,5 +346,4 @@ and mover_init board =
             else mover_init new_board2)
 
 let () = Display.print_board Display.start_board
-
 let _ = mover_init Display.start_board
