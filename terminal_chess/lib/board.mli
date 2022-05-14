@@ -12,6 +12,9 @@ val model_move : model
 (**sends a message to the model to update the color and number of moves*)
 type change = Change
 
+(** returns a string of whose turn it currently is for model 'board'*)
+val get_turn : model -> string
+
 val update_turn : model -> change -> model
 (** changes the player turn from White to Black (or vice versa). Adds 1
     to the number of moves.*)

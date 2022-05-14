@@ -47,6 +47,10 @@ val check3 : string -> piecerow
    user selects.*)
 
 val castle : piece option -> string -> piece option -> bool
+(**[castle] takes in a piece option [i_p] representing the input position,
+a string representing the input, and another piece option representing
+the output position [o_p] and returns a boolean in accordance to whether the
+piece may or may not be moved.*)
 
 val check_piece :
   piece option ->
@@ -62,8 +66,14 @@ val check_piece :
   piecerow ->
   piecerow ->
   bool
+(**[check_piece] takes in a piece option, string, piece option, boolean,
+and several piecerows and returns whether the desired move is valid.*)
 
 val color_checker : piece option -> piece option -> string -> bool
+(**[color_checker] takes in a piece option representing the input 
+position [i_p] as well as one representing the output position 
+[o_p] as well as a string representing the input and returns a boolean
+based on whether the color is correct.*)
 
 val promote_pawn : string -> piece option -> bool
 
