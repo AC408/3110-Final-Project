@@ -244,8 +244,12 @@ let queen_check input is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   || check_vertical input is_sim r1 r2 r3 r4 r5 r6 r7 r8
 
 let king_check input is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
-  Char.code input.[3] - Char.code input.[1] |> abs = 1
-  && int_of_char input.[2] - int_of_char input.[0] |> abs = 1
+  (Char.code input.[3] - Char.code input.[1] |> abs = 1
+   && int_of_char input.[2] - int_of_char input.[0] |> abs = 1
+  || Char.code input.[3] - Char.code input.[1] |> abs = 1
+     && int_of_char input.[2] - int_of_char input.[0] |> abs = 0
+  || Char.code input.[3] - Char.code input.[1] |> abs = 0
+     && int_of_char input.[2] - int_of_char input.[0] |> abs = 1)
   && (check_horizontal input
      || check_vertical input is_sim r1 r2 r3 r4 r5 r6 r7 r8
      || check_diagonal input is_sim r1 r2 r3 r4 r5 r6 r7 r8)
@@ -284,19 +288,19 @@ let castle i_p input o_p =
       if get_level i_p = King && get_level o_p = Rook then
         if have_moved i_p || have_moved o_p then ("na", false)
         else if input.[3] = 'h' then
-          if check_horizontal input then ("ksir", true)
+          if check_horizontal input then ("ksik", true)
           else ("na", false)
         else if input.[3] = 'a' then
-          if check_horizontal input then ("qsir", true)
+          if check_horizontal input then ("qsik", true)
           else ("na", false)
         else ("na", false)
       else if get_level i_p = Rook && get_level o_p = King then
         if have_moved i_p || have_moved o_p then ("na", false)
         else if input.[1] = 'h' then
-          if check_horizontal input then ("ksik", true)
+          if check_horizontal input then ("ksir", true)
           else ("na", false)
         else if input.[1] = 'a' then
-          if check_horizontal input then ("qsik", true)
+          if check_horizontal input then ("qsir", true)
           else ("na", false)
         else ("na", false)
       else ("na", false)
