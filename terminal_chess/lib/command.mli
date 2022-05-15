@@ -76,6 +76,8 @@ position [i_p] as well as one representing the output position
 based on whether the color is correct.*)
 
 val promote_pawn : string -> piece option -> bool
+(**[promote_pawn] takes in a string [input] and piece option [i_p] and
+returns a boolean in accordance to whether the pawn can be moved.*)
 
 val has_move :
   piece list ->
@@ -88,6 +90,11 @@ val has_move :
   piecerow ->
   piecerow ->
   (piece * string) list
+  (**[has_move] takes in a piece list called [same_side_list] representing
+  the list on the same side , a piece list called [opp_side_list] representing
+  the list on the opposite side, a piece [king] representing the king piece, 
+  and 8 piecerow representing rooks called [r1], [r2], [r3], [r4], [r5], [r6],
+  [r7], [r8] and it returns whether the desired move is valid.*).
 
 val incheck :
   piece list ->
@@ -102,6 +109,11 @@ val incheck :
   piecerow ->
   piecerow ->
   bool
+(**[incheck] takes in a piece list called [same_side_list] representing
+  the list on the same side , a piece list called [opp_side_list] representing
+  the list on the opposite side, a piece [king] representing the king piece, 
+  and 8 piecerow representing rooks called [r1], [r2], [r3], [r4], [r5], [r6],
+  [r7], [r8] and it returns whether the desired move is valid.*).
 
 val checkmated :
   piece list ->
@@ -116,3 +128,8 @@ val checkmated :
   piecerow ->
   piecerow ->
   bool
+  (**[checkmated] takes in a piece list called [same_side_list] representing
+  the list on the same side , a piece list called [opp_side_list] representing
+  the list on the opposite side, a piece [king] representing the king piece, 
+  and 8 piecerow representing rooks called [r1], [r2], [r3], [r4], [r5], [r6],
+  [r7], [r8] and it returns a boolean [bool] in accordance to the checkmate. *)
