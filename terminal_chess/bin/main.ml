@@ -160,8 +160,8 @@ and mover_init board =
         mover_init board)
       else
         let new_board =
-          if o_p <> None && Command.castle i_p input o_p = false then
-            { board with graveyard = rep o_p :: board.graveyard }
+          if o_p <> None && snd (Command.castle i_p input o_p) = false
+          then { board with graveyard = rep o_p :: board.graveyard }
           else board
         in
         (* new_board checks if output position is occupied *)
@@ -187,166 +187,185 @@ and mover_init board =
                    (Piece.get_color piece) (Piece.get_level piece)
                    (Piece.get_rep piece) true)
         in
-        Array.set o_pr oc_rel_a moved_piece;
-        if Command.castle i_p input o_p = false then
-          Array.set i_pr ic_rel_a None
-        else Array.set i_pr ic_rel_a moved_piece2;
-        if Command.promote_pawn input moved_piece then (
-          print_newline ();
-          print_endline
-            "Congrats! Your pawn has reached the end of the board! \
-             What would you like to promote it to?";
-          print_endline
-            "Your options are Queen, Bishop, Knight, or Rook. Please \
-             use the following format:";
-          print_endline "Example format: Queen";
-          promote_check input moved_piece |> Array.set o_pr oc_rel_a;
-          let new_board2 =
-            {
-              new_board with
-              model = update_turn new_board.model Board.Change;
-            }
-          in
-          Display.print_board new_board2;
-          print_newline ();
-          print_endline "Here are all of the captured pieces:";
-          print_list new_board2.graveyard;
-          print_newline ();
-          mover_init new_board2)
-        else
-          let new_board2 =
-            {
-              new_board with
-              model = update_turn new_board.model Board.Change;
-            }
-          in
-          Display.print_board new_board2;
-          Array.iter
-            (fun y ->
-              match y with
-              | None -> ()
-              | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
-            new_board2.r1;
-          Array.iter
-            (fun y ->
-              match y with
-              | None -> ()
-              | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
-            new_board2.r2;
-          Array.iter
-            (fun y ->
-              match y with
-              | None -> ()
-              | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
-            new_board2.r3;
-          Array.iter
-            (fun y ->
-              match y with
-              | None -> ()
-              | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
-            new_board2.r4;
-          Array.iter
-            (fun y ->
-              match y with
-              | None -> ()
-              | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
-            new_board2.r5;
-          Array.iter
-            (fun y ->
-              match y with
-              | None -> ()
-              | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
-            new_board2.r6;
-          Array.iter
-            (fun y ->
-              match y with
-              | None -> ()
-              | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
-            new_board2.r7;
-          Array.iter
-            (fun y ->
-              match y with
-              | None -> ()
-              | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
-            new_board2.r8;
-          print_newline ();
-          print_endline "Here are all of the captured pieces:";
-          print_list new_board2.graveyard;
-          print_newline ();
-          if board.model.turn = White then (
-            if
-              Command.incheck !avail_wp !b_k false row1 row2 row3 row4
-                row5 row6 row7 row8
-            then print_endline "Black Player Now In Check!"
-            else ();
-            if
-              Command.has_move !avail_bp row1 row2 row3 row4 row5 row6
-                row7 row8
-              = []
-            then (
-              print_endline "Black Player Now In Stalemate!";
-              false)
-            else if
-              Command.checkmated !avail_wp !avail_bp !b_k new_board2.r1
-                new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5
-                new_board2.r6 new_board2.r7 new_board2.r8
-            then (
-              print_endline "Checkmate!";
-              false)
-            else mover_init new_board2)
-          else (
-            if
-              Command.incheck !avail_bp !w_k false row1 row2 row3 row4
-                row5 row6 row7 row8
-            then print_endline "White Player Now In Check!"
-            else ();
-            if
-              Command.has_move !avail_wp row1 row2 row3 row4 row5 row6
-                row7 row8
-              = []
-            then (
-              print_endline "White Player Now In Stalemate!";
-              false)
-            else if
-              Command.checkmated !avail_bp !avail_wp !w_k new_board2.r1
-                new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5
-                new_board2.r6 new_board2.r7 new_board2.r8
-            then (
-              print_endline "Checkmate!";
-              false)
-            else mover_init new_board2)
+        if snd (Command.castle i_p input o_p) = false then (
+          Array.set o_pr oc_rel_a moved_piece;
+          Array.set i_pr ic_rel_a None)
+        else begin
+          Array.set o_pr oc_rel_a None;
+          match fst (Command.castle i_p input o_p) with
+          | "ksir" ->
+              Array.set o_pr 5 moved_piece;
+              Array.set o_pr 6 moved_piece2
+          | "qsir" -> 
+              Array.set o_pr 2 moved_piece2;
+              Array.set o_pr 3 moved_piece
+          | "ksik" -> 
+              Array.set o_pr 5 moved_piece2;
+              Array.set o_pr 6 moved_piece
+          | "qsik" -> 
+              Array.set o_pr 2 moved_piece;
+              Array.set o_pr 3 moved_piece2;
+          | _ ->
+              failwith "castle function error";
+          end 
+            if Command.promote_pawn input moved_piece then (
+              print_newline ();
+              print_endline
+                "Congrats! Your pawn has reached the end of the board! \
+                 What would you like to promote it to?";
+              print_endline
+                "Your options are Queen, Bishop, Knight, or Rook. \
+                 Please use the following format:";
+              print_endline "Example format: Queen";
+              promote_check input moved_piece |> Array.set o_pr oc_rel_a;
+              let new_board2 =
+                {
+                  new_board with
+                  model = update_turn new_board.model Board.Change;
+                }
+              in
+              Display.print_board new_board2;
+              print_newline ();
+              print_endline "Here are all of the captured pieces:";
+              print_list new_board2.graveyard;
+              print_newline ();
+              mover_init new_board2)
+            else
+              let new_board2 =
+                {
+                  new_board with
+                  model = update_turn new_board.model Board.Change;
+                }
+              in
+              Display.print_board new_board2;
+              Array.iter
+                (fun y ->
+                  match y with
+                  | None -> ()
+                  | Some x ->
+                      if x.color = White then avail_wp := x :: !avail_wp
+                      else avail_bp := x :: !avail_bp;
+                      if x = whiteking then w_k := x
+                      else if x = blackking then b_k := x)
+                new_board2.r1;
+              Array.iter
+                (fun y ->
+                  match y with
+                  | None -> ()
+                  | Some x ->
+                      if x.color = White then avail_wp := x :: !avail_wp
+                      else avail_bp := x :: !avail_bp;
+                      if x = whiteking then w_k := x
+                      else if x = blackking then b_k := x)
+                new_board2.r2;
+              Array.iter
+                (fun y ->
+                  match y with
+                  | None -> ()
+                  | Some x ->
+                      if x.color = White then avail_wp := x :: !avail_wp
+                      else avail_bp := x :: !avail_bp;
+                      if x = whiteking then w_k := x
+                      else if x = blackking then b_k := x)
+                new_board2.r3;
+              Array.iter
+                (fun y ->
+                  match y with
+                  | None -> ()
+                  | Some x ->
+                      if x.color = White then avail_wp := x :: !avail_wp
+                      else avail_bp := x :: !avail_bp;
+                      if x = whiteking then w_k := x
+                      else if x = blackking then b_k := x)
+                new_board2.r4;
+              Array.iter
+                (fun y ->
+                  match y with
+                  | None -> ()
+                  | Some x ->
+                      if x.color = White then avail_wp := x :: !avail_wp
+                      else avail_bp := x :: !avail_bp;
+                      if x = whiteking then w_k := x
+                      else if x = blackking then b_k := x)
+                new_board2.r5;
+              Array.iter
+                (fun y ->
+                  match y with
+                  | None -> ()
+                  | Some x ->
+                      if x.color = White then avail_wp := x :: !avail_wp
+                      else avail_bp := x :: !avail_bp;
+                      if x = whiteking then w_k := x
+                      else if x = blackking then b_k := x)
+                new_board2.r6;
+              Array.iter
+                (fun y ->
+                  match y with
+                  | None -> ()
+                  | Some x ->
+                      if x.color = White then avail_wp := x :: !avail_wp
+                      else avail_bp := x :: !avail_bp;
+                      if x = whiteking then w_k := x
+                      else if x = blackking then b_k := x)
+                new_board2.r7;
+              Array.iter
+                (fun y ->
+                  match y with
+                  | None -> ()
+                  | Some x ->
+                      if x.color = White then avail_wp := x :: !avail_wp
+                      else avail_bp := x :: !avail_bp;
+                      if x = whiteking then w_k := x
+                      else if x = blackking then b_k := x)
+                new_board2.r8;
+              print_newline ();
+              print_endline "Here are all of the captured pieces:";
+              print_list new_board2.graveyard;
+              print_newline ();
+              if board.model.turn = White then (
+                if
+                  Command.incheck !avail_wp !b_k false row1 row2 row3
+                    row4 row5 row6 row7 row8
+                then print_endline "Black Player Now In Check!"
+                else ();
+                if
+                  Command.has_move !avail_bp row1 row2 row3 row4 row5
+                    row6 row7 row8
+                  = []
+                then (
+                  print_endline "Black Player Now In Stalemate!";
+                  false)
+                else if
+                  Command.checkmated !avail_wp !avail_bp !b_k
+                    new_board2.r1 new_board2.r2 new_board2.r3
+                    new_board2.r4 new_board2.r5 new_board2.r6
+                    new_board2.r7 new_board2.r8
+                then (
+                  print_endline "Checkmate!";
+                  false)
+                else mover_init new_board2)
+              else (
+                if
+                  Command.incheck !avail_bp !w_k false row1 row2 row3
+                    row4 row5 row6 row7 row8
+                then print_endline "White Player Now In Check!"
+                else ();
+                if
+                  Command.has_move !avail_wp row1 row2 row3 row4 row5
+                    row6 row7 row8
+                  = []
+                then (
+                  print_endline "White Player Now In Stalemate!";
+                  false)
+                else if
+                  Command.checkmated !avail_bp !avail_wp !w_k
+                    new_board2.r1 new_board2.r2 new_board2.r3
+                    new_board2.r4 new_board2.r5 new_board2.r6
+                    new_board2.r7 new_board2.r8
+                then (
+                  print_endline "Checkmate!";
+                  false)
+                else mover_init new_board2)
 
 let () = Display.print_board Display.start_board
 let _ = mover_init Display.start_board

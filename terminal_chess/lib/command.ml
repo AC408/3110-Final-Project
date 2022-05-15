@@ -282,17 +282,25 @@ let castle i_p input o_p =
   match (i_p, o_p) with
   | Some i_p, Some o_p ->
       if get_level i_p = King && get_level o_p = Rook then
-        if have_moved i_p || have_moved o_p then false
-        else if input.[3] = 'h' || input.[3] = 'a' then
-          check_horizontal input
-        else false
+        if have_moved i_p || have_moved o_p then ("na", false)
+        else if input.[3] = 'h' then
+          if check_horizontal input then ("ksir", true)
+          else ("na", false)
+        else if input.[3] = 'a' then
+          if check_horizontal input then ("qsir", true)
+          else ("na", false)
+        else ("na", false)
       else if get_level i_p = Rook && get_level o_p = King then
-        if have_moved i_p || have_moved o_p then false
-        else if input.[1] = 'h' || input.[1] = 'a' then
-          check_horizontal input
-        else false
-      else false
-  | _, _ -> false
+        if have_moved i_p || have_moved o_p then ("na", false)
+        else if input.[1] = 'h' then
+          if check_horizontal input then ("ksik", true)
+          else ("na", false)
+        else if input.[1] = 'a' then
+          if check_horizontal input then ("qsik", true)
+          else ("na", false)
+        else ("na", false)
+      else ("na", false)
+  | _, _ -> ("na", false)
 
 let check_piece ipc str opc is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
   match ipc with
@@ -309,7 +317,7 @@ let check_piece ipc str opc is_sim r1 r2 r3 r4 r5 r6 r7 r8 =
       else if get_level pc = Queen then
         queen_check str is_sim r1 r2 r3 r4 r5 r6 r7 r8
       else king_check str is_sim r1 r2 r3 r4 r5 r6 r7 r8)
-      || castle ipc str opc
+      || snd (castle ipc str opc)
 
 let color_checker i_p o_p input =
   match o_p with
@@ -319,8 +327,9 @@ let color_checker i_p o_p input =
       | None -> false
       | Some ip ->
           if
-            (castle i_p input o_p = false && get_color op = get_color ip)
-            || castle i_p input o_p = true
+            snd (castle i_p input o_p) = false
+            && get_color op = get_color ip
+            || snd (castle i_p input o_p) = true
                && get_color op <> get_color ip
           then false
           else true)
