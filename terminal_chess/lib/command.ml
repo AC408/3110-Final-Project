@@ -40,8 +40,8 @@ let check_valid_move str =
   match str with
   | [] -> raise EmptyCommand
   | [ _; curr; next ] ->
-      explode curr |> check_format
-      |> ( ^ ) (explode next |> check_format)
+      explode next |> check_format
+      |> ( ^ ) (explode curr |> check_format)
   | _ -> raise InvalidInput
 
 (* returns true if the string list starts with "quit" else false *)
@@ -196,7 +196,7 @@ let rec go_diagonal
           go_diagonal direction
             (Char.escaped row1 ^ Char.escaped col1
             ^ (Char.code row2 - Char.code '0' - 1 |> string_of_int)
-            ^ (int_of_char col2 + diagonal_direction
+            ^ (int_of_char col2 - diagonal_direction
               |> Char.chr |> Char.escaped))
             false false is_sim r1 r2 r3 r4 r5 r6 r7 r8
     | _ -> false
