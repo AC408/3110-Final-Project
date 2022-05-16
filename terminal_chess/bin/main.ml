@@ -369,9 +369,7 @@ and mover_init board =
           | Some piece ->
               Some
                 (Piece.place_piece
-                   (Some
-                      ( input.[3],
-                        int_of_char input.[2] - int_of_char '0' ))
+                   (Piece.get_position piece)
                    (Piece.get_color piece) (Piece.get_level piece)
                    (Piece.get_rep piece) true)
         in

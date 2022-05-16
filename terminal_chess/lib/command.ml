@@ -74,77 +74,58 @@ let rec go_left lower_col upper_col row =
   else if Array.get row (upper_col - 1) <> None then false
   else go_left lower_col (upper_col - 1) row
 
-let rec go_down str gate gate2 grid =
+let exists_in_between str grid gate =
+  gate = false
+  && Char.code str.[3] - Char.code 'a'
+     |> Array.get (check3 str grid)
+     <> None
+
+let rec go_down str gate grid =
   let row_diff = int_of_char str.[2] - int_of_char str.[0] in
-  if gate then
-    if row_diff |> abs = 1 then true else go_down str false true grid
-  else if row_diff = 0 then true
-  else if gate2 then
-    let new_str = str |> explode in
-    match new_str with
-    | [ row1; col1; row2; col2 ] ->
-        if row2 < row1 then
-          go_down
-            (Char.escaped row1 ^ Char.escaped col1
-            ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-            ^ Char.escaped col2)
-            false false grid
-        else
-          go_down
-            (Char.escaped row1 ^ Char.escaped col1
-            ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-            ^ Char.escaped col2)
-            false false grid
-    | _ -> false
-  else if
-    let checkarr =
-      Array.get (check3 str grid) (Char.code str.[3] - Char.code 'a')
-    in
-    checkarr <> None
-  then false
+  if exists_in_between str grid gate then false
+  else if row_diff |> abs = 1 then true
+  else if row_diff = 0 then false
   else
     let new_str = str |> explode in
     match new_str with
     | [ row1; col1; row2; col2 ] ->
+        let prev_loc = Char.escaped row1 ^ Char.escaped col1 in
         if row2 < row1 then
           go_down
-            (Char.escaped row1 ^ Char.escaped col1
+            (prev_loc
             ^ string_of_int (Char.code row2 - Char.code '0' + 1)
             ^ Char.escaped col2)
-            false false grid
+            false grid
         else
           go_down
-            (Char.escaped row1 ^ Char.escaped col1
+            (prev_loc
             ^ string_of_int (Char.code row2 - Char.code '0' - 1)
             ^ Char.escaped col2)
-            false false grid
+            false grid
     | _ -> false
 
 let rec go_diagonal direction str gate grid =
   let diagonal_direction = if direction = "up_right" then 1 else -1 in
   let row_diff = int_of_char str.[2] - int_of_char str.[0] in
   let col_diff = Char.code str.[3] - Char.code str.[1] in
-  let check_fun = check3 str grid in
-  if
-    gate = false
-    && Char.code str.[3] - Char.code 'a' |> Array.get check_fun <> None
-  then false
+  if exists_in_between str grid gate then false
   else if abs row_diff = 1 && abs col_diff = 1 then true
   else if row_diff = 0 && col_diff = 0 then false
   else
     let new_str = str |> explode in
     match new_str with
     | [ row1; col1; row2; col2 ] ->
+        let prev_loc = Char.escaped row1 ^ Char.escaped col1 in
         if row2 < row1 then
           go_diagonal direction
-            (Char.escaped row1 ^ Char.escaped col1
+            (prev_loc
             ^ (Char.code row2 - Char.code '0' + 1 |> string_of_int)
             ^ (int_of_char col2 + diagonal_direction
               |> Char.chr |> Char.escaped))
             false grid
         else
           go_diagonal direction
-            (Char.escaped row1 ^ Char.escaped col1
+            (prev_loc
             ^ (Char.code row2 - Char.code '0' - 1 |> string_of_int)
             ^ (int_of_char col2 - diagonal_direction
               |> Char.chr |> Char.escaped))
@@ -166,8 +147,7 @@ let check_horizontal str grid =
   && go_left get_lower_col get_upper_col (check1 str grid)
 
 let check_vertical str grid =
-  Char.code str.[3] - Char.code str.[1] = 0
-  && go_down str true true grid
+  Char.code str.[3] - Char.code str.[1] = 0 && go_down str true grid
 
 let check_diagonal str grid =
   let col_dif = Char.code str.[3] - Char.code str.[1] in
