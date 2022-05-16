@@ -311,6 +311,58 @@ let moved_tests =
     moved_tests "BP" bptest false;
   ]
 
+(**[remove_blank_tests name strlist output_strlist] constructs an OUnit
+   test named [name] that asserts the quality of [output_strlist] with
+   [remove_blank strlist].*)
+let remove_blank_tests
+    (name : string)
+    (strlist : string list)
+    (output_strlist : string list) : test =
+  name >:: fun _ -> assert_equal output_strlist (remove_blank strlist)
+
+let remove_blank_tests =
+  [
+    remove_blank_tests "empty" [] [];
+    remove_blank_tests "all empty strings" [ ""; ""; "" ] [];
+    remove_blank_tests "one empty string" [ "" ] [];
+    remove_blank_tests "one element" [ "hi" ] [ "hi" ];
+    remove_blank_tests "multiple elements" [ "hi"; "everyone" ]
+      [ "hi"; "everyone" ];
+    remove_blank_tests "first string is empty" [ ""; "hi" ] [ "hi" ];
+    remove_blank_tests "last string is empty" [ "hi"; "" ] [ "hi" ];
+    remove_blank_tests "middle string is empty" [ "hi"; ""; "all" ]
+      [ "hi"; "all" ];
+    remove_blank_tests "alternating empty and filled"
+      [ "hi"; ""; "all"; ""; "!" ]
+      [ "hi"; "all"; "!" ];
+  ]
+
+(**[explode_tests name str output_charlist] constructs an OUnit test
+   named [name] that asserts the quality of [output_charlist] with
+   [explode strlist].*)
+let explode_tests
+    (name : string)
+    (str : string)
+    (output_charlist : char list) : test =
+  name >:: fun _ -> assert_equal output_charlist (explode str)
+
+let explode_tests =
+  [
+    explode_tests "empty" "" [];
+    explode_tests "one space" " " [ ' ' ];
+    explode_tests "multiple spaces" "   " [ ' '; ' '; ' ' ];
+    explode_tests "one char" "h" [ 'h' ];
+    explode_tests "multiple char, same" "hhh" [ 'h'; 'h'; 'h' ];
+    explode_tests "multiple char, different" "welcomers"
+      [ 'w'; 'e'; 'l'; 'c'; 'o'; 'm'; 'e'; 'r'; 's' ];
+    explode_tests "intermingled - start with space" " hello"
+      [ ' '; 'h'; 'e'; 'l'; 'l'; 'o' ];
+    explode_tests "intermingled - end with space" "hello "
+      [ 'h'; 'e'; 'l'; 'l'; 'o'; ' ' ];
+    explode_tests "alternating space and filled" "h e l l o"
+      [ 'h'; ' '; 'e'; ' '; 'l'; ' '; 'l'; ' '; 'o' ];
+  ]
+
 let tests =
   "test suite for full project"
   >::: List.flatten
@@ -321,6 +373,8 @@ let tests =
            get_pos_tests;
            place_piece_tests;
            moved_tests;
+           remove_blank_tests;
+           explode_tests;
          ]
 
 let _ = run_test_tt_main tests
