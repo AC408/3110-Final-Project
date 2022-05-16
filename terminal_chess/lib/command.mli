@@ -38,66 +38,32 @@ val parse_mod : string -> string
    based on empty space, with all empty space removed, and then checks
    to see if it is a valid move.*)
 
-val check1 : string -> piecerow
+val check3 : string -> piecerow array -> piecerow
+(**[check3] is the row that corresponds to the output space that the
+   user selects.*)
+
+val check1 : string -> piecerow array -> piecerow
 (**[check1] is the row that corresponds to the input piece that the user
    selects.*)
 
-val check3 : string -> piecerow
-(**[check3] is the row that corresponds to the output space that the
-   user selects.*)
-
-val checkn3 :
+val castle :
+  piece option ->
   string ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow
-(**[check3] is the row that corresponds to the output space that the
-   user selects.*)
-
-val checkn1 :
-  string ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow
-(**[check3] is the row that corresponds to the output space that the
-   user selects.*)
-
-val castle : piece option -> string -> piece option -> string * bool
+  piece option ->
+  piecerow array ->
+  string * bool
 (**[castle] takes in a piece option [i_p] representing the input
    position, a string representing the input, and another piece option
    representing the output position [o_p] and returns a boolean in
    accordance to whether the piece may or may not be moved.*)
 
 val check_piece :
-  piece option ->
-  string ->
-  piece option ->
-  bool ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  bool
+  piece option -> string -> piece option -> piecerow array -> bool
 (**[check_piece] takes in a piece option, string, piece option, boolean,
    and several piecerows and returns whether the desired move is valid.*)
 
-val color_checker : piece option -> piece option -> string -> bool
+val color_checker :
+  piece option -> piece option -> string -> piecerow array -> bool
 (**[color_checker] takes in a piece option representing the input
    position [i_p] as well as one representing the output position [o_p]
    as well as a string representing the input and returns a boolean
@@ -107,17 +73,7 @@ val promote_pawn : string -> piece option -> bool
 (**[promote_pawn] takes in a string [input] and piece option [i_p] and
    returns a boolean in accordance to whether the pawn can be moved.*)
 
-val has_move :
-  piece list ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  (piece * string) list
+val has_move : piece list -> piecerow array -> (piece * string) list
 (**[has_move] takes in a piece list called [same_side_list] representing
    the list on the same side , a piece list called [opp_side_list]
    representing the list on the opposite side, a piece [king]
@@ -125,19 +81,7 @@ val has_move :
    [r1], [r2], [r3], [r4], [r5], [r6], [r7], [r8] and it returns whether
    the desired move is valid.*)
 
-val incheck :
-  piece list ->
-  piece ->
-  bool ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  bool
+val incheck : piece list -> piece -> piecerow array -> bool
 (**[incheck] takes in a piece list called [same_side_list] representing
    the list on the same side , a piece list called [opp_side_list]
    representing the list on the opposite side, a piece [king]
@@ -146,18 +90,7 @@ val incheck :
    the desired move is valid.*)
 
 val checkmated :
-  piece list ->
-  piece list ->
-  piece ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  piecerow ->
-  bool
+  piece list -> piece list -> piece -> piecerow array -> bool
 (**[checkmated] takes in a piece list called [same_side_list]
    representing the list on the same side , a piece list called
    [opp_side_list] representing the list on the opposite side, a piece

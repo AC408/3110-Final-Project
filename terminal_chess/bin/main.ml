@@ -21,7 +21,7 @@ let color_matcher board space =
       raise NoPiece
   | Some space -> board.model.turn <> space.color
 
-let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
+let move_into_check piece cmd king grid =
   let p =
     match piece with
     | None -> failwith "input not a piece"
@@ -30,17 +30,8 @@ let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
   let k = ref king in
   let a_bp = ref [] in
   let a_wp = ref [] in
-  let arr1 = Array.copy r1 in
-  let arr2 = Array.copy r2 in
-  let arr3 = Array.copy r3 in
-  let arr4 = Array.copy r4 in
-  let arr5 = Array.copy r5 in
-  let arr6 = Array.copy r6 in
-  let arr7 = Array.copy r7 in
-  let arr8 = Array.copy r8 in
-  let o_r =
-    Command.checkn3 cmd arr1 arr2 arr3 arr4 arr5 arr6 arr7 arr8
-  in
+  let copy_grid = Array.map Array.copy grid in
+  let o_r = Command.check3 cmd copy_grid in
   let moved_piece =
     Piece.place_piece
       (Some (cmd.[3], int_of_char cmd.[2] - int_of_char '0'))
@@ -50,7 +41,7 @@ let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
   Some moved_piece |> Array.set o_r (Char.code cmd.[3] - Char.code 'a');
   None
   |> Array.set
-       (Command.checkn1 cmd arr1 arr2 arr3 arr4 arr5 arr6 arr7 arr8)
+       (Command.check1 cmd copy_grid)
        (Char.code cmd.[1] - Char.code 'a');
   Array.iter
     (fun y ->
@@ -59,7 +50,7 @@ let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
       | Some x ->
           if x.color = White then a_wp := x :: !a_wp
           else a_bp := x :: !a_bp)
-    arr1;
+    (Array.get copy_grid 0);
   Array.iter
     (fun y ->
       match y with
@@ -67,7 +58,7 @@ let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
       | Some x ->
           if x.color = White then a_wp := x :: !a_wp
           else a_bp := x :: !a_bp)
-    arr2;
+    (Array.get copy_grid 1);
   Array.iter
     (fun y ->
       match y with
@@ -75,7 +66,7 @@ let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
       | Some x ->
           if x.color = White then a_wp := x :: !a_wp
           else a_bp := x :: !a_bp)
-    arr3;
+    (Array.get copy_grid 2);
   Array.iter
     (fun y ->
       match y with
@@ -83,7 +74,7 @@ let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
       | Some x ->
           if x.color = White then a_wp := x :: !a_wp
           else a_bp := x :: !a_bp)
-    arr4;
+    (Array.get copy_grid 3);
   Array.iter
     (fun y ->
       match y with
@@ -91,7 +82,7 @@ let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
       | Some x ->
           if x.color = White then a_wp := x :: !a_wp
           else a_bp := x :: !a_bp)
-    arr5;
+    (Array.get copy_grid 4);
   Array.iter
     (fun y ->
       match y with
@@ -99,7 +90,7 @@ let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
       | Some x ->
           if x.color = White then a_wp := x :: !a_wp
           else a_bp := x :: !a_bp)
-    arr6;
+    (Array.get copy_grid 5);
   Array.iter
     (fun y ->
       match y with
@@ -107,7 +98,7 @@ let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
       | Some x ->
           if x.color = White then a_wp := x :: !a_wp
           else a_bp := x :: !a_bp)
-    arr7;
+    (Array.get copy_grid 6);
   Array.iter
     (fun y ->
       match y with
@@ -115,12 +106,10 @@ let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
       | Some x ->
           if x.color = White then a_wp := x :: !a_wp
           else a_bp := x :: !a_bp)
-    arr8;
+    (Array.get copy_grid 7);
   match Piece.get_color king with
-  | White ->
-      incheck !a_bp !k true arr1 arr2 arr3 arr4 arr5 arr6 arr7 arr8
-  | Black ->
-      incheck !a_wp !k true arr1 arr2 arr3 arr4 arr5 arr6 arr7 arr8
+  | White -> incheck !a_bp !k copy_grid
+  | Black -> incheck !a_wp !k copy_grid
 
 let rec promote_check input piece1 =
   match piece1 with
@@ -229,15 +218,17 @@ and mover_init board =
     let oc_rel_a = Char.code input.[3] - Char.code 'a' in
     let ic_rel_a = Char.code input.[1] - Char.code 'a' in
     if
-      ic_rel_a |> Array.get (Command.check1 input) |> filled_input board
+      ic_rel_a
+      |> Array.get (Command.check1 input board.grid)
+      |> filled_input board
     then (
       print_endline "Sorry, it's not your turn. Try again later!.";
       mover_init board)
     else
       let input = Command.parse_mod in_command in
-      let i_pr = Command.check1 input in
+      let i_pr = Command.check1 input board.grid in
       (*input piecerow*)
-      let o_pr = Command.check3 input in
+      let o_pr = Command.check3 input board.grid in
       (*output piecerow*)
       let i_p = Array.get i_pr ic_rel_a in
       (*ip*)
@@ -340,16 +331,12 @@ and mover_init board =
                 if x.level = King then b_k := x;
                 avail_bp := x :: !avail_bp))
         (Array.get board.grid 7);
-      if
-        check_piece i_p input o_p true row1 row2 row3 row4 row5 row6
-          row7 row8
-        = false
-      then (
+      if check_piece i_p input o_p board.grid = false then (
         print_endline
           "Sorry, either this piece doesn't move that way or that's \
            not a valid castling";
         mover_init board)
-      else if color_checker i_p o_p input = false then (
+      else if color_checker i_p o_p input board.grid = false then (
         print_endline
           "Sorry, you can't capture one of your own pieces! (or that's \
            not a valid castling, sorry.)";
@@ -358,33 +345,20 @@ and mover_init board =
         clr = White
         && move_into_check
              (Array.get i_pr ic_rel_a)
-             input !w_k
-             (Array.get board.grid 0)
-             (Array.get board.grid 1)
-             (Array.get board.grid 2)
-             (Array.get board.grid 3)
-             (Array.get board.grid 4)
-             (Array.get board.grid 5)
-             (Array.get board.grid 6)
-             (Array.get board.grid 7)
+             input !w_k board.grid
         || clr = Black
            && move_into_check
                 (Array.get i_pr ic_rel_a)
-                input !b_k
-                (Array.get board.grid 0)
-                (Array.get board.grid 1)
-                (Array.get board.grid 2)
-                (Array.get board.grid 3)
-                (Array.get board.grid 4)
-                (Array.get board.grid 5)
-                (Array.get board.grid 6)
-                (Array.get board.grid 7)
+                input !b_k board.grid
       then (
-        print_endline "Sorry, you can't move into check";
+        print_endline
+          "Sorry, you can't move into check or stay in check";
         mover_init board)
       else
         let new_board =
-          if o_p <> None && snd (Command.castle i_p input o_p) = false
+          if
+            o_p <> None
+            && snd (Command.castle i_p input o_p board.grid) = false
           then { board with graveyard = rep o_p :: board.graveyard }
           else board
         in
@@ -411,13 +385,13 @@ and mover_init board =
                    (Piece.get_color piece) (Piece.get_level piece)
                    (Piece.get_rep piece) true)
         in
-        if snd (Command.castle i_p input o_p) = false then (
+        if snd (Command.castle i_p input o_p board.grid) = false then (
           Array.set o_pr oc_rel_a moved_piece;
           Array.set i_pr ic_rel_a None)
         else begin
           Array.set o_pr oc_rel_a None;
           Array.set i_pr ic_rel_a None;
-          match fst (Command.castle i_p input o_p) with
+          match fst (Command.castle i_p input o_p board.grid) with
           | "ksir" ->
               Array.set o_pr 6 moved_piece;
               Array.set o_pr 5 moved_piece2
@@ -448,7 +422,7 @@ and mover_init board =
               model = update_turn new_board.model Board.Change;
             }
           in
-          Display.print_board new_board2;
+          Display.print_board new_board2.grid;
           print_newline ();
           print_endline "Here are all of the captured pieces:";
           print_list new_board2.graveyard;
@@ -461,7 +435,7 @@ and mover_init board =
               model = update_turn new_board.model Board.Change;
             }
           in
-          Display.print_board new_board2;
+          Display.print_board new_board2.grid;
           Array.iter
             (fun y ->
               match y with
@@ -563,60 +537,34 @@ and mover_init board =
           print_list new_board2.graveyard;
           print_newline ();
           if board.model.turn = White then (
-            if
-              Command.incheck !avail_wp !b_k false row1 row2 row3 row4
-                row5 row6 row7 row8
-            then print_endline "Black Player Now In Check!"
+            if Command.incheck !avail_wp !b_k board.grid then
+              print_endline "Black Player Now In Check!"
             else ();
-            if
-              Command.has_move !avail_bp row1 row2 row3 row4 row5 row6
-                row7 row8
-              = []
-            then (
+            if Command.has_move !avail_bp board.grid = [] then (
               print_endline "Black Player Now In Stalemate!";
               false)
             else if
               Command.checkmated !avail_wp !avail_bp !b_k
-                (Array.get new_board2.grid 0)
-                (Array.get new_board2.grid 1)
-                (Array.get new_board2.grid 2)
-                (Array.get new_board2.grid 3)
-                (Array.get new_board2.grid 4)
-                (Array.get new_board2.grid 5)
-                (Array.get new_board2.grid 6)
-                (Array.get new_board2.grid 7)
+                new_board2.grid
             then (
               print_endline "Checkmate!";
               false)
             else mover_init new_board2)
           else (
-            if
-              Command.incheck !avail_bp !w_k false row1 row2 row3 row4
-                row5 row6 row7 row8
-            then print_endline "White Player Now In Check!"
+            if Command.incheck !avail_bp !w_k board.grid then
+              print_endline "White Player Now In Check!"
             else ();
-            if
-              Command.has_move !avail_wp row1 row2 row3 row4 row5 row6
-                row7 row8
-              = []
-            then (
+            if Command.has_move !avail_wp board.grid = [] then (
               print_endline "White Player Now In Stalemate!";
               false)
             else if
               Command.checkmated !avail_bp !avail_wp !w_k
-                (Array.get new_board2.grid 0)
-                (Array.get new_board2.grid 1)
-                (Array.get new_board2.grid 2)
-                (Array.get new_board2.grid 3)
-                (Array.get new_board2.grid 4)
-                (Array.get new_board2.grid 5)
-                (Array.get new_board2.grid 6)
-                (Array.get new_board2.grid 7)
+                new_board2.grid
             then (
               print_endline "Checkmate!";
               false)
             else mover_init new_board2)
 
-let () = Display.print_board Display.start_board
+let () = Display.print_board Display.start_board.grid
 
 let _ = mover_init Display.start_board

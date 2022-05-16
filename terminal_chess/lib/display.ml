@@ -87,13 +87,13 @@ let print_piece (piece : piece option) =
 let print_piecerow (elt : piecerow) =
   Array.iter (fun x -> print_piece x) elt
 
-let rec print_board ?(cycle = 8) brd =
+let rec print_board ?(cycle = 8) grd =
   if cycle = 0 then (
     print_endline sep;
     print_endline lett)
   else
     let decr_cycle = cycle - 1 in
     print_endline sep;
-    Array.get brd.grid decr_cycle |> print_piecerow;
+    Array.get grd decr_cycle |> print_piecerow;
     cycle |> string_of_int |> ( ^ ) "|  " |> print_endline;
-    print_board brd ~cycle:decr_cycle
+    print_board grd ~cycle:decr_cycle

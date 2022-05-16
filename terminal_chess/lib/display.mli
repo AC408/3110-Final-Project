@@ -40,6 +40,6 @@ val print_piecerow : piecerow -> unit
 (**[print_piecerow] iterates through the array and prints every piece in
    the row*)
 
-val print_board : ?cycle:int -> board -> unit
+val print_board : ?cycle:int -> piecerow array -> unit
 (**[print_board] prints all pieces, dividing lines, and identification
    markers*)
