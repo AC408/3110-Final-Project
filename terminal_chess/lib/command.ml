@@ -328,70 +328,16 @@ let rec has_legal_move plist king grid =
       None
       |> Array.set (check1 cmd copy_grid)
            (Char.code cmd.[1] - Char.code 'a');
-      Array.iter
-        (fun y ->
-          match y with
-          | None -> ()
-          | Some x ->
-              if x.color = White then a_wp := x :: !a_wp
-              else a_bp := x :: !a_bp)
-        (Array.get copy_grid 0);
-      Array.iter
-        (fun y ->
-          match y with
-          | None -> ()
-          | Some x ->
-              if x.color = White then a_wp := x :: !a_wp
-              else a_bp := x :: !a_bp)
-        (Array.get copy_grid 1);
-      Array.iter
-        (fun y ->
-          match y with
-          | None -> ()
-          | Some x ->
-              if x.color = White then a_wp := x :: !a_wp
-              else a_bp := x :: !a_bp)
-        (Array.get copy_grid 2);
-      Array.iter
-        (fun y ->
-          match y with
-          | None -> ()
-          | Some x ->
-              if x.color = White then a_wp := x :: !a_wp
-              else a_bp := x :: !a_bp)
-        (Array.get copy_grid 3);
-      Array.iter
-        (fun y ->
-          match y with
-          | None -> ()
-          | Some x ->
-              if x.color = White then a_wp := x :: !a_wp
-              else a_bp := x :: !a_bp)
-        (Array.get copy_grid 4);
-      Array.iter
-        (fun y ->
-          match y with
-          | None -> ()
-          | Some x ->
-              if x.color = White then a_wp := x :: !a_wp
-              else a_bp := x :: !a_bp)
-        (Array.get copy_grid 5);
-      Array.iter
-        (fun y ->
-          match y with
-          | None -> ()
-          | Some x ->
-              if x.color = White then a_wp := x :: !a_wp
-              else a_bp := x :: !a_bp)
-        (Array.get copy_grid 6);
-      Array.iter
-        (fun y ->
-          match y with
-          | None -> ()
-          | Some x ->
-              if x.color = White then a_wp := x :: !a_wp
-              else a_bp := x :: !a_bp)
-        (Array.get copy_grid 7);
+      for x = 0 to 7 do
+        Array.iter
+          (fun y ->
+            match y with
+            | None -> ()
+            | Some x ->
+                if x.color = White then a_wp := x :: !a_wp
+                else a_bp := x :: !a_bp)
+          (Array.get copy_grid x)
+      done;
       match Piece.get_color king with
       | White ->
           if incheck !a_bp !k copy_grid <> true then true
