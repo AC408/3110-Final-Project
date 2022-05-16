@@ -4,23 +4,7 @@ type piecerow = piece option array
 (**[piecerow] represents the row and columns of the chess board*)
 
 type board = {
-  l1 : string;
-  r8 : piecerow;
-  l2 : string;
-  r7 : piecerow;
-  l3 : string;
-  r6 : piecerow;
-  l4 : string;
-  r5 : piecerow;
-  l5 : string;
-  r4 : piecerow;
-  l6 : string;
-  r3 : piecerow;
-  l7 : string;
-  r2 : piecerow;
-  l8 : string;
-  r1 : piecerow;
-  l9 : string;
+  grid : piecerow array;
   graveyard : string list;
   model : Board.model;
 }
@@ -56,6 +40,6 @@ val print_piecerow : piecerow -> unit
 (**[print_piecerow] iterates through the array and prints every piece in
    the row*)
 
-val print_board : board -> unit
+val print_board : ?cycle:int -> board -> unit
 (**[print_board] prints all pieces, dividing lines, and identification
    markers*)

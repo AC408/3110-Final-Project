@@ -255,7 +255,7 @@ and mover_init board =
               else (
                 if x.level = King then b_k := x;
                 avail_bp := x :: !avail_bp))
-        board.r1;
+        (Array.get board.grid 0);
       Array.iter
         (fun y ->
           match y with
@@ -267,7 +267,7 @@ and mover_init board =
               else (
                 if x.level = King then b_k := x;
                 avail_bp := x :: !avail_bp))
-        board.r2;
+        (Array.get board.grid 1);
       Array.iter
         (fun y ->
           match y with
@@ -279,7 +279,7 @@ and mover_init board =
               else (
                 if x.level = King then b_k := x;
                 avail_bp := x :: !avail_bp))
-        board.r3;
+        (Array.get board.grid 2);
       Array.iter
         (fun y ->
           match y with
@@ -291,7 +291,7 @@ and mover_init board =
               else (
                 if x.level = King then b_k := x;
                 avail_bp := x :: !avail_bp))
-        board.r4;
+        (Array.get board.grid 3);
       Array.iter
         (fun y ->
           match y with
@@ -303,7 +303,7 @@ and mover_init board =
               else (
                 if x.level = King then b_k := x;
                 avail_bp := x :: !avail_bp))
-        board.r5;
+        (Array.get board.grid 4);
       Array.iter
         (fun y ->
           match y with
@@ -315,7 +315,7 @@ and mover_init board =
               else (
                 if x.level = King then b_k := x;
                 avail_bp := x :: !avail_bp))
-        board.r6;
+        (Array.get board.grid 5);
       Array.iter
         (fun y ->
           match y with
@@ -327,7 +327,7 @@ and mover_init board =
               else (
                 if x.level = King then b_k := x;
                 avail_bp := x :: !avail_bp))
-        board.r7;
+        (Array.get board.grid 6);
       Array.iter
         (fun y ->
           match y with
@@ -339,7 +339,7 @@ and mover_init board =
               else (
                 if x.level = King then b_k := x;
                 avail_bp := x :: !avail_bp))
-        board.r8;
+        (Array.get board.grid 7);
       if
         check_piece i_p input o_p true row1 row2 row3 row4 row5 row6
           row7 row8
@@ -358,13 +358,27 @@ and mover_init board =
         clr = White
         && move_into_check
              (Array.get i_pr ic_rel_a)
-             input !w_k board.r1 board.r2 board.r3 board.r4 board.r5
-             board.r6 board.r7 board.r8
+             input !w_k
+             (Array.get board.grid 0)
+             (Array.get board.grid 1)
+             (Array.get board.grid 2)
+             (Array.get board.grid 3)
+             (Array.get board.grid 4)
+             (Array.get board.grid 5)
+             (Array.get board.grid 6)
+             (Array.get board.grid 7)
         || clr = Black
            && move_into_check
                 (Array.get i_pr ic_rel_a)
-                input !b_k board.r1 board.r2 board.r3 board.r4 board.r5
-                board.r6 board.r7 board.r8
+                input !b_k
+                (Array.get board.grid 0)
+                (Array.get board.grid 1)
+                (Array.get board.grid 2)
+                (Array.get board.grid 3)
+                (Array.get board.grid 4)
+                (Array.get board.grid 5)
+                (Array.get board.grid 6)
+                (Array.get board.grid 7)
       then (
         print_endline "Sorry, you can't move into check";
         mover_init board)
@@ -459,7 +473,7 @@ and mover_init board =
                   else (
                     if x.level = King then b_k := x;
                     avail_bp := x :: !avail_bp))
-            new_board2.r1;
+            (Array.get new_board2.grid 0);
           Array.iter
             (fun y ->
               match y with
@@ -471,7 +485,7 @@ and mover_init board =
                   else (
                     if x.level = King then b_k := x;
                     avail_bp := x :: !avail_bp))
-            new_board2.r2;
+            (Array.get new_board2.grid 1);
           Array.iter
             (fun y ->
               match y with
@@ -483,7 +497,7 @@ and mover_init board =
                   else (
                     if x.level = King then b_k := x;
                     avail_bp := x :: !avail_bp))
-            new_board2.r3;
+            (Array.get new_board2.grid 2);
           Array.iter
             (fun y ->
               match y with
@@ -495,7 +509,7 @@ and mover_init board =
                   else (
                     if x.level = King then b_k := x;
                     avail_bp := x :: !avail_bp))
-            new_board2.r4;
+            (Array.get new_board2.grid 3);
           Array.iter
             (fun y ->
               match y with
@@ -507,7 +521,7 @@ and mover_init board =
                   else (
                     if x.level = King then b_k := x;
                     avail_bp := x :: !avail_bp))
-            new_board2.r5;
+            (Array.get new_board2.grid 4);
           Array.iter
             (fun y ->
               match y with
@@ -519,7 +533,7 @@ and mover_init board =
                   else (
                     if x.level = King then b_k := x;
                     avail_bp := x :: !avail_bp))
-            new_board2.r6;
+            (Array.get new_board2.grid 5);
           Array.iter
             (fun y ->
               match y with
@@ -531,7 +545,7 @@ and mover_init board =
                   else (
                     if x.level = King then b_k := x;
                     avail_bp := x :: !avail_bp))
-            new_board2.r7;
+            (Array.get new_board2.grid 6);
           Array.iter
             (fun y ->
               match y with
@@ -543,7 +557,7 @@ and mover_init board =
                   else (
                     if x.level = King then b_k := x;
                     avail_bp := x :: !avail_bp))
-            new_board2.r8;
+            (Array.get new_board2.grid 7);
           print_newline ();
           print_endline "Here are all of the captured pieces:";
           print_list new_board2.graveyard;
@@ -562,9 +576,15 @@ and mover_init board =
               print_endline "Black Player Now In Stalemate!";
               false)
             else if
-              Command.checkmated !avail_wp !avail_bp !b_k new_board2.r1
-                new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5
-                new_board2.r6 new_board2.r7 new_board2.r8
+              Command.checkmated !avail_wp !avail_bp !b_k
+                (Array.get new_board2.grid 0)
+                (Array.get new_board2.grid 1)
+                (Array.get new_board2.grid 2)
+                (Array.get new_board2.grid 3)
+                (Array.get new_board2.grid 4)
+                (Array.get new_board2.grid 5)
+                (Array.get new_board2.grid 6)
+                (Array.get new_board2.grid 7)
             then (
               print_endline "Checkmate!";
               false)
@@ -583,9 +603,15 @@ and mover_init board =
               print_endline "White Player Now In Stalemate!";
               false)
             else if
-              Command.checkmated !avail_bp !avail_wp !w_k new_board2.r1
-                new_board2.r2 new_board2.r3 new_board2.r4 new_board2.r5
-                new_board2.r6 new_board2.r7 new_board2.r8
+              Command.checkmated !avail_bp !avail_wp !w_k
+                (Array.get new_board2.grid 0)
+                (Array.get new_board2.grid 1)
+                (Array.get new_board2.grid 2)
+                (Array.get new_board2.grid 3)
+                (Array.get new_board2.grid 4)
+                (Array.get new_board2.grid 5)
+                (Array.get new_board2.grid 6)
+                (Array.get new_board2.grid 7)
             then (
               print_endline "Checkmate!";
               false)

@@ -4,23 +4,7 @@ open Board
 type piecerow = piece option array
 
 type board = {
-  l1 : string;
-  r8 : piecerow;
-  l2 : string;
-  r7 : piecerow;
-  l3 : string;
-  r6 : piecerow;
-  l4 : string;
-  r5 : piecerow;
-  l5 : string;
-  r4 : piecerow;
-  l6 : string;
-  r3 : piecerow;
-  l7 : string;
-  r2 : piecerow;
-  l8 : string;
-  r1 : piecerow;
-  l9 : string;
+  grid : piecerow array;
   graveyard : string list;
   model : model;
 }
@@ -49,10 +33,16 @@ let row7 =
     Some blackpawn8;
   |]
 
-let row6 = [| None; None; None; None; None; None; None; None |]
-let row5 = [| None; None; None; None; None; None; None; None |]
-let row4 = [| None; None; None; None; None; None; None; None |]
-let row3 = [| None; None; None; None; None; None; None; None |]
+let make_empty_row () =
+  [| None; None; None; None; None; None; None; None |]
+
+let row6 = make_empty_row ()
+
+let row5 = make_empty_row ()
+
+let row4 = make_empty_row ()
+
+let row3 = make_empty_row ()
 
 let row2 =
   [|
@@ -79,27 +69,12 @@ let row1 =
   |]
 
 let sep = "----------------------------------------------------------"
+
 let lett = "    a      b      c      d      e      f      g      h    "
 
 let start_board =
   {
-    l1 = sep;
-    r8 = row8;
-    l2 = sep;
-    r7 = row7;
-    l3 = sep;
-    r6 = row6;
-    l4 = sep;
-    r5 = row5;
-    l5 = sep;
-    r4 = row4;
-    l6 = sep;
-    r3 = row3;
-    l7 = sep;
-    r2 = row2;
-    l8 = sep;
-    r1 = row1;
-    l9 = sep;
+    grid = [| row1; row2; row3; row4; row5; row6; row7; row8 |];
     graveyard = [];
     model = model_move;
   }
@@ -112,30 +87,13 @@ let print_piece (piece : piece option) =
 let print_piecerow (elt : piecerow) =
   Array.iter (fun x -> print_piece x) elt
 
-let print_board (ex : board) =
-  print_endline ex.l1;
-  print_piecerow ex.r8;
-  print_endline "|  8";
-  print_endline ex.l2;
-  print_piecerow ex.r7;
-  print_endline "|  7";
-  print_endline ex.l3;
-  print_piecerow ex.r6;
-  print_endline "|  6";
-  print_endline ex.l4;
-  print_piecerow ex.r5;
-  print_endline "|  5";
-  print_endline ex.l5;
-  print_piecerow ex.r4;
-  print_endline "|  4";
-  print_endline ex.l6;
-  print_piecerow ex.r3;
-  print_endline "|  3";
-  print_endline ex.l7;
-  print_piecerow ex.r2;
-  print_endline "|  2";
-  print_endline ex.l8;
-  print_piecerow ex.r1;
-  print_endline "|  1";
-  print_endline ex.l9;
-  print_endline lett
+let rec print_board ?(cycle = 8) brd =
+  if cycle = 0 then (
+    print_endline sep;
+    print_endline lett)
+  else
+    let decr_cycle = cycle - 1 in
+    print_endline sep;
+    Array.get brd.grid decr_cycle |> print_piecerow;
+    cycle |> string_of_int |> ( ^ ) "|  " |> print_endline;
+    print_board brd ~cycle:decr_cycle
