@@ -2,9 +2,7 @@ open Display
 open Piece
 
 exception InvalidInput
-
 exception EmptyCommand
-
 exception InvalidQuit
 
 val remove_blank : string list -> string list
@@ -100,3 +98,13 @@ val checkmated :
 
 val update_avail_lst :
   piece list ref -> piece list ref -> piece option array array -> unit
+
+val print_list : string list -> unit
+(**[print_list] takes in a list of strings and prints each element,
+   separated by a space.*)
+
+val color_matcher : board -> piece option -> bool
+(**[color_matcher] takes in a piece option, returning an exception if
+   there is no piece on the space in question. If there is a piece, it
+   returns [true] if the color of the player whose turn it is is
+   different from the color of the piece that is on the space.*)

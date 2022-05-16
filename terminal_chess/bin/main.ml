@@ -7,20 +7,6 @@ open Board
 open Display
 open Command
 
-let rec print_list = function
-  | [] -> ()
-  | e :: l ->
-      print_string e;
-      print_string " ";
-      print_list l
-
-let color_matcher board space =
-  match space with
-  | None ->
-      print_endline "calling None";
-      raise NoPiece
-  | Some space -> board.model.turn <> space.color
-
 let move_into_check piece cmd king grid =
   let p =
     match piece with
@@ -108,7 +94,7 @@ let rec promote_check input piece1 =
           promote_check input piece1)
 
 let rec filled_input board space =
-  try color_matcher board space with
+  try Command.color_matcher board space with
   | NoPiece ->
       print_endline
         "Sorry, there's no piece there. Check your input and try again.";
@@ -273,7 +259,7 @@ and mover_init board =
           Display.print_board new_board2.grid;
           print_newline ();
           print_endline "Here are all of the captured pieces:";
-          print_list new_board2.graveyard;
+          Command.print_list new_board2.graveyard;
           print_newline ();
           mover_init new_board2)
         else
@@ -287,7 +273,7 @@ and mover_init board =
           Command.update_avail_lst avail_wp avail_bp new_board2.grid;
           print_newline ();
           print_endline "Here are all of the captured pieces:";
-          print_list new_board2.graveyard;
+          Command.print_list new_board2.graveyard;
           print_newline ();
           if board.model.turn = White then (
             if Command.incheck !avail_wp !Display.bk board.grid then
@@ -319,5 +305,4 @@ and mover_init board =
             else mover_init new_board2)
 
 let () = Display.print_board Display.start_board.grid
-
 let _ = mover_init Display.start_board

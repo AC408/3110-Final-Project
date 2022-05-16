@@ -6,9 +6,7 @@ open Display
 open Piece
 
 exception InvalidInput
-
 exception EmptyCommand
-
 exception InvalidQuit
 
 (* given a list of string, removes empty string element *)
@@ -371,3 +369,17 @@ let checkmated same_side_list opp_side_list king grid =
        (*their pieces have moves*)
        king grid
      <> true
+
+let rec print_list = function
+  | [] -> ()
+  | e :: l ->
+      print_string e;
+      print_string " ";
+      print_list l
+
+let color_matcher board space =
+  match space with
+  | None ->
+      print_endline "calling None";
+      raise NoPiece
+  | Some space -> board.model.turn <> space.color
