@@ -7,11 +7,6 @@ open Board
 open Display
 open Command
 
-let rec print_avail_p lst =
-  match lst with
-  | [] -> ""
-  | h :: t -> h.rep ^ print_avail_p t
-
 let rec print_list = function
   | [] -> ()
   | e :: l ->
@@ -25,6 +20,107 @@ let color_matcher board space =
       print_endline "calling None";
       raise NoPiece
   | Some space -> board.model.turn <> space.color
+
+let move_into_check piece cmd king r1 r2 r3 r4 r5 r6 r7 r8 =
+  let p =
+    match piece with
+    | None -> failwith "input not a piece"
+    | Some pc -> pc
+  in
+  let k = ref king in
+  let a_bp = ref [] in
+  let a_wp = ref [] in
+  let arr1 = Array.copy r1 in
+  let arr2 = Array.copy r2 in
+  let arr3 = Array.copy r3 in
+  let arr4 = Array.copy r4 in
+  let arr5 = Array.copy r5 in
+  let arr6 = Array.copy r6 in
+  let arr7 = Array.copy r7 in
+  let arr8 = Array.copy r8 in
+  let o_r =
+    Command.checkn3 cmd arr1 arr2 arr3 arr4 arr5 arr6 arr7 arr8
+  in
+  let moved_piece =
+    Piece.place_piece
+      (Some (cmd.[3], int_of_char cmd.[2] - int_of_char '0'))
+      (Piece.get_color p) (Piece.get_level p) (Piece.get_rep p) true
+  in
+  if p = king then k := moved_piece;
+  Some moved_piece |> Array.set o_r (Char.code cmd.[3] - Char.code 'a');
+  None
+  |> Array.set
+       (Command.checkn1 cmd arr1 arr2 arr3 arr4 arr5 arr6 arr7 arr8)
+       (Char.code cmd.[1] - Char.code 'a');
+  Array.iter
+    (fun y ->
+      match y with
+      | None -> ()
+      | Some x ->
+          if x.color = White then a_wp := x :: !a_wp
+          else a_bp := x :: !a_bp)
+    arr1;
+  Array.iter
+    (fun y ->
+      match y with
+      | None -> ()
+      | Some x ->
+          if x.color = White then a_wp := x :: !a_wp
+          else a_bp := x :: !a_bp)
+    arr2;
+  Array.iter
+    (fun y ->
+      match y with
+      | None -> ()
+      | Some x ->
+          if x.color = White then a_wp := x :: !a_wp
+          else a_bp := x :: !a_bp)
+    arr3;
+  Array.iter
+    (fun y ->
+      match y with
+      | None -> ()
+      | Some x ->
+          if x.color = White then a_wp := x :: !a_wp
+          else a_bp := x :: !a_bp)
+    arr4;
+  Array.iter
+    (fun y ->
+      match y with
+      | None -> ()
+      | Some x ->
+          if x.color = White then a_wp := x :: !a_wp
+          else a_bp := x :: !a_bp)
+    arr5;
+  Array.iter
+    (fun y ->
+      match y with
+      | None -> ()
+      | Some x ->
+          if x.color = White then a_wp := x :: !a_wp
+          else a_bp := x :: !a_bp)
+    arr6;
+  Array.iter
+    (fun y ->
+      match y with
+      | None -> ()
+      | Some x ->
+          if x.color = White then a_wp := x :: !a_wp
+          else a_bp := x :: !a_bp)
+    arr7;
+  Array.iter
+    (fun y ->
+      match y with
+      | None -> ()
+      | Some x ->
+          if x.color = White then a_wp := x :: !a_wp
+          else a_bp := x :: !a_bp)
+    arr8;
+  match Piece.get_color king with
+  | White ->
+      incheck !a_bp !k true arr1 arr2 arr3 arr4 arr5 arr6 arr7 arr8
+  | Black ->
+      incheck !a_wp !k true arr1 arr2 arr3 arr4 arr5 arr6 arr7 arr8
 
 let rec promote_check input piece1 =
   match piece1 with
@@ -147,6 +243,103 @@ and mover_init board =
       (*ip*)
       let o_p = Array.get o_pr oc_rel_a in
       (*op*)
+      let clr = board.model.turn in
+      Array.iter
+        (fun y ->
+          match y with
+          | None -> ()
+          | Some x ->
+              if x.color = White then (
+                if x.level = King then w_k := x;
+                avail_wp := x :: !avail_wp)
+              else (
+                if x.level = King then b_k := x;
+                avail_bp := x :: !avail_bp))
+        board.r1;
+      Array.iter
+        (fun y ->
+          match y with
+          | None -> ()
+          | Some x ->
+              if x.color = White then (
+                if x.level = King then w_k := x;
+                avail_wp := x :: !avail_wp)
+              else (
+                if x.level = King then b_k := x;
+                avail_bp := x :: !avail_bp))
+        board.r2;
+      Array.iter
+        (fun y ->
+          match y with
+          | None -> ()
+          | Some x ->
+              if x.color = White then (
+                if x.level = King then w_k := x;
+                avail_wp := x :: !avail_wp)
+              else (
+                if x.level = King then b_k := x;
+                avail_bp := x :: !avail_bp))
+        board.r3;
+      Array.iter
+        (fun y ->
+          match y with
+          | None -> ()
+          | Some x ->
+              if x.color = White then (
+                if x.level = King then w_k := x;
+                avail_wp := x :: !avail_wp)
+              else (
+                if x.level = King then b_k := x;
+                avail_bp := x :: !avail_bp))
+        board.r4;
+      Array.iter
+        (fun y ->
+          match y with
+          | None -> ()
+          | Some x ->
+              if x.color = White then (
+                if x.level = King then w_k := x;
+                avail_wp := x :: !avail_wp)
+              else (
+                if x.level = King then b_k := x;
+                avail_bp := x :: !avail_bp))
+        board.r5;
+      Array.iter
+        (fun y ->
+          match y with
+          | None -> ()
+          | Some x ->
+              if x.color = White then (
+                if x.level = King then w_k := x;
+                avail_wp := x :: !avail_wp)
+              else (
+                if x.level = King then b_k := x;
+                avail_bp := x :: !avail_bp))
+        board.r6;
+      Array.iter
+        (fun y ->
+          match y with
+          | None -> ()
+          | Some x ->
+              if x.color = White then (
+                if x.level = King then w_k := x;
+                avail_wp := x :: !avail_wp)
+              else (
+                if x.level = King then b_k := x;
+                avail_bp := x :: !avail_bp))
+        board.r7;
+      Array.iter
+        (fun y ->
+          match y with
+          | None -> ()
+          | Some x ->
+              if x.color = White then (
+                if x.level = King then w_k := x;
+                avail_wp := x :: !avail_wp)
+              else (
+                if x.level = King then b_k := x;
+                avail_bp := x :: !avail_bp))
+        board.r8;
       if
         check_piece i_p input o_p true row1 row2 row3 row4 row5 row6
           row7 row8
@@ -160,6 +353,20 @@ and mover_init board =
         print_endline
           "Sorry, you can't capture one of your own pieces! (or that's \
            not a valid castling, sorry.)";
+        mover_init board)
+      else if
+        clr = White
+        && move_into_check
+             (Array.get i_pr ic_rel_a)
+             input !w_k board.r1 board.r2 board.r3 board.r4 board.r5
+             board.r6 board.r7 board.r8
+        || clr = Black
+           && move_into_check
+                (Array.get i_pr ic_rel_a)
+                input !b_k board.r1 board.r2 board.r3 board.r4 board.r5
+                board.r6 board.r7 board.r8
+      then (
+        print_endline "Sorry, you can't move into check";
         mover_init board)
       else
         let new_board =
@@ -246,80 +453,96 @@ and mover_init board =
               match y with
               | None -> ()
               | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
+                  if x.color = White then (
+                    if x.level = King then w_k := x;
+                    avail_wp := x :: !avail_wp)
+                  else (
+                    if x.level = King then b_k := x;
+                    avail_bp := x :: !avail_bp))
             new_board2.r1;
           Array.iter
             (fun y ->
               match y with
               | None -> ()
               | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
+                  if x.color = White then (
+                    if x.level = King then w_k := x;
+                    avail_wp := x :: !avail_wp)
+                  else (
+                    if x.level = King then b_k := x;
+                    avail_bp := x :: !avail_bp))
             new_board2.r2;
           Array.iter
             (fun y ->
               match y with
               | None -> ()
               | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
+                  if x.color = White then (
+                    if x.level = King then w_k := x;
+                    avail_wp := x :: !avail_wp)
+                  else (
+                    if x.level = King then b_k := x;
+                    avail_bp := x :: !avail_bp))
             new_board2.r3;
           Array.iter
             (fun y ->
               match y with
               | None -> ()
               | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
+                  if x.color = White then (
+                    if x.level = King then w_k := x;
+                    avail_wp := x :: !avail_wp)
+                  else (
+                    if x.level = King then b_k := x;
+                    avail_bp := x :: !avail_bp))
             new_board2.r4;
           Array.iter
             (fun y ->
               match y with
               | None -> ()
               | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
+                  if x.color = White then (
+                    if x.level = King then w_k := x;
+                    avail_wp := x :: !avail_wp)
+                  else (
+                    if x.level = King then b_k := x;
+                    avail_bp := x :: !avail_bp))
             new_board2.r5;
           Array.iter
             (fun y ->
               match y with
               | None -> ()
               | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
+                  if x.color = White then (
+                    if x.level = King then w_k := x;
+                    avail_wp := x :: !avail_wp)
+                  else (
+                    if x.level = King then b_k := x;
+                    avail_bp := x :: !avail_bp))
             new_board2.r6;
           Array.iter
             (fun y ->
               match y with
               | None -> ()
               | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
+                  if x.color = White then (
+                    if x.level = King then w_k := x;
+                    avail_wp := x :: !avail_wp)
+                  else (
+                    if x.level = King then b_k := x;
+                    avail_bp := x :: !avail_bp))
             new_board2.r7;
           Array.iter
             (fun y ->
               match y with
               | None -> ()
               | Some x ->
-                  if x.color = White then avail_wp := x :: !avail_wp
-                  else avail_bp := x :: !avail_bp;
-                  if x = whiteking then w_k := x
-                  else if x = blackking then b_k := x)
+                  if x.color = White then (
+                    if x.level = King then w_k := x;
+                    avail_wp := x :: !avail_wp)
+                  else (
+                    if x.level = King then b_k := x;
+                    avail_bp := x :: !avail_bp))
             new_board2.r8;
           print_newline ();
           print_endline "Here are all of the captured pieces:";
@@ -369,4 +592,5 @@ and mover_init board =
             else mover_init new_board2)
 
 let () = Display.print_board Display.start_board
+
 let _ = mover_init Display.start_board

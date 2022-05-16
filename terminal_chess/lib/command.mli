@@ -2,7 +2,9 @@ open Display
 open Piece
 
 exception InvalidInput
+
 exception EmptyCommand
+
 exception InvalidQuit
 
 val remove_blank : string list -> string list
@@ -41,6 +43,34 @@ val check1 : string -> piecerow
    selects.*)
 
 val check3 : string -> piecerow
+(**[check3] is the row that corresponds to the output space that the
+   user selects.*)
+
+val checkn3 :
+  string ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow
+(**[check3] is the row that corresponds to the output space that the
+   user selects.*)
+
+val checkn1 :
+  string ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow ->
+  piecerow
 (**[check3] is the row that corresponds to the output space that the
    user selects.*)
 
