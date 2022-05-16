@@ -97,3 +97,7 @@ let rec print_board ?(cycle = 8) grd =
     Array.get grd decr_cycle |> print_piecerow;
     cycle |> string_of_int |> ( ^ ) "|  " |> print_endline;
     print_board grd ~cycle:decr_cycle
+
+let bk = ref blackking
+
+let wk = ref whiteking

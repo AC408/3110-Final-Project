@@ -97,3 +97,6 @@ val checkmated :
    [king] representing the king piece, and 8 piecerow representing rooks
    called [r1], [r2], [r3], [r4], [r5], [r6], [r7], [r8] and it returns
    a boolean [bool] in accordance to the checkmate. *)
+
+val update_avail_lst :
+  piece list ref -> piece list ref -> piece option array array -> unit

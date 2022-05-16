@@ -43,3 +43,7 @@ val print_piecerow : piecerow -> unit
 val print_board : ?cycle:int -> piecerow array -> unit
 (**[print_board] prints all pieces, dividing lines, and identification
    markers*)
+
+val wk : piece ref
+
+val bk : piece ref

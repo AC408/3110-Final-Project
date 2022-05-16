@@ -306,6 +306,18 @@ let rec has_move plist grid =
       let ppos = string_of_pos p in
       loop_x 1 0 p ppos grid @ has_move t grid
 
+let update_avail_lst a_wp a_bp grid =
+  for x = 0 to 7 do
+    Array.iter
+      (fun y ->
+        match y with
+        | None -> ()
+        | Some x ->
+            if x.color = White then a_wp := x :: !a_wp
+            else a_bp := x :: !a_bp)
+      (Array.get grid x)
+  done
+
 (* given moves, try executing moves and seeing if king is still in
    check. if not, return false, else recurse*)
 let rec has_legal_move plist king grid =
@@ -328,16 +340,7 @@ let rec has_legal_move plist king grid =
       None
       |> Array.set (check1 cmd copy_grid)
            (Char.code cmd.[1] - Char.code 'a');
-      for x = 0 to 7 do
-        Array.iter
-          (fun y ->
-            match y with
-            | None -> ()
-            | Some x ->
-                if x.color = White then a_wp := x :: !a_wp
-                else a_bp := x :: !a_bp)
-          (Array.get copy_grid x)
-      done;
+      update_avail_lst a_wp a_bp copy_grid;
       match Piece.get_color king with
       | White ->
           if incheck !a_bp !k copy_grid <> true then true

@@ -43,70 +43,7 @@ let move_into_check piece cmd king grid =
   |> Array.set
        (Command.check1 cmd copy_grid)
        (Char.code cmd.[1] - Char.code 'a');
-  Array.iter
-    (fun y ->
-      match y with
-      | None -> ()
-      | Some x ->
-          if x.color = White then a_wp := x :: !a_wp
-          else a_bp := x :: !a_bp)
-    (Array.get copy_grid 0);
-  Array.iter
-    (fun y ->
-      match y with
-      | None -> ()
-      | Some x ->
-          if x.color = White then a_wp := x :: !a_wp
-          else a_bp := x :: !a_bp)
-    (Array.get copy_grid 1);
-  Array.iter
-    (fun y ->
-      match y with
-      | None -> ()
-      | Some x ->
-          if x.color = White then a_wp := x :: !a_wp
-          else a_bp := x :: !a_bp)
-    (Array.get copy_grid 2);
-  Array.iter
-    (fun y ->
-      match y with
-      | None -> ()
-      | Some x ->
-          if x.color = White then a_wp := x :: !a_wp
-          else a_bp := x :: !a_bp)
-    (Array.get copy_grid 3);
-  Array.iter
-    (fun y ->
-      match y with
-      | None -> ()
-      | Some x ->
-          if x.color = White then a_wp := x :: !a_wp
-          else a_bp := x :: !a_bp)
-    (Array.get copy_grid 4);
-  Array.iter
-    (fun y ->
-      match y with
-      | None -> ()
-      | Some x ->
-          if x.color = White then a_wp := x :: !a_wp
-          else a_bp := x :: !a_bp)
-    (Array.get copy_grid 5);
-  Array.iter
-    (fun y ->
-      match y with
-      | None -> ()
-      | Some x ->
-          if x.color = White then a_wp := x :: !a_wp
-          else a_bp := x :: !a_bp)
-    (Array.get copy_grid 6);
-  Array.iter
-    (fun y ->
-      match y with
-      | None -> ()
-      | Some x ->
-          if x.color = White then a_wp := x :: !a_wp
-          else a_bp := x :: !a_bp)
-    (Array.get copy_grid 7);
+  Command.update_avail_lst a_wp a_wp copy_grid;
   match Piece.get_color king with
   | White -> incheck !a_bp !k copy_grid
   | Black -> incheck !a_wp !k copy_grid
@@ -194,8 +131,6 @@ and char_in_range str =
 and mover_init board =
   let avail_wp = ref [] in
   let avail_bp = ref [] in
-  let w_k = ref whiteking in
-  let b_k = ref blackking in
   print_newline ();
   let whoseturn =
     "Currently it is " ^ Board.get_turn board.model ^ "'s turn."
@@ -235,21 +170,6 @@ and mover_init board =
       let o_p = Array.get o_pr oc_rel_a in
       (*op*)
       let clr = board.model.turn in
-      for x = 0 to 7 do
-        Array.iter
-          (fun y ->
-            match y with
-            | None -> ()
-            | Some x ->
-                if x.color = White then (
-                  if x.level = King then w_k := x;
-                  avail_wp := x :: !avail_wp)
-                else (
-                  if x.level = King then b_k := x;
-                  avail_bp := x :: !avail_bp))
-          (Array.get board.grid x)
-      done;
-
       if check_piece i_p input o_p board.grid = false then (
         print_endline
           "Sorry, either this piece doesn't move that way or that's \
@@ -264,11 +184,11 @@ and mover_init board =
         clr = White
         && move_into_check
              (Array.get i_pr ic_rel_a)
-             input !w_k board.grid
+             input !Display.wk board.grid
         || clr = Black
            && move_into_check
                 (Array.get i_pr ic_rel_a)
-                input !b_k board.grid
+                input !Display.wk board.grid
       then (
         print_endline
           "Sorry, you can't move into check or stay in check";
@@ -286,23 +206,32 @@ and mover_init board =
           match Array.get i_pr ic_rel_a with
           | None -> None
           | Some piece ->
-              Some
-                (Piece.place_piece
-                   (Some
-                      ( input.[3],
-                        int_of_char input.[2] - int_of_char '0' ))
-                   (Piece.get_color piece) (Piece.get_level piece)
-                   (Piece.get_rep piece) true)
+              let new_p =
+                Piece.place_piece
+                  (Some
+                     (input.[3], int_of_char input.[2] - int_of_char '0'))
+                  (Piece.get_color piece) (Piece.get_level piece)
+                  (Piece.get_rep piece) true
+              in
+              if new_p.level = King then
+                if new_p.color = White then Display.wk := new_p
+                else Display.bk := new_p;
+              Some new_p
         in
         let moved_piece2 =
           match Array.get o_pr oc_rel_a with
           | None -> None
           | Some piece ->
-              Some
-                (Piece.place_piece
-                   (Piece.get_position piece)
-                   (Piece.get_color piece) (Piece.get_level piece)
-                   (Piece.get_rep piece) true)
+              let new_p =
+                Piece.place_piece
+                  (Piece.get_position piece)
+                  (Piece.get_color piece) (Piece.get_level piece)
+                  (Piece.get_rep piece) true
+              in
+              if new_p.level = King then
+                if new_p.color = White then Display.wk := new_p
+                else Display.bk := new_p;
+              Some new_p
         in
         if snd (Command.castle i_p input o_p board.grid) = false then (
           Array.set o_pr oc_rel_a moved_piece;
@@ -355,47 +284,34 @@ and mover_init board =
             }
           in
           Display.print_board new_board2.grid;
-          for x = 0 to 7 do
-            Array.iter
-              (fun y ->
-                match y with
-                | None -> ()
-                | Some x ->
-                    if x.color = White then (
-                      if x.level = King then w_k := x;
-                      avail_wp := x :: !avail_wp)
-                    else (
-                      if x.level = King then b_k := x;
-                      avail_bp := x :: !avail_bp))
-              (Array.get new_board2.grid x)
-          done;
+          Command.update_avail_lst avail_wp avail_bp new_board2.grid;
           print_newline ();
           print_endline "Here are all of the captured pieces:";
           print_list new_board2.graveyard;
           print_newline ();
           if board.model.turn = White then (
-            if Command.incheck !avail_wp !b_k board.grid then
+            if Command.incheck !avail_wp !Display.bk board.grid then
               print_endline "Black Player Now In Check!"
             else ();
             if Command.has_move !avail_bp board.grid = [] then (
               print_endline "Black Player Now In Stalemate!";
               false)
             else if
-              Command.checkmated !avail_wp !avail_bp !b_k
+              Command.checkmated !avail_wp !avail_bp !Display.bk
                 new_board2.grid
             then (
               print_endline "Checkmate!";
               false)
             else mover_init new_board2)
           else (
-            if Command.incheck !avail_bp !w_k board.grid then
+            if Command.incheck !avail_bp !Display.wk board.grid then
               print_endline "White Player Now In Check!"
             else ();
             if Command.has_move !avail_wp board.grid = [] then (
               print_endline "White Player Now In Stalemate!";
               false)
             else if
-              Command.checkmated !avail_bp !avail_wp !w_k
+              Command.checkmated !avail_bp !avail_wp !Display.wk
                 new_board2.grid
             then (
               print_endline "Checkmate!";
