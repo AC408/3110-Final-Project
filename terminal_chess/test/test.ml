@@ -44,27 +44,16 @@ let bptestopt =
 (**These are not written as options -- just pieces*)
 
 let wqtest = place_piece (Some ('d', 1)) White Queen "|  ♕   " true
-
 let wktest = place_piece (Some ('e', 1)) White King "|  ♔   " true
-
 let wbtest = place_piece (Some ('c', 1)) White Bishop "|  ♗   " true
-
 let wkntest = place_piece (Some ('b', 1)) White Knight "|  ♘   " true
-
 let wrtest = place_piece (Some ('a', 1)) White Rook "|  ♖   " true
-
 let wptest = place_piece (Some ('a', 2)) White Pawn "|  ♙   " true
-
 let bqtest = place_piece (Some ('d', 8)) Black Queen "|  ♛   " false
-
 let bktest = place_piece (Some ('e', 8)) Black King "|  ♚   " false
-
 let bbtest = place_piece (Some ('c', 8)) Black Bishop "|  ♝   " false
-
 let bkntest = place_piece (Some ('b', 8)) Black Knight "|  ♞   " false
-
 let brtest = place_piece (Some ('a', 8)) Black Rook "|  ♜   " false
-
 let bptest = place_piece (Some ('a', 7)) Black Pawn "|  ♟   " false
 let model1 = { moves = 0; turn = White }
 let model1b = { moves = 1; turn = Black }
@@ -86,7 +75,6 @@ let model9 = { moves = 17; turn = White }
 let model9b = { moves = 18; turn = Black }
 let model10 = { moves = 30; turn = Black }
 let model10b = { moves = 31; turn = White }
-
 let wqgrid = [| wqtestopt |]
 
 let wtestgrid =
@@ -390,6 +378,30 @@ let get_turn_tests =
     get_turn_tests "mod10b" model10b "White";
   ]
 
+(**[update_tests name board change output_board] constructs an OUnit
+   test named [name] that asserts the quality of [output_board] with
+   [update_turn board change].*)
+let update_tests
+    (name : string)
+    (board : model)
+    (change : change)
+    (output_board : model) : test =
+  name >:: fun _ -> assert_equal output_board (update_turn board change)
+
+let update_tests =
+  [
+    update_tests "mod1" model1 Change model1b;
+    update_tests "mod2" model2 Change model2b;
+    update_tests "mod3" model3 Change model3b;
+    update_tests "mod4" model4 Change model4b;
+    update_tests "mod5" model5 Change model5b;
+    update_tests "mod6" model6 Change model6b;
+    update_tests "mod7" model7 Change model7b;
+    update_tests "mod8" model8 Change model8b;
+    update_tests "mod9" model9 Change model9b;
+    update_tests "mod10" model10 Change model10b;
+  ]
+
 (**[remove_blank_tests name strlist output_strlist] constructs an OUnit
    test named [name] that asserts the quality of [output_strlist] with
    [remove_blank strlist].*)
@@ -455,6 +467,7 @@ let tests =
            remove_blank_tests;
            explode_tests;
            get_turn_tests;
+           update_tests;
          ]
 
 let _ = run_test_tt_main tests
