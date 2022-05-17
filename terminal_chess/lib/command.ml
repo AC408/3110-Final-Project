@@ -90,18 +90,11 @@ let rec go_down str gate grid =
     match new_str with
     | [ row1; col1; row2; col2 ] ->
         let prev_loc = Char.escaped row1 ^ Char.escaped col1 in
-        if row2 < row1 then
-          go_down
-            (prev_loc
-            ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-            ^ Char.escaped col2)
-            false grid
-        else
-          go_down
-            (prev_loc
-            ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-            ^ Char.escaped col2)
-            false grid
+        let dir = if row2 < row1 then 1 else -1 in
+        let new_o_row = Char.code row2 - Char.code '0' + dir in
+        go_down
+          (prev_loc ^ string_of_int new_o_row ^ Char.escaped col2)
+          false grid
     | _ -> false
 
 let rec go_diagonal direction str gate grid =
@@ -116,20 +109,15 @@ let rec go_diagonal direction str gate grid =
     match new_str with
     | [ row1; col1; row2; col2 ] ->
         let prev_loc = Char.escaped row1 ^ Char.escaped col1 in
-        if row2 < row1 then
-          go_diagonal direction
-            (prev_loc
-            ^ (Char.code row2 - Char.code '0' + 1 |> string_of_int)
-            ^ (int_of_char col2 + diagonal_direction
-              |> Char.chr |> Char.escaped))
-            false grid
-        else
-          go_diagonal direction
-            (prev_loc
-            ^ (Char.code row2 - Char.code '0' - 1 |> string_of_int)
-            ^ (int_of_char col2 - diagonal_direction
-              |> Char.chr |> Char.escaped))
-            false grid
+        let hor_dir = if row2 < row1 then 1 else -1 in
+        let new_o_row = Char.code row2 - Char.code '0' + hor_dir in
+        let new_o_col =
+          int_of_char col2 + (diagonal_direction * hor_dir)
+          |> Char.chr |> Char.escaped
+        in
+        go_diagonal direction
+          (prev_loc ^ (new_o_row |> string_of_int) ^ new_o_col)
+          false grid
     | _ -> false
 
 let check_horizontal str grid =
@@ -207,23 +195,14 @@ let pawn_check input moved color grid =
 let castle i_p input o_p grid =
   match (i_p, o_p) with
   | Some i_p, Some o_p ->
-      if get_level i_p = King && get_level o_p = Rook then
-        if have_moved i_p || have_moved o_p then ("na", false)
-        else if input.[3] = 'h' then
-          if check_horizontal input grid then ("ksik", true)
-          else ("na", false)
-        else if input.[3] = 'a' then
-          if check_horizontal input grid then ("qsik", true)
-          else ("na", false)
-        else ("na", false)
-      else if get_level i_p = Rook && get_level o_p = King then
-        if have_moved i_p || have_moved o_p then ("na", false)
-        else if input.[1] = 'h' then
-          if check_horizontal input grid then ("ksir", true)
-          else ("na", false)
-        else if input.[1] = 'a' then
-          if check_horizontal input grid then ("qsir", true)
-          else ("na", false)
+      if have_moved i_p || have_moved o_p then ("na", false)
+      else if check_horizontal input grid = false then ("na", false)
+      else if
+        (get_level i_p = King && get_level o_p = Rook)
+        || (get_level i_p = King && get_level o_p = Rook)
+      then
+        if input.[3] = 'h' || input.[1] = 'h' then ("ksik", true)
+        else if input.[3] = 'a' || input.[1] = 'a' then ("qsik", true)
         else ("na", false)
       else ("na", false)
   | _, _ -> ("na", false)

@@ -189,17 +189,17 @@ and mover_init board =
           Array.set i_pr ic_rel_a None;
           match fst (Command.castle i_p input o_p board.grid) with
           | "ksir" ->
-              Array.set o_pr 6 moved_piece;
-              Array.set o_pr 5 moved_piece2
-          | "qsir" ->
-              Array.set o_pr 3 moved_piece2;
-              Array.set o_pr 2 moved_piece
-          | "ksik" ->
               Array.set o_pr 6 moved_piece2;
               Array.set o_pr 5 moved_piece
-          | "qsik" ->
+          | "qsir" ->
               Array.set o_pr 3 moved_piece;
               Array.set o_pr 2 moved_piece2
+          | "ksik" ->
+              Array.set o_pr 6 moved_piece;
+              Array.set o_pr 5 moved_piece2
+          | "qsik" ->
+              Array.set o_pr 3 moved_piece2;
+              Array.set o_pr 2 moved_piece
           | _ -> failwith "castle function error"
         end;
         if Command.promote_pawn input moved_piece then (
