@@ -13,16 +13,19 @@ type color =
   | White
   | Black
 
-type position = (char * int) option
+type position = {
+  row : int;
+  col : string;
+}
 
 exception NoPiece
-
 exception NoPosition
 
 type piece = {
+  name : string;
   position : position;
-  color : color;
-  level : level;
+  color : string;
+  level : string;
   rep : string;
   moved : bool;
 }
@@ -30,6 +33,11 @@ type piece = {
 
 type t = { pieces : piece list }
 (** type t is a board including all pieces*)
+
+val pieces : t -> piece list
+val position_of_json : Yojson.Basic.t -> position
+val piece_of_json : Yojson.Basic.t -> piece
+val t_from_json : Yojson.Basic.t -> t
 
 val from_json : Yojson.Basic.t -> t
 (** [from_json j] is the set of pieces that [j] represents. Requires:
@@ -43,18 +51,20 @@ val get_level : piece -> level
 val get_color : piece -> color
 (** [get_color p] returns the color of the piece [p]. *)
 
-val get_position : piece -> (char * int) option
+val get_position : piece -> position
 (** [get_position p] returns the position of the piece [p]. *)
 
 val string_of_pos : piece -> string
 (** [get_position p] returns the position of the piece [p]. Raises
     NoPosition if position is None *)
 
+val get_name : piece -> string
+
 val get_rep : piece -> string
 (** [get_rep p] returns the rep of the piece [p] *)
 
 val place_piece :
-  (char * int) option -> color -> level -> string -> bool -> piece
+  string -> position -> string -> string -> string -> bool -> piece
 (** [place_piece pos c l] returns the position [pos], color [c], level
     [l], and representation [rep] of the function. *)
 

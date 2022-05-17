@@ -9,6 +9,170 @@ type board = {
   model : model;
 }
 
+let jsonfile =
+  "data" ^ Filename.dir_sep ^ "pieces.json"
+  |> Yojson.Basic.from_file |> Piece.t_from_json
+
+let blackrook1 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackrook1" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackknight1 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackknight1" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackbishop1 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackbishop1" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackqueen =
+  List.find
+    (fun x -> if Piece.get_name x = "blackqueen" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackking =
+  List.find
+    (fun x -> if Piece.get_name x = "blackking" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackbishop2 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackbishop2" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackknight2 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackknight2" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackrook2 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackrook2" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackpawn1 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackpawn1" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackpawn2 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackpawn2" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackpawn3 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackpawn3" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackpawn4 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackpawn4" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackpawn5 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackpawn5" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackpawn6 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackpawn6" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackpawn7 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackpawn7" then true else false)
+    (Piece.pieces jsonfile)
+
+let blackpawn8 =
+  List.find
+    (fun x -> if Piece.get_name x = "blackpawn8" then true else false)
+    (Piece.pieces jsonfile)
+
+let whitepawn1 =
+  List.find
+    (fun x -> if Piece.get_name x = "whitepawn1" then true else false)
+    (Piece.pieces jsonfile)
+
+let whitepawn2 =
+  List.find
+    (fun x -> if Piece.get_name x = "whitepawn2" then true else false)
+    (Piece.pieces jsonfile)
+
+let whitepawn3 =
+  List.find
+    (fun x -> if Piece.get_name x = "whitepawn3" then true else false)
+    (Piece.pieces jsonfile)
+
+let whitepawn4 =
+  List.find
+    (fun x -> if Piece.get_name x = "whitepawn4" then true else false)
+    (Piece.pieces jsonfile)
+
+let whitepawn5 =
+  List.find
+    (fun x -> if Piece.get_name x = "whitepawn5" then true else false)
+    (Piece.pieces jsonfile)
+
+let whitepawn6 =
+  List.find
+    (fun x -> if Piece.get_name x = "whitepawn6" then true else false)
+    (Piece.pieces jsonfile)
+
+let whitepawn7 =
+  List.find
+    (fun x -> if Piece.get_name x = "whitepawn7" then true else false)
+    (Piece.pieces jsonfile)
+
+let whitepawn8 =
+  List.find
+    (fun x -> if Piece.get_name x = "whitepawn8" then true else false)
+    (Piece.pieces jsonfile)
+
+let whiterook1 =
+  List.find
+    (fun x -> if Piece.get_name x = "whiterook1" then true else false)
+    (Piece.pieces jsonfile)
+
+let whiteknight1 =
+  List.find
+    (fun x -> if Piece.get_name x = "whiteknight1" then true else false)
+    (Piece.pieces jsonfile)
+
+let whitebishop1 =
+  List.find
+    (fun x -> if Piece.get_name x = "whitebishop1" then true else false)
+    (Piece.pieces jsonfile)
+
+let whitequeen =
+  List.find
+    (fun x -> if Piece.get_name x = "whitequeen" then true else false)
+    (Piece.pieces jsonfile)
+
+let whiteking =
+  List.find
+    (fun x -> if Piece.get_name x = "whiteking" then true else false)
+    (Piece.pieces jsonfile)
+
+let whitebishop2 =
+  List.find
+    (fun x -> if Piece.get_name x = "whitebishop2" then true else false)
+    (Piece.pieces jsonfile)
+
+let whiteknight2 =
+  List.find
+    (fun x -> if Piece.get_name x = "whiteknight2" then true else false)
+    (Piece.pieces jsonfile)
+
+let whiterook2 =
+  List.find
+    (fun x -> if Piece.get_name x = "whiterook2" then true else false)
+    (Piece.pieces jsonfile)
+
 let row8 =
   [|
     Some blackrook1;
@@ -37,11 +201,8 @@ let make_empty_row () =
   [| None; None; None; None; None; None; None; None |]
 
 let row6 = make_empty_row ()
-
 let row5 = make_empty_row ()
-
 let row4 = make_empty_row ()
-
 let row3 = make_empty_row ()
 
 let row2 =
@@ -69,7 +230,6 @@ let row1 =
   |]
 
 let sep = "----------------------------------------------------------"
-
 let lett = "    a      b      c      d      e      f      g      h    "
 
 let start_board =
@@ -99,5 +259,4 @@ let rec print_board ?(cycle = 8) grd =
     print_board grd ~cycle:decr_cycle
 
 let bk = ref blackking
-
 let wk = ref whiteking
