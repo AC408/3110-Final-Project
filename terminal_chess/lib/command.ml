@@ -336,9 +336,7 @@ and incheck w_plist b_plist king grid =
   | p :: t ->
       let cmd = king |> string_of_pos |> ( ^ ) (string_of_pos p) in
       let o_pr = check3 cmd grid in
-      (*output piecerow*)
       let o_p = Char.code cmd.[3] - Char.code 'a' |> Array.get o_pr in
-      (*output piece*)
       if check_piece (Some p) cmd o_p grid then true
       else if color = White then incheck w_plist t king grid
       else incheck t b_plist king grid

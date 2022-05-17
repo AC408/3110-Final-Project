@@ -15,6 +15,7 @@ type color =
 type position = (char * int) option
 
 exception NoPiece
+
 exception NoPosition
 
 type piece = {
@@ -55,7 +56,9 @@ let rep space =
   | Some space -> space.rep
 
 let get_level p = p.level
+
 let get_color p = p.color
+
 let get_position p = p.position
 
 let string_of_pos p =
