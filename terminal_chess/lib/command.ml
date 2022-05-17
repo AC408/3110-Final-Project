@@ -6,7 +6,9 @@ open Display
 open Piece
 
 exception InvalidInput
+
 exception EmptyCommand
+
 exception InvalidQuit
 
 (* given a list of string, removes empty string element *)
@@ -297,12 +299,18 @@ let rec loop_x x y p ppos grid =
   | curr_x ->
       loop_y curr_x y p ppos grid @ loop_x (curr_x + 1) y p ppos grid
 
-let rec has_move plist grid =
+let rec has_move w_plist b_plist king grid =
+  let color = king.color in
+  let plist = if color = White then w_plist else b_plist in
   match plist with
   | [] -> []
   | p :: t ->
+      let new_lst =
+        if color = White then has_move t b_plist king grid
+        else has_move w_plist t king grid
+      in
       let ppos = string_of_pos p in
-      loop_x 1 0 p ppos grid @ has_move t grid
+      loop_x 1 0 p ppos grid @ new_lst
 
 let update_avail_lst a_wp a_bp grid =
   for x = 0 to 7 do
@@ -321,7 +329,7 @@ let update_avail_lst a_wp a_bp grid =
 let rec has_legal_move plist king grid =
   match plist with
   | [] -> false
-  | (p, cmd) :: t -> (
+  | (p, cmd) :: t ->
       let k = ref king in
       let a_bp = ref [] in
       let a_wp = ref [] in
@@ -339,17 +347,12 @@ let rec has_legal_move plist king grid =
       |> Array.set (check1 cmd copy_grid)
            (Char.code cmd.[1] - Char.code 'a');
       update_avail_lst a_wp a_bp copy_grid;
-      match Piece.get_color king with
-      | White ->
-          if incheck !a_bp !k copy_grid <> true then true
-          else has_legal_move t king grid
-      | Black ->
-          (*simulating black moves to see if black has any legal moves -
-            k = black king*)
-          if incheck !a_wp !k copy_grid <> true then true
-          else has_legal_move t king grid)
+      if incheck !a_wp !a_bp !k copy_grid <> true then true
+      else has_legal_move t king grid
 
-and incheck plist king grid =
+and incheck w_plist b_plist king grid =
+  let color = king.color in
+  let plist = if color = White then b_plist else w_plist in
   match plist with
   | [] -> false
   | p :: t ->
@@ -359,13 +362,14 @@ and incheck plist king grid =
       let o_p = Char.code cmd.[3] - Char.code 'a' |> Array.get o_pr in
       (*output piece*)
       if check_piece (Some p) cmd o_p grid then true
-      else incheck t king grid
+      else if color = White then incheck w_plist t king grid
+      else incheck t b_plist king grid
 
-let checkmated same_side_list opp_side_list king grid =
-  incheck same_side_list king grid
+let checkmated w_p_list b_p_list king grid =
+  incheck w_p_list b_p_list king grid
   (*using your pieces to check their king*)
   && has_legal_move
-       (has_move opp_side_list grid)
+       (has_move w_p_list b_p_list king grid)
        (*their pieces have moves*)
        king grid
      <> true
