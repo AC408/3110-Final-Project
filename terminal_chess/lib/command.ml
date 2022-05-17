@@ -345,11 +345,7 @@ and incheck w_plist b_plist king grid =
 
 let checkmated w_p_list b_p_list king grid =
   incheck w_p_list b_p_list king grid
-  (*using your pieces to check their king*)
-  && has_legal_move
-       (has_move w_p_list b_p_list king grid)
-       (*their pieces have moves*)
-       king grid
+  && has_legal_move (has_move w_p_list b_p_list king grid) king grid
      <> true
 
 let rec print_list = function
