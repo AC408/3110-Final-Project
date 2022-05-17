@@ -6,7 +6,9 @@ open Display
 open Piece
 
 exception InvalidInput
+
 exception EmptyCommand
+
 exception InvalidQuit
 
 (* given a list of string, removes empty string element *)
@@ -311,18 +313,17 @@ let rec has_legal_move plist king grid =
       let a_bp = ref [] in
       let a_wp = ref [] in
       let copy_grid = Array.map Array.copy grid in
+      let i_r = check1 cmd copy_grid in
+      let i_col = Char.code cmd.[1] - Char.code 'a' in
       let o_r = check3 cmd copy_grid in
-      let moved_piece =
-        Piece.place_piece
-          (Some (cmd.[3], int_of_char cmd.[2] - int_of_char '0'))
-          (Piece.get_color p) (Piece.get_level p) (Piece.get_rep p) true
+      let o_col = Char.code cmd.[3] - Char.code 'a' in
+      let new_pos =
+        Some (cmd.[3], int_of_char cmd.[2] - int_of_char '0')
       in
+      let moved_piece = { p with position = new_pos; moved = true } in
       if p = king then k := moved_piece;
-      Some moved_piece
-      |> Array.set o_r (Char.code cmd.[3] - Char.code 'a');
-      None
-      |> Array.set (check1 cmd copy_grid)
-           (Char.code cmd.[1] - Char.code 'a');
+      Some moved_piece |> Array.set o_r o_col;
+      None |> Array.set i_r i_col;
       update_avail_lst a_wp a_bp copy_grid;
       if incheck !a_wp !a_bp !k copy_grid <> true then true
       else has_legal_move t king grid
