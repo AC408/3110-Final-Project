@@ -254,6 +254,8 @@ let color_checker i_p o_p input grid =
           then false
           else true)
 
+(**If a white pawn moves from row 7 to row 8, or a black pawn moves from
+   row 1 to row 2, then set it up for promotion.*)
 let promote_pawn input i_p =
   match i_p with
   | Some i_p ->

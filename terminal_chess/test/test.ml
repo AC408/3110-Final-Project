@@ -508,6 +508,53 @@ let cq_tests =
     cq_tests "F" " quit" false;
   ]
 
+(**[parse_mod_tests name str output_str] constructs an OUnit test named
+   [name] that asserts the quality of [output_str] with [parse_mod str].*)
+let parse_mod_tests (name : string) (str : string) (output_str : string)
+    : test =
+  name >:: fun _ -> assert_equal output_str (parse_mod str)
+
+let parse_mod_tests =
+  [
+    parse_mod_tests "a1b2" "move (a,1) (b,2)" "a1b2";
+    parse_mod_tests "b1g1" "move (b,1) (g,1)" "b1g1";
+    parse_mod_tests "c6f6" "move (c,6) (f,6)" "c6f6";
+    parse_mod_tests "g2g9" "move (g,2) (g,9)" "g2g9";
+    parse_mod_tests "d4e8" "move (d,4) (e,8)" "d4e8";
+    parse_mod_tests "f4g5" "move (f,4) (g,5)" "f4g5";
+    parse_mod_tests "e3e3" "move (e,3) (e,3)" "e3e3";
+    parse_mod_tests "h8a1" "move (h,8) (a,1)" "h8a1";
+    parse_mod_tests "h8f6" "move (h,8) (f,6)" "h8f6";
+    parse_mod_tests "mmmm" "move (m,m) (m,m)" "mmmm";
+  ]
+
+(**[parse_tests name str output_strlist] constructs an OUnit test named
+   [name] that asserts the quality of [output_strlist] with [parse str].*)
+let parse_tests
+    (name : string)
+    (str : string)
+    (output_strlist : string list) : test =
+  name >:: fun _ -> assert_equal output_strlist (parse str)
+
+let parse_tests =
+  [
+    parse_tests "empty" "" [];
+    parse_tests "one word no space" "hello" [ "hello" ];
+    parse_tests "one word space" "hello " [ "hello" ];
+    parse_tests "two words" "hello everyone" [ "hello"; "everyone" ];
+    parse_tests "three words" "wow hello all" [ "wow"; "hello"; "all" ];
+    parse_tests "smushed together" "it'sreallysonicetomeetyou"
+      [ "it'sreallysonicetomeetyou" ];
+    parse_tests "missing spaces" "it'sreallyso nicetomeet you"
+      [ "it'sreallyso"; "nicetomeet"; "you" ];
+    parse_tests "wrong spaces" "h ello it'smeLu igi"
+      [ "h"; "ello"; "it'smeLu"; "igi" ];
+    parse_tests "alternating spaces" "h e l l o"
+      [ "h"; "e"; "l"; "l"; "o" ];
+    parse_tests "single space" " " [];
+    parse_tests "multiple spaces" "   " [];
+  ]
+
 (**[remove_blank_tests name strlist output_strlist] constructs an OUnit
    test named [name] that asserts the quality of [output_strlist] with
    [remove_blank strlist].*)
@@ -577,6 +624,8 @@ let tests =
            cf_tests;
            cvm_tests;
            cq_tests;
+           parse_tests;
+           parse_mod_tests;
          ]
 
 let _ = run_test_tt_main tests
