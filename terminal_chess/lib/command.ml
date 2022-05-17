@@ -6,9 +6,7 @@ open Display
 open Piece
 
 exception InvalidInput
-
 exception EmptyCommand
-
 exception InvalidQuit
 
 (* given a list of string, removes empty string element *)
@@ -37,7 +35,7 @@ let check_format str =
 
 (* if string list started with move, check whether it has 2 more element
    for curr pos and next pos. Returns the 4 letter representation of a
-   move from concating 2 2 letter strings. Ex, (2,b) (3,b) -> 2b3b *)
+   move from concating 2 2 letter strings. Ex: (2,b) (3,b) -> 2b3b *)
 let check_valid_move str =
   match str with
   | [] -> raise EmptyCommand
