@@ -26,64 +26,39 @@ let move_into_check piece cmd king grid =
   Command.update_avail_lst a_wp a_wp copy_grid;
   Command.incheck !a_wp !a_bp !k copy_grid
 
-let rec promote_check input piece1 =
-  match piece1 with
-  | None ->
-      print_endline
-        "Sorry, you can't promote an empty space. Try again!";
-      promote_check input piece1
-  | Some piece -> (
-      let prom_command = read_line () in
-      match prom_command with
-      | "Queen" ->
-          if Piece.get_color piece = White then
-            Some
-              (Piece.place_piece
-                 (Piece.get_position piece)
-                 (Piece.get_color piece) Queen "|  ♕   " true)
-          else
-            Some
-              (Piece.place_piece
-                 (Piece.get_position piece)
-                 (Piece.get_color piece) Queen "|  ♛   " true)
-      | "Bishop" ->
-          if Piece.get_color piece = White then
-            Some
-              (Piece.place_piece
-                 (Piece.get_position piece)
-                 (Piece.get_color piece) Bishop "|  ♗   " true)
-          else
-            Some
-              (Piece.place_piece
-                 (Piece.get_position piece)
-                 (Piece.get_color piece) Bishop "|  ♝   " true)
-      | "Knight" ->
-          if Piece.get_color piece = White then
-            Some
-              (Piece.place_piece
-                 (Piece.get_position piece)
-                 (Piece.get_color piece) Knight "|  ♘   " true)
-          else
-            Some
-              (Piece.place_piece
-                 (Piece.get_position piece)
-                 (Piece.get_color piece) Knight "|  ♞   " true)
-      | "Rook" ->
-          if Piece.get_color piece = White then
-            Some
-              (Piece.place_piece
-                 (Piece.get_position piece)
-                 (Piece.get_color piece) Rook "|  ♖   " true)
-          else
-            Some
-              (Piece.place_piece
-                 (Piece.get_position piece)
-                 (Piece.get_color piece) Rook "|  ♜   " true)
-      | _ ->
-          print_endline
-            "Sorry, that's not a valid rank to promote your pawn to. \
-             Try again!";
-          promote_check input piece1)
+let make_new_promoted_p piece =
+  let color = Piece.get_color piece in
+  let new_p =
+    match read_line () with
+    | "Queen" -> if color = White then whitequeen else blackqueen
+    | "Bishop" -> if color = White then whitebishop1 else blackbishop1
+    | "Knight" -> if color = White then whiteknight1 else blackknight1
+    | "Rook" -> if color = White then whiterook1 else blackrook1
+    | _ ->
+        failwith
+          "Sorry, that's not a valid rank to promote your pawn to. Try \
+           again!"
+  in
+  Some
+    {
+      piece with
+      level = Piece.get_level new_p;
+      rep = Piece.get_rep new_p;
+      moved = true;
+    }
+
+let rec promote_check piece =
+  try
+    match piece with
+    | None ->
+        print_endline
+          "Sorry, you can't promote an empty space. Try again!";
+        promote_check piece
+    | Some p -> make_new_promoted_p p
+  with
+  | Failure x ->
+      print_endline x;
+      promote_check piece
 
 let rec filled_input board space =
   try Command.color_matcher board space with
@@ -236,7 +211,7 @@ and mover_init board =
             "Your options are Queen, Bishop, Knight, or Rook. Please \
              use the following format:";
           print_endline "Example format: Queen";
-          promote_check input moved_piece |> Array.set o_pr oc_rel_a;
+          promote_check moved_piece |> Array.set o_pr oc_rel_a;
           let new_board2 =
             {
               new_board with
