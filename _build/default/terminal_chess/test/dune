@@ -1,2 +1,3 @@
-(test
- (name terminal_chess))
+(executable
+ (name test)
+ (libraries chess ounit2))

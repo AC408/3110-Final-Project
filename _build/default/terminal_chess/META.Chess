@@ -1,5 +1,5 @@
 description = ""
-requires = ""
+requires = "ANSITerminal yojson"
 archive(byte) = "chess.cma"
 archive(native) = "chess.cmxa"
 plugin(byte) = "chess.cma"

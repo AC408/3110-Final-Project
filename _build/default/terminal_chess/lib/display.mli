@@ -1,34 +1,55 @@
 open Piece
 
-(**[piecerow] represents the row and columns of the chess board*)
 type piecerow = piece option array
+(**[piecerow] represents the row and columns of the chess board*)
 
-(**[board] represents the lines and rows of the chessboard*)
 type board = {
-  l1: string;
-  r8: piecerow;
-  l2: string;
-  r7: piecerow;
-  l3: string;
-  r6: piecerow;
-  l4: string;
-  r5: piecerow;
-  l5: string;
-  r4: piecerow;
-  l6: string;
-  r3: piecerow;
-  l7: string;
-  r2: piecerow;
-  l8: string;
-  r1: piecerow;
-  l9: string;
+  grid : piecerow array;
   graveyard : string list;
-  model : Board.model
+  model : Board.model;
 }
+(**[board] represents the lines and rows of the chessboard*)
 
-(** [row [number]] represents the corresponding horizontal row of the 
-8-row chess board*)
+val blackqueen : piece
+val whitequeen : piece
+val blackking : piece
+val blackking : piece
+val blackbishop1 : piece
+val blackbishop2 : piece
+val whitebishop1 : piece
+val whitebishop2 : piece
+val blackrook1 : piece
+val blackrook2 : piece
+val whiterook1 : piece
+val whiterook2 : piece
+val blackknight1 : piece
+val blackknight2 : piece
+val whiteknight1 : piece
+val whiteknight2 : piece
+val blackpawn1 : piece
+val blackpawn2 : piece
+val blackpawn3 : piece
+val blackpawn4 : piece
+val blackpawn5 : piece
+val blackpawn6 : piece
+val blackpawn7 : piece
+val blackpawn8 : piece
+val whitepawn1 : piece
+val whitepawn2 : piece
+val whitepawn3 : piece
+val whitepawn4 : piece
+val whitepawn5 : piece
+val whitepawn6 : piece
+val whitepawn7 : piece
+
+val whitepawn8 : piece
+(**The above values represent the pieces that are listed on the starting
+   board.*)
+
 val row8 : piecerow
+(** [row \[number\]] represents the corresponding horizontal row of the
+    8-row chess board*)
+
 val row7 : piecerow
 val row6 : piecerow
 val row5 : piecerow
@@ -37,16 +58,22 @@ val row3 : piecerow
 val row2 : piecerow
 val row1 : piecerow
 
-(**[start_board] represents the lines and columns for the chess board*)
 val start_board : board
+(**[start_board] represents the lines and columns for the chess board*)
 
-(**[print_piece] returns the current representations of each space on the 
-chessboard, either an empty space or a visual depiction of the piece*)
-val print_piece: piece option -> unit
+val print_piece : piece option -> unit
+(**[print_piece] returns the current representations of each space on
+   the chessboard, either an empty space or a visual depiction of the
+   piece*)
 
-(**[print_piecerow] iterates through the array and prints every piece in the 
-row*)
 val print_piecerow : piecerow -> unit
+(**[print_piecerow] iterates through the array and prints every piece in
+   the row*)
 
-(**[print_board] prints all pieces, dividing lines, and identification markers*)
-val print_board : board -> unit
+val print_board : ?cycle:int -> piecerow array -> unit
+(**[print_board] prints all pieces, dividing lines, and identification
+   markers*)
+
+val wk : piece ref
+val bk : piece ref
+val make_empty_row : unit -> piecerow

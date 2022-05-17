@@ -1,1 +1,1 @@
-terminal_chess/lib/piece.mli:
+terminal_chess/lib/piece.mli: Yojson

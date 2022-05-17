@@ -14,9 +14,5 @@ module Command = Chess__Command
 module Display = Chess__Display
 
 
-(** @canonical Chess.Main_menu *)
-module Main_menu = Chess__Main_menu
-
-
 (** @canonical Chess.Piece *)
 module Piece = Chess__Piece

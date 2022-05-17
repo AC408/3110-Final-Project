@@ -36,37 +36,85 @@ let wptestopt =
        "|  ♙   " true)
 
 let bqtestopt =
-  Some (place_piece (Some ('d', 8)) Black Queen "|  ♛   " true)
+  Some
+    (place_piece "blackqueen" { row = 8; col = "d" } "Black" "Queen"
+       "|  ♛   " true)
 
 let bktestopt =
-  Some (place_piece (Some ('e', 8)) Black King "|  ♚   " true)
+  Some
+    (place_piece "blackking" { row = 8; col = "e" } "Black" "King"
+       "|  ♚   " true)
 
 let bbtestopt =
-  Some (place_piece (Some ('c', 8)) Black Bishop "|  ♝   " true)
+  Some
+    (place_piece "blackbishop1" { row = 8; col = "c" } "Black" "Bishop"
+       "|  ♝   " true)
 
 let bkntestopt =
-  Some (place_piece (Some ('b', 8)) Black Knight "|  ♞   " true)
+  Some
+    (place_piece "blackknight1" { row = 8; col = "b" } "Black" "Knight"
+       "|  ♞   " true)
 
 let brtestopt =
-  Some (place_piece (Some ('a', 8)) Black Rook "|  ♜   " true)
+  Some
+    (place_piece "blackrook1" { row = 8; col = "a" } "Black" "Rook"
+       "|  ♜   " true)
 
 let bptestopt =
-  Some (place_piece (Some ('a', 7)) Black Pawn "|  ♟   " true)
+  Some
+    (place_piece "blackpawn1" { row = 7; col = "a" } "Black" "Pawn"
+       "|  ♟   " true)
 
 (**These are not written as options -- just pieces*)
 
-let wqtest = place_piece (Some ('d', 1)) White Queen "|  ♕   " true
-let wktest = place_piece (Some ('e', 1)) White King "|  ♔   " true
-let wbtest = place_piece (Some ('c', 1)) White Bishop "|  ♗   " true
-let wkntest = place_piece (Some ('b', 1)) White Knight "|  ♘   " true
-let wrtest = place_piece (Some ('a', 1)) White Rook "|  ♖   " true
-let wptest = place_piece (Some ('a', 2)) White Pawn "|  ♙   " true
-let bqtest = place_piece (Some ('d', 8)) Black Queen "|  ♛   " false
-let bktest = place_piece (Some ('e', 8)) Black King "|  ♚   " false
-let bbtest = place_piece (Some ('c', 8)) Black Bishop "|  ♝   " false
-let bkntest = place_piece (Some ('b', 8)) Black Knight "|  ♞   " false
-let brtest = place_piece (Some ('a', 8)) Black Rook "|  ♜   " false
-let bptest = place_piece (Some ('a', 7)) Black Pawn "|  ♟   " false
+let wqtest =
+  place_piece "whitequeen" { row = 1; col = "d" } "White" "Queen"
+    "|  ♕   " true
+
+let wktest =
+  place_piece "whiteking" { row = 1; col = "e" } "White" "King"
+    "|  ♔   " true
+
+let wbtest =
+  place_piece "whitebishop1" { row = 1; col = "c" } "White" "Bishop"
+    "|  ♗   " true
+
+let wkntest =
+  place_piece "whiteknight1" { row = 1; col = "b" } "White" "Knight"
+    "|  ♘   " true
+
+let wrtest =
+  place_piece "whiterook1" { row = 1; col = "a" } "White" "Rook"
+    "|  ♖   " true
+
+let wptest =
+  place_piece "whitepawn1" { row = 2; col = "a" } "White" "Pawn"
+    "|  ♙   " true
+
+let bqtest =
+  place_piece "blackqueen" { row = 8; col = "d" } "Black" "Queen"
+    "|  ♛   " false
+
+let bktest =
+  place_piece "blackking" { row = 8; col = "e" } "Black" "King"
+    "|  ♚   " false
+
+let bbtest =
+  place_piece "blackbishop1" { row = 8; col = "c" } "Black" "Bishop"
+    "|  ♝   " false
+
+let bkntest =
+  place_piece "blackknight1" { row = 8; col = "b" } "Black" "Knight"
+    "|  ♞   " false
+
+let brtest =
+  place_piece "blackrook1" { row = 8; col = "a" } "Black" "Rook"
+    "|  ♜   " false
+
+let bptest =
+  place_piece "blackpawn1" { row = 7; col = "a" } "Black" "Pawn"
+    "|  ♟   " false
+
 let model1 = { moves = 0; turn = White }
 let model1b = { moves = 1; turn = Black }
 let model2 = { moves = 2; turn = White }
@@ -225,153 +273,155 @@ let get_pos_tests
 
 let get_pos_tests =
   [
-    get_pos_tests "WQ" wqtest (Some ('d', 1));
-    get_pos_tests "WK" wktest (Some ('e', 1));
-    get_pos_tests "WB" wbtest (Some ('c', 1));
-    get_pos_tests "WKn" wkntest (Some ('b', 1));
-    get_pos_tests "WR" wrtest (Some ('a', 1));
-    get_pos_tests "WP" wptest (Some ('a', 2));
-    get_pos_tests "BQ" bqtest (Some ('d', 8));
-    get_pos_tests "BK" bktest (Some ('e', 8));
-    get_pos_tests "BB" bbtest (Some ('c', 8));
-    get_pos_tests "BKn" bkntest (Some ('b', 8));
-    get_pos_tests "BR" brtest (Some ('a', 8));
-    get_pos_tests "BP" bptest (Some ('a', 7));
+    get_pos_tests "WQ" wqtest { row = 1; col = "d" };
+    get_pos_tests "WK" wktest { row = 1; col = "e" };
+    get_pos_tests "WB" wbtest { row = 1; col = "c" };
+    get_pos_tests "WKn" wkntest { row = 1; col = "b" };
+    get_pos_tests "WR" wrtest { row = 1; col = "a" };
+    get_pos_tests "WP" wptest { row = 2; col = "a" };
+    get_pos_tests "BQ" bqtest { row = 8; col = "d" };
+    get_pos_tests "BK" bktest { row = 8; col = "e" };
+    get_pos_tests "BB" bbtest { row = 8; col = "c" };
+    get_pos_tests "BKn" bkntest { row = 8; col = "b" };
+    get_pos_tests "BR" brtest { row = 8; col = "a" };
+    get_pos_tests "BP" bptest { row = 8; col = "a" };
   ]
 
-(**[place_piece_tests name position color level rep move output_pc]
+(**[place_piece_tests named name position color level rep move output_pc]
    constructs an OUnit test named [name] that asserts the quality of
    [output_pc] with [place_piece position color level rep move].*)
 let place_piece_tests
+    (named : string)
     (name : string)
     (position : position)
-    (color : color)
-    (level : level)
+    (color : string)
+    (level : string)
     (rep : string)
     (move : bool)
     (output_pc : piece) : test =
-  name >:: fun _ ->
-  assert_equal output_pc (place_piece position color level rep move)
+  named >:: fun _ ->
+  assert_equal output_pc
+    (place_piece name position color level rep move)
 
 let place_piece_tests =
   [
-    place_piece_tests "WQ"
-      (Some ('d', 1))
-      White Queen "|  ♕   " true
+    place_piece_tests "WQ" "whitequeen" { row = 1; col = "d" } "White"
+      "Queen" "|  ♕   " true
       {
-        position = Some ('d', 1);
-        color = White;
-        level = Queen;
+        name = "whitequeen";
+        position = { row = 1; col = "d" };
+        color = "White";
+        level = "Queen";
         rep = "|  ♕   ";
         moved = true;
       };
-    place_piece_tests "WK"
-      (Some ('e', 1))
-      White King "|  ♔   " true
+    place_piece_tests "WK" "whiteking" { row = 1; col = "e" } "White"
+      "King" "|  ♔   " true
       {
-        position = Some ('e', 1);
-        color = White;
-        level = King;
+        name = "whiteking";
+        position = { row = 1; col = "e" };
+        color = "White";
+        level = "King";
         rep = "|  ♔   ";
         moved = true;
       };
-    place_piece_tests "WB"
-      (Some ('c', 1))
-      White Bishop "|  ♗   " true
+    place_piece_tests "WB" "whitebishop1" { row = 1; col = "c" } "White"
+      "Bishop" "|  ♗   " true
       {
-        position = Some ('c', 1);
-        color = White;
-        level = Bishop;
+        name = "whitebishop1";
+        position = { row = 1; col = "c" };
+        color = "White";
+        level = "Bishop";
         rep = "|  ♗   ";
         moved = true;
       };
-    place_piece_tests "WKn"
-      (Some ('b', 1))
-      White Knight "|  ♘   " true
+    place_piece_tests "WKn" "whiteknight1" { row = 1; col = "b" }
+      "White" "Knight" "|  ♘   " true
       {
-        position = Some ('b', 1);
-        color = White;
-        level = Knight;
+        name = "whiteknight1";
+        position = { row = 1; col = "b" };
+        color = "White";
+        level = "Knight";
         rep = "|  ♘   ";
         moved = true;
       };
-    place_piece_tests "WR"
-      (Some ('a', 1))
-      White Rook "|  ♖   " true
+    place_piece_tests "WR" "whiterook1" { row = 1; col = "a" } "White"
+      "Rook" "|  ♖   " true
       {
-        position = Some ('a', 1);
-        color = White;
-        level = Rook;
+        name = "whiterook1";
+        position = { row = 1; col = "a" };
+        color = "White";
+        level = "Rook";
         rep = "|  ♖   ";
         moved = true;
       };
-    place_piece_tests "WP"
-      (Some ('a', 2))
-      White Pawn "|  ♙   " true
+    place_piece_tests "WP" "whitepawn1" { row = 2; col = "a" } "White"
+      "Pawn" "|  ♙   " true
       {
-        position = Some ('a', 2);
-        color = White;
-        level = Pawn;
+        name = "whitepawn1";
+        position = { row = 2; col = "a" };
+        color = "White";
+        level = "Pawn";
         rep = "|  ♙   ";
         moved = true;
       };
-    place_piece_tests "BQ"
-      (Some ('d', 8))
-      Black Queen "|  ♛   " false
+    place_piece_tests "BQ" "blackqueen" { row = 8; col = "d" } "Black"
+      "Queen" "|  ♛   " false
       {
-        position = Some ('d', 8);
-        color = Black;
-        level = Queen;
+        name = "blackqueen";
+        position = { row = 8; col = "d" };
+        color = "Black";
+        level = "Queen";
         rep = "|  ♛   ";
         moved = false;
       };
-    place_piece_tests "BK"
-      (Some ('e', 8))
-      Black King "|  ♚   " false
+    place_piece_tests "BK" "blackking" { row = 8; col = "e" } "Black"
+      "King" "|  ♚   " false
       {
-        position = Some ('e', 8);
-        color = Black;
-        level = King;
+        name = "blackking";
+        position = { row = 8; col = "e" };
+        color = "Black";
+        level = "King";
         rep = "|  ♚   ";
         moved = false;
       };
-    place_piece_tests "BB"
-      (Some ('c', 8))
-      Black Bishop "|  ♝   " false
+    place_piece_tests "BB" "blackbishop1" { row = 8; col = "c" } "Black"
+      "Bishop" "|  ♝   " false
       {
-        position = Some ('c', 8);
-        color = Black;
-        level = Bishop;
+        name = "blackbishop1";
+        position = { row = 8; col = "c" };
+        color = "Black";
+        level = "Bishop";
         rep = "|  ♝   ";
         moved = false;
       };
-    place_piece_tests "BKn"
-      (Some ('b', 8))
-      Black Knight "|  ♞   " false
+    place_piece_tests "BKn" "blackknight1" { row = 8; col = "b" }
+      "Black" "Knight" "|  ♞   " false
       {
-        position = Some ('b', 8);
-        color = Black;
-        level = Knight;
+        name = "blackknight1";
+        position = { row = 8; col = "b" };
+        color = "Black";
+        level = "Knight";
         rep = "|  ♞   ";
         moved = false;
       };
-    place_piece_tests "BR"
-      (Some ('a', 8))
-      Black Rook "|  ♜   " false
+    place_piece_tests "BR" "blackrook1" { row = 8; col = "a" } "Black"
+      "Rook" "|  ♜   " false
       {
-        position = Some ('a', 8);
-        color = Black;
-        level = Rook;
+        name = "blackrook1";
+        position = { row = 8; col = "a" };
+        color = "Black";
+        level = "Rook";
         rep = "|  ♜   ";
         moved = false;
       };
-    place_piece_tests "BP"
-      (Some ('a', 7))
-      Black Pawn "|  ♟   " false
+    place_piece_tests "BP" "blackpawn" { row = 7; col = "a" } "Black"
+      "Pawn" "|  ♟   " false
       {
-        position = Some ('a', 7);
-        color = Black;
-        level = Pawn;
+        name = "blackpawn";
+        position = { row = 7; col = "a" };
+        color = "Black";
+        level = "Pawn";
         rep = "|  ♟   ";
         moved = false;
       };

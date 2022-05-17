@@ -15,7 +15,12 @@ let move_into_check piece cmd king grid =
   let a_wp = ref [] in
   let copy_grid = Array.map Array.copy grid in
   let o_r = Command.check3 cmd copy_grid in
-  let new_pos = Some (cmd.[3], int_of_char cmd.[2] - int_of_char '0') in
+  let new_pos =
+    {
+      row = int_of_char cmd.[2] - int_of_char '0';
+      col = Char.escaped cmd.[3];
+    }
+  in
   let moved_piece = { p with position = new_pos; moved = true } in
   if p = king then k := moved_piece;
   Some moved_piece |> Array.set o_r (Char.code cmd.[3] - Char.code 'a');
@@ -30,7 +35,8 @@ let make_new_promoted_p piece =
   let color = Piece.get_color piece in
   let new_p =
     match read_line () with
-    | "Queen" -> if color = White then whitequeen else blackqueen
+    | "Queen" ->
+        if color = White then Display.whitequeen else blackqueen
     | "Bishop" -> if color = White then whitebishop1 else blackbishop1
     | "Knight" -> if color = White then whiteknight1 else blackknight1
     | "Rook" -> if color = White then whiterook1 else blackrook1
@@ -42,7 +48,7 @@ let make_new_promoted_p piece =
   Some
     {
       piece with
-      level = Piece.get_level new_p;
+      level = new_p.level;
       rep = Piece.get_rep new_p;
       moved = true;
     }
@@ -155,14 +161,15 @@ and mover_init board =
           | None -> None
           | Some piece ->
               let new_p =
-                Piece.place_piece
-                  (Some
-                     (input.[3], int_of_char input.[2] - int_of_char '0'))
-                  (Piece.get_color piece) (Piece.get_level piece)
-                  (Piece.get_rep piece) true
+                Piece.place_piece (Piece.get_name piece)
+                  {
+                    row = int_of_char input.[2] - int_of_char '0';
+                    col = Char.escaped input.[3];
+                  }
+                  piece.color piece.level (Piece.get_rep piece) true
               in
-              if new_p.level = King then
-                if new_p.color = White then Display.wk := new_p
+              if get_level new_p = King then
+                if get_color new_p = White then Display.wk := new_p
                 else Display.bk := new_p;
               Some new_p
         in
@@ -171,13 +178,12 @@ and mover_init board =
           | None -> None
           | Some piece ->
               let new_p =
-                Piece.place_piece
+                Piece.place_piece (Piece.get_name piece)
                   (Piece.get_position piece)
-                  (Piece.get_color piece) (Piece.get_level piece)
-                  (Piece.get_rep piece) true
+                  piece.color piece.level (Piece.get_rep piece) true
               in
-              if new_p.level = King then
-                if new_p.color = White then Display.wk := new_p
+              if get_level new_p = King then
+                if get_color new_p = White then Display.wk := new_p
                 else Display.bk := new_p;
               Some new_p
         in
