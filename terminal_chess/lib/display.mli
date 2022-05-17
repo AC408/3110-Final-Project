@@ -47,3 +47,5 @@ val print_board : ?cycle:int -> piecerow array -> unit
 val wk : piece ref
 
 val bk : piece ref
+
+val make_empty_row : unit -> piecerow

@@ -75,17 +75,50 @@ let model9 = { moves = 17; turn = White }
 let model9b = { moves = 18; turn = Black }
 let model10 = { moves = 30; turn = Black }
 let model10b = { moves = 31; turn = White }
-let wqgrid = [| wqtestopt |]
+
+let wkgrid =
+  [|
+    [| None; None; None; None; wktestopt; None; None; None |];
+    make_empty_row ();
+    make_empty_row ();
+    make_empty_row ();
+    make_empty_row ();
+    make_empty_row ();
+    make_empty_row ();
+    make_empty_row ();
+  |]
 
 let wtestgrid =
-  [|
-    wqtestopt; wktestopt; wbtestopt; wkntestopt; wrtestopt; wptestopt;
-  |]
+  let new_arr = Array.init 8 (fun x -> Array.get wkgrid x) in
+  Array.set new_arr 0
+    [|
+      wrtestopt;
+      wkntestopt;
+      wbtestopt;
+      wqtestopt;
+      wktestopt;
+      wbtestopt;
+      wkntestopt;
+      wrtestopt;
+    |];
+  Array.set new_arr 1 (Array.make 8 wptestopt);
+  new_arr
 
 let btestgrid =
-  [|
-    bqtestopt; bktestopt; bbtestopt; bkntestopt; brtestopt; bptestopt;
-  |]
+  let new_arr = Array.init 8 (fun x -> Array.get wtestgrid x) in
+  Array.set new_arr 7
+    [|
+      brtestopt;
+      bkntestopt;
+      bbtestopt;
+      bqtestopt;
+      bktestopt;
+      bbtestopt;
+      bkntestopt;
+      brtestopt;
+    |];
+  Array.set new_arr 1 (Array.make 8 bptestopt);
+  new_arr
 
 let testgrid = Array.append wtestgrid btestgrid
 

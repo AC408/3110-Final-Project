@@ -1,6 +1,3 @@
-let in_game = false
-(*toggle between parsing from main menu and command*)
-
 open Chess
 open Piece
 open Board
@@ -18,11 +15,8 @@ let move_into_check piece cmd king grid =
   let a_wp = ref [] in
   let copy_grid = Array.map Array.copy grid in
   let o_r = Command.check3 cmd copy_grid in
-  let moved_piece =
-    Piece.place_piece
-      (Some (cmd.[3], int_of_char cmd.[2] - int_of_char '0'))
-      (Piece.get_color p) (Piece.get_level p) (Piece.get_rep p) true
-  in
+  let new_pos = Some (cmd.[3], int_of_char cmd.[2] - int_of_char '0') in
+  let moved_piece = { p with position = new_pos; moved = true } in
   if p = king then k := moved_piece;
   Some moved_piece |> Array.set o_r (Char.code cmd.[3] - Char.code 'a');
   None
@@ -30,9 +24,7 @@ let move_into_check piece cmd king grid =
        (Command.check1 cmd copy_grid)
        (Char.code cmd.[1] - Char.code 'a');
   Command.update_avail_lst a_wp a_wp copy_grid;
-  match Piece.get_color king with
-  | White -> incheck !a_bp !k copy_grid
-  | Black -> incheck !a_wp !k copy_grid
+  Command.incheck !a_wp !a_bp !k copy_grid
 
 let rec promote_check input piece1 =
   match piece1 with
@@ -167,14 +159,9 @@ and mover_init board =
            not a valid castling, sorry.)";
         mover_init board)
       else if
-        clr = White
-        && move_into_check
-             (Array.get i_pr ic_rel_a)
-             input !Display.wk board.grid
+        (clr = White && move_into_check i_p input !Display.wk board.grid)
         || clr = Black
-           && move_into_check
-                (Array.get i_pr ic_rel_a)
-                input !Display.wk board.grid
+           && move_into_check i_p input !Display.wk board.grid
       then (
         print_endline
           "Sorry, you can't move into check or stay in check";
@@ -276,10 +263,11 @@ and mover_init board =
           Command.print_list new_board2.graveyard;
           print_newline ();
           if board.model.turn = White then (
-            if Command.incheck !avail_wp !Display.bk board.grid then
+            if Command.incheck !avail_wp !avail_bp !bk board.grid then
               print_endline "Black Player Now In Check!"
             else ();
-            if Command.has_move !avail_bp board.grid = [] then (
+            if Command.has_move !avail_wp !avail_bp !bk board.grid = []
+            then (
               print_endline "Black Player Now In Stalemate!";
               false)
             else if
@@ -290,14 +278,15 @@ and mover_init board =
               false)
             else mover_init new_board2)
           else (
-            if Command.incheck !avail_bp !Display.wk board.grid then
+            if Command.incheck !avail_wp !avail_bp !wk board.grid then
               print_endline "White Player Now In Check!"
             else ();
-            if Command.has_move !avail_wp board.grid = [] then (
+            if Command.has_move !avail_wp !avail_bp !wk board.grid = []
+            then (
               print_endline "White Player Now In Stalemate!";
               false)
             else if
-              Command.checkmated !avail_bp !avail_wp !Display.wk
+              Command.checkmated !avail_wp !avail_bp !Display.wk
                 new_board2.grid
             then (
               print_endline "Checkmate!";
@@ -305,4 +294,5 @@ and mover_init board =
             else mover_init new_board2)
 
 let () = Display.print_board Display.start_board.grid
+
 let _ = mover_init Display.start_board
