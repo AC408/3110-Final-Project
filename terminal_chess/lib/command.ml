@@ -6,9 +6,7 @@ open Display
 open Piece
 
 exception InvalidInput
-
 exception EmptyCommand
-
 exception InvalidQuit
 
 (* given a list of string, removes empty string element *)
@@ -281,7 +279,7 @@ let rec loop_x x y p ppos grid =
       loop_y curr_x y p ppos grid @ loop_x (curr_x + 1) y p ppos grid
 
 let rec has_move w_plist b_plist king grid =
-  let color = king.color in
+  let color = get_color king in
   let plist = if color = White then w_plist else b_plist in
   match plist with
   | [] -> []
@@ -300,7 +298,7 @@ let update_avail_lst a_wp a_bp grid =
         match y with
         | None -> ()
         | Some x ->
-            if x.color = White then a_wp := x :: !a_wp
+            if get_color x = White then a_wp := x :: !a_wp
             else a_bp := x :: !a_bp)
       (Array.get grid x)
   done
@@ -320,7 +318,10 @@ let rec has_legal_move plist king grid =
       let o_r = check3 cmd copy_grid in
       let o_col = Char.code cmd.[3] - Char.code 'a' in
       let new_pos =
-        Some (cmd.[3], int_of_char cmd.[2] - int_of_char '0')
+        {
+          row = int_of_char cmd.[2] - int_of_char '0';
+          col = Char.escaped cmd.[3];
+        }
       in
       let moved_piece = { p with position = new_pos; moved = true } in
       if p = king then k := moved_piece;
@@ -331,7 +332,7 @@ let rec has_legal_move plist king grid =
       else has_legal_move t king grid
 
 and incheck w_plist b_plist king grid =
-  let color = king.color in
+  let color = get_color king in
   let plist = if color = White then b_plist else w_plist in
   match plist with
   | [] -> false
@@ -362,4 +363,99 @@ let color_matcher board space =
   | None ->
       print_endline "calling None";
       raise NoPiece
-  | Some space -> board.model.turn <> space.color
+  | Some space -> board.model.turn <> get_color space
+
+let rules () =
+  print_endline
+    "Rules of Chess (taken from chessusa.com):\n\n\
+    \  Pieces:\n\
+    \  \n\
+    \  The King is the most important piece on the chessboard. If he \
+     is checkmated (see objectives, below) the game is over! The King \
+     in chess can move one space in any direction. He can never move \
+     into 'check' (where he is threatened by another piece). This \
+     means the king can never be in the space adjacent to the opposing \
+     King. The King in chess can also castle. 'Castling' is described \
+     in the special moves section below.\n\
+    \  \n\
+    \  The Queen is often considered the most powerful piece on the \
+     chessboard. She is placed next to the king. The game is not over \
+     when she is lost, but if your opponent has a Queen and you do \
+     not, you may find yourself at a considerable disadvantage! Like \
+     the King, the Queen can move in any direction. However, she is \
+     not limited to just one space - she can move any number of spaces \
+     in any direction, as long as she is not obstructed by another \
+     piece. Of course, if that obstruction is an opposing piece, she \
+     is free to capture it!\n\
+    \  \n\
+    \  There are two Bishops for each player on the chessboard, \
+     situated next to Queen and the King, respectively. These pieces \
+     move along the diagonals of the chessboard. You can see that this \
+     means that the Bishop is bound to the color square it starts on. \
+     One Bishop starts on a white square, and one starts on a black \
+     square. They can move any number of spaces on the diagonals as \
+     long as they are not obstructed by another piece, Of course, if \
+     that obstruction is an opposing piece, they are free to capture \
+     it!\n\
+    \  \n\
+    \  There are two Knights for each player on the chessboard, \
+     situated between the Bishop and the Rook. The Knight has the \
+     unique trait of being able to 'leap' over other pieces. They move \
+     in an 'L' shape. If they land on an opposing piece, it is \
+     captured.\n\
+    \  \n\
+    \  There are two Rooks for each player on the chessboard, situated \
+     on the corners, next to the Knight. These pieces move up and down \
+     the rank and file of the chessboard, and can move any number of \
+     spaces as long as they are not obstructed by another piece. If \
+     the obstructing piece belong to their opponent, they are free to \
+     capture it. The Rook can also castle with the King. 'Castling' is \
+     described in the special moves section below.\n\
+    \  \n\
+    \  Each player has eight Pawns. There are several unique \
+     attributes with regards to Pawn moves in chess. The 'Pawn First' \
+     move rules state each pawn has the option to move forward one \
+     space or two spaces. After this move, they can only move one \
+     space forward. However, they are also the only piece that \
+     captures in a method different from how they move. To capture, \
+     the Pawn moves diagonally one space. The Pawn can never move \
+     backwards. But what happens when a pawn reaches the other side? \
+     If the Pawn reaches the opposite side of the chessboard, it has \
+     the unique ability to promote to another piece. The pawn can \
+     become a Queen, Bishop, Rook, or Knight. There are no \
+     restrictions to how many pieces of a given type you can have via \
+     promotion.\n\
+    \  \n\
+    \  Objectives:\n\
+    \  \n\
+    \  The objective in chess is to checkmate your opponents King, and \
+     there are three potential ways the game can end:\n\
+    \  \n\
+    \  First, you can checkmate your opponent. This means that the \
+     King is in check (under potential attack from an opposing piece) \
+     and the player can not make any legal move to remove the King \
+     from check. At this point, the game is over and the checkmated \
+     player loses. The amount of material on the chessboard is of no \
+     concern.\n\
+    \  \n\
+    \  Second, you and your opponent can reach a stalemate - the \
+     opponents King is not currently in check, but would be force to \
+     move in to check with their next move. Because you can never put \
+     your own King in check, you would have no legal moves to make. A \
+     stalemate does not mean the attacking player has won. Instead, it \
+     is a draw - neither player is victorious.\n\
+    \  \n\
+    \  Special Moves:\n\
+    \  \n\
+    \  Castling, otherwise known as the rook and king switch, is a \
+     move that involves the King and the Rook. This is the only \
+     situation in which you would move two of your own pieces in the \
+     same move. The King and the Rook move towards each other and swap \
+     places. To do this, move your King not one, but two spaces \
+     towards the Rook you are castling with. Then place the Rook on \
+     the opposite side of the King. This can be done on either the \
+     King side or Queen side, however there are several prerequisites:\n\
+    \    1. The king and rook must not have moved thus far\n\
+    \    2. There must not be any obstructing pieces between them\n\
+    \    3. Remember, the king cannot castle into check (once castling \
+     is completed, the king cannot end up in check)."
