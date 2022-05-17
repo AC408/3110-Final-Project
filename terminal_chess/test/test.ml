@@ -75,6 +75,16 @@ let model9 = { moves = 17; turn = White }
 let model9b = { moves = 18; turn = Black }
 let model10 = { moves = 30; turn = Black }
 let model10b = { moves = 31; turn = White }
+let cl1 = [ '('; 'a'; ','; '1'; ')' ]
+let cl2 = [ '('; 'b'; ','; '5'; ')' ]
+let cl3 = [ '('; '6'; ','; '*'; ')' ]
+let cl4 = [ '('; 'g'; ','; '9'; ')' ]
+let cl5 = [ '('; '5'; ','; ')'; ')' ]
+let cl6 = [ '('; '('; ','; ')'; ')' ]
+let cl7 = [ '('; 'j'; ','; '('; ')' ]
+let cl8 = [ '('; '4'; ','; '5'; ')' ]
+let cl9 = [ '('; 'm'; ','; 'm'; ')' ]
+let cl10 = [ '('; '*'; ','; '1'; ')' ]
 
 let wkgrid =
   [|
@@ -435,6 +445,69 @@ let update_tests =
     update_tests "mod10" model10 Change model10b;
   ]
 
+(**[cf_tests name charlist output_str] constructs an OUnit test named
+   [name] that asserts the quality of [output_str] with
+   [check_format charlist].*)
+let cf_tests
+    (name : string)
+    (charlist : char list)
+    (output_str : string) : test =
+  name >:: fun _ -> assert_equal output_str (check_format charlist)
+
+let cf_tests =
+  [
+    cf_tests "a1" cl1 "a1";
+    cf_tests "b5" cl2 "b5";
+    cf_tests "6*" cl3 "6*";
+    cf_tests "g9" cl4 "g9";
+    cf_tests "5)" cl5 "5)";
+    cf_tests "()" cl6 "()";
+    cf_tests "j(" cl7 "j(";
+    cf_tests "45" cl8 "45";
+    cf_tests "mm" cl9 "mm";
+    cf_tests "*1" cl10 "*1";
+  ]
+
+(**[cvm_tests name str output_str] constructs an OUnit test named [name]
+   that asserts the quality of [output_str] with [check_valid_move str].*)
+let cvm_tests (name : string) (str : string list) (output_str : string)
+    : test =
+  name >:: fun _ -> assert_equal output_str (check_valid_move str)
+
+let cvm_tests =
+  [
+    cvm_tests "a1b2" [ "move"; "(a,1)"; "(b,2)" ] "a1b2";
+    cvm_tests "b1g1" [ "move"; "(b,1)"; "(g,1)" ] "b1g1";
+    cvm_tests "c6f6" [ "move"; "(c,6)"; "(f,6)" ] "c6f6";
+    cvm_tests "g2g9" [ "move"; "(g,2)"; "(g,9)" ] "g2g9";
+    cvm_tests "d4e8" [ "move"; "(d,4)"; "(e,8)" ] "d4e8";
+    cvm_tests "f4g5" [ "move"; "(f,4)"; "(g,5)" ] "f4g5";
+    cvm_tests "e3e3" [ "move"; "(e,3)"; "(e,3)" ] "e3e3";
+    cvm_tests "h8a1" [ "move"; "(h,8)"; "(a,1)" ] "h8a1";
+    cvm_tests "h8f6" [ "move"; "(h,8)"; "(f,6)" ] "h8f6";
+    cvm_tests "mmmm" [ "move"; "(m,m)"; "(m,m)" ] "mmmm";
+  ]
+
+(**[cq_tests name str output_bool] constructs an OUnit test named [name]
+   that asserts the quality of [output_bool] with [check_quit str].*)
+let cq_tests (name : string) (str : string) (output_bool : bool) : test
+    =
+  name >:: fun _ -> assert_equal output_bool (check_quit str)
+
+let cq_tests =
+  [
+    cq_tests "T" "quit" true;
+    cq_tests "F" "" false;
+    cq_tests "F" "Quit" false;
+    cq_tests "F" "QUIT" false;
+    cq_tests "F" "qut" false;
+    cq_tests "F" "qit" false;
+    cq_tests "F" "exit" false;
+    cq_tests "F" "QuIt" false;
+    cq_tests "F" "q uit" false;
+    cq_tests "F" " quit" false;
+  ]
+
 (**[remove_blank_tests name strlist output_strlist] constructs an OUnit
    test named [name] that asserts the quality of [output_strlist] with
    [remove_blank strlist].*)
@@ -501,6 +574,9 @@ let tests =
            explode_tests;
            get_turn_tests;
            update_tests;
+           cf_tests;
+           cvm_tests;
+           cq_tests;
          ]
 
 let _ = run_test_tt_main tests

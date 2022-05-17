@@ -28,6 +28,13 @@ type piece = {
 }
 (** Characteristics of each chess piece. *)
 
+type t = { pieces : piece list }
+(** type t is a board including all pieces*)
+
+val from_json : Yojson.Basic.t -> t
+(** [from_json j] is the set of pieces that [j] represents. Requires:
+    [j] is a valid JSON chess board representation. *)
+
 val rep : piece option -> string
 
 val get_level : piece -> level
