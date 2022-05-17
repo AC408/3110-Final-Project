@@ -488,6 +488,26 @@ let cvm_tests =
     cvm_tests "mmmm" [ "move"; "(m,m)"; "(m,m)" ] "mmmm";
   ]
 
+(**[cq_tests name str output_bool] constructs an OUnit test named [name]
+   that asserts the quality of [output_bool] with [check_quit str].*)
+let cq_tests (name : string) (str : string) (output_bool : bool) : test
+    =
+  name >:: fun _ -> assert_equal output_bool (check_quit str)
+
+let cq_tests =
+  [
+    cq_tests "T" "quit" true;
+    cq_tests "F" "" false;
+    cq_tests "F" "Quit" false;
+    cq_tests "F" "QUIT" false;
+    cq_tests "F" "qut" false;
+    cq_tests "F" "qit" false;
+    cq_tests "F" "exit" false;
+    cq_tests "F" "QuIt" false;
+    cq_tests "F" "q uit" false;
+    cq_tests "F" " quit" false;
+  ]
+
 (**[remove_blank_tests name strlist output_strlist] constructs an OUnit
    test named [name] that asserts the quality of [output_strlist] with
    [remove_blank strlist].*)
@@ -556,6 +576,7 @@ let tests =
            update_tests;
            cf_tests;
            cvm_tests;
+           cq_tests;
          ]
 
 let _ = run_test_tt_main tests

@@ -1,3 +1,4 @@
 (library
  (public_name Chess)
- (name chess))
+ (name chess)
+ (libraries yojson ANSITerminal))
