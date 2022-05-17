@@ -54,6 +54,26 @@ let bbtest = place_piece (Some ('c', 8)) Black Bishop "|  ♝   " false
 let bkntest = place_piece (Some ('b', 8)) Black Knight "|  ♞   " false
 let brtest = place_piece (Some ('a', 8)) Black Rook "|  ♜   " false
 let bptest = place_piece (Some ('a', 7)) Black Pawn "|  ♟   " false
+let model1 = { moves = 0; turn = White }
+let model1b = { moves = 1; turn = Black }
+let model2 = { moves = 2; turn = White }
+let model2b = { moves = 3; turn = Black }
+let model3 = { moves = 0; turn = Black }
+let model3b = { moves = 1; turn = White }
+let model4 = { moves = 5; turn = Black }
+let model4b = { moves = 6; turn = White }
+let model5 = { moves = 1; turn = White }
+let model5b = { moves = 2; turn = Black }
+let model6 = { moves = 100; turn = Black }
+let model6b = { moves = 101; turn = White }
+let model7 = { moves = 1000; turn = White }
+let model7b = { moves = 1001; turn = Black }
+let model8 = { moves = 15; turn = Black }
+let model8b = { moves = 16; turn = White }
+let model9 = { moves = 17; turn = White }
+let model9b = { moves = 18; turn = Black }
+let model10 = { moves = 30; turn = Black }
+let model10b = { moves = 31; turn = White }
 
 (**[rep_tests name pieceopt output_rep] constructs an OUnit test named
    [name] that asserts the quality of [output_rep] with [rep pieceopt].*)
@@ -311,6 +331,39 @@ let moved_tests =
     moved_tests "BP" bptest false;
   ]
 
+(**[get_turn_tests name board output_turn] constructs an OUnit test
+   named [name] that asserts the quality of [output_turn] with
+   [get_turn board].*)
+let get_turn_tests
+    (name : string)
+    (board : model)
+    (output_turn : string) : test =
+  name >:: fun _ -> assert_equal output_turn (get_turn board)
+
+let get_turn_tests =
+  [
+    get_turn_tests "mod1" model1 "White";
+    get_turn_tests "mod1b" model1b "Black";
+    get_turn_tests "mod2" model2 "White";
+    get_turn_tests "mod2b" model2b "Black";
+    get_turn_tests "mod3" model3 "Black";
+    get_turn_tests "mod3b" model3b "White";
+    get_turn_tests "mod4" model4 "Black";
+    get_turn_tests "mod4b" model4b "White";
+    get_turn_tests "mod5" model5 "White";
+    get_turn_tests "mod5b" model5b "Black";
+    get_turn_tests "mod6" model6 "Black";
+    get_turn_tests "mod6b" model6b "White";
+    get_turn_tests "mod7" model7 "White";
+    get_turn_tests "mod7b" model7b "Black";
+    get_turn_tests "mod8" model8 "Black";
+    get_turn_tests "mod8b" model8b "White";
+    get_turn_tests "mod9" model9 "White";
+    get_turn_tests "mod9b" model9b "Black";
+    get_turn_tests "mod10" model10 "Black";
+    get_turn_tests "mod10b" model10b "White";
+  ]
+
 (**[remove_blank_tests name strlist output_strlist] constructs an OUnit
    test named [name] that asserts the quality of [output_strlist] with
    [remove_blank strlist].*)
@@ -375,6 +428,7 @@ let tests =
            moved_tests;
            remove_blank_tests;
            explode_tests;
+           get_turn_tests;
          ]
 
 let _ = run_test_tt_main tests
