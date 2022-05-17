@@ -6,22 +6,34 @@ open Chess.Display
 
 (**These are formatted as piece options*)
 let wqtestopt =
-  Some (place_piece (Some ('d', 1)) White Queen "|  ♕   " true)
+  Some
+    (place_piece "whitequeen" { row = 1; col = "d" } "White" "Queen"
+       "|  ♕   " true)
 
 let wktestopt =
-  Some (place_piece (Some ('e', 1)) White King "|  ♔   " true)
+  Some
+    (place_piece "whiteking" { row = 1; col = "e" } "White" "King"
+       "|  ♔   " true)
 
 let wbtestopt =
-  Some (place_piece (Some ('c', 1)) White Bishop "|  ♗   " true)
+  Some
+    (place_piece "whitebishop1" { row = 1; col = "c" } "White" "Bishop"
+       "|  ♗   " true)
 
 let wkntestopt =
-  Some (place_piece (Some ('b', 1)) White Knight "|  ♘   " true)
+  Some
+    (place_piece "whiteknight1" { row = 1; col = "b" } "White" "Knight"
+       "|  ♘   " true)
 
 let wrtestopt =
-  Some (place_piece (Some ('a', 1)) White Rook "|  ♖   " true)
+  Some
+    (place_piece "whiterook1" { row = 1; col = "a" } "White" "Rook"
+       "|  ♖   " true)
 
 let wptestopt =
-  Some (place_piece (Some ('a', 2)) White Pawn "|  ♙   " true)
+  Some
+    (place_piece "whitepawn1" { row = 2; col = "a" } "White" "Pawn"
+       "|  ♙   " true)
 
 let bqtestopt =
   Some (place_piece (Some ('d', 8)) Black Queen "|  ♛   " true)
