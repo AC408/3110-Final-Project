@@ -18,6 +18,7 @@ type position = {
 }
 
 exception NoPiece
+
 exception NoPosition
 
 type piece = {
@@ -83,8 +84,11 @@ let get_color p =
   | _ -> failwith "this is not a valid color"
 
 let get_name p = p.name
+
 let get_position p = p.position
+
 let string_of_pos p = string_of_int p.position.row ^ p.position.col
+
 let get_rep p = p.rep
 
 let place_piece name pos c l rep move =
