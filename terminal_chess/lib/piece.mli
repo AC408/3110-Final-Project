@@ -27,7 +27,7 @@ type piece = {
   color : string;
   level : string;
   rep : string;
-  moved : bool;
+  moved : string;
 }
 (** Characteristics of each chess piece. *)
 
@@ -35,6 +35,8 @@ type t = { pieces : piece list }
 (** type t is a board including all pieces*)
 
 val pieces : t -> piece list
+(** [pieces t] is the list of pieces that [t] represents.*)
+
 val position_of_json : Yojson.Basic.t -> position
 val piece_of_json : Yojson.Basic.t -> piece
 val t_from_json : Yojson.Basic.t -> t
@@ -59,12 +61,13 @@ val string_of_pos : piece -> string
     NoPosition if position is None *)
 
 val get_name : piece -> string
+(** [get_rep p] returns the name of the piece [p] *)
 
 val get_rep : piece -> string
 (** [get_rep p] returns the rep of the piece [p] *)
 
 val place_piece :
-  string -> position -> string -> string -> string -> bool -> piece
+  string -> position -> string -> string -> string -> string -> piece
 (** [place_piece pos c l] returns the position [pos], color [c], level
     [l], and representation [rep] of the function. *)
 

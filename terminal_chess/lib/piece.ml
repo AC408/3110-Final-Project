@@ -18,7 +18,6 @@ type position = {
 }
 
 exception NoPiece
-
 exception NoPosition
 
 type piece = {
@@ -27,7 +26,7 @@ type piece = {
   color : string;
   level : string;
   rep : string;
-  moved : bool;
+  moved : string;
 }
 
 type t = { pieces : piece list }
@@ -50,7 +49,7 @@ let piece_of_json j =
     color = j |> member "color" |> to_string;
     level = j |> member "level" |> to_string;
     rep = j |> member "rep" |> to_string;
-    moved = j |> member "moved" |> to_bool;
+    moved = j |> member "moved" |> to_string;
   }
 
 let t_from_json j =
@@ -84,14 +83,15 @@ let get_color p =
   | _ -> failwith "this is not a valid color"
 
 let get_name p = p.name
-
 let get_position p = p.position
-
 let string_of_pos p = string_of_int p.position.row ^ p.position.col
-
 let get_rep p = p.rep
 
 let place_piece name pos c l rep move =
   { name; position = pos; color = c; level = l; rep; moved = move }
 
-let have_moved p = p.moved
+let have_moved p =
+  match p.moved with
+  | "true" -> true
+  | "false" -> false
+  | _ -> failwith "this is not a valid moved-status"

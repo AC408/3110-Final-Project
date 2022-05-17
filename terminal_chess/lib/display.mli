@@ -13,7 +13,7 @@ type board = {
 val blackqueen : piece
 val whitequeen : piece
 val blackking : piece
-val blackking : piece
+val whiteking : piece
 val blackbishop1 : piece
 val blackbishop2 : piece
 val whitebishop1 : piece
@@ -75,5 +75,11 @@ val print_board : ?cycle:int -> piecerow array -> unit
    markers*)
 
 val wk : piece ref
+
 val bk : piece ref
+(**[wk] and [bk] will eventually hold the pieces that represent the
+   white king and the black king, respectively.*)
+
 val make_empty_row : unit -> piecerow
+(**[make_empty_row] creates the representation array of a row that has
+   no pieces on it.*)

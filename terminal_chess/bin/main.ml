@@ -21,7 +21,7 @@ let move_into_check piece cmd king grid =
       col = Char.escaped cmd.[3];
     }
   in
-  let moved_piece = { p with position = new_pos; moved = true } in
+  let moved_piece = { p with position = new_pos; moved = "true" } in
   if p = king then k := moved_piece;
   Some moved_piece |> Array.set o_r (Char.code cmd.[3] - Char.code 'a');
   None
@@ -35,8 +35,7 @@ let make_new_promoted_p piece =
   let color = Piece.get_color piece in
   let new_p =
     match read_line () with
-    | "Queen" ->
-        if color = White then Display.whitequeen else blackqueen
+    | "Queen" -> if color = White then whitequeen else blackqueen
     | "Bishop" -> if color = White then whitebishop1 else blackbishop1
     | "Knight" -> if color = White then whiteknight1 else blackknight1
     | "Rook" -> if color = White then whiterook1 else blackrook1
@@ -50,7 +49,7 @@ let make_new_promoted_p piece =
       piece with
       level = new_p.level;
       rep = Piece.get_rep new_p;
-      moved = true;
+      moved = "true";
     }
 
 let rec promote_check piece =
@@ -108,7 +107,7 @@ let new_p_i i_pr ic_rel_a input =
           col = Char.escaped input.[3];
         }
       in
-      let new_p = { piece with position = new_pos; moved = true } in
+      let new_p = { piece with position = new_pos; moved = "true" } in
       if get_level new_p = King then
         if get_color new_p = White then Display.wk := new_p
         else Display.bk := new_p;
@@ -118,7 +117,7 @@ let new_p_o o_pr oc_rel_a =
   match Array.get o_pr oc_rel_a with
   | None -> None
   | Some piece ->
-      let new_p = { piece with moved = true } in
+      let new_p = { piece with moved = "true" } in
       if get_level new_p = King then
         if get_color new_p = White then Display.wk := new_p
         else Display.bk := new_p;
@@ -199,8 +198,9 @@ and update_board new_board board =
   let pckg =
     if board.model.turn = White then (!bk, "White ") else (!wk, "Black ")
   in
+  let pckgopp = if snd pckg = "White" then "Black" else "White" in
   if Command.incheck !avail_wp !avail_bp (fst pckg) board.grid then
-    print_endline (snd pckg ^ "Player Now In Check!")
+    print_endline (pckgopp ^ "Player Now In Check!")
   else ();
   if Command.has_move !avail_wp !avail_bp (fst pckg) board.grid = []
   then (
@@ -304,7 +304,7 @@ let rules () =
      means that the Bishop is bound to the color square it starts on. \
      One Bishop starts on a white square, and one starts on a black \
      square. They can move any number of spaces on the diagonals as \
-     long as they are not obstructed by another piece, Of course, if \
+     long as they are not obstructed by another piece. Of course, if \
      that obstruction is an opposing piece, they are free to capture \
      it!\n\
     \  \n\
@@ -318,23 +318,23 @@ let rules () =
      on the corners, next to the Knight. These pieces move up and down \
      the rank and file of the chessboard, and can move any number of \
      spaces as long as they are not obstructed by another piece. If \
-     the obstructing piece belong to their opponent, they are free to \
+     the obstructing piece belongs to their opponent, they are free to \
      capture it. The Rook can also castle with the King. 'Castling' is \
      described in the special moves section below.\n\
     \  \n\
     \  Each player has eight Pawns. There are several unique \
      attributes with regards to Pawn moves in chess. The 'Pawn First' \
-     move rules state each pawn has the option to move forward one \
-     space or two spaces. After this move, they can only move one \
-     space forward. However, they are also the only piece that \
-     captures in a method different from how they move. To capture, \
-     the Pawn moves diagonally one space. The Pawn can never move \
-     backwards. But what happens when a pawn reaches the other side? \
-     If the Pawn reaches the opposite side of the chessboard, it has \
-     the unique ability to promote to another piece. The pawn can \
-     become a Queen, Bishop, Rook, or Knight. There are no \
-     restrictions to how many pieces of a given type you can have via \
-     promotion.\n\
+     move rule states that each pawn has the option to move forward \
+     either one space or two spaces. After this move, they can only \
+     move one space forward. However, they are also the only piece \
+     that captures in a method different from how they move. To \
+     capture, the Pawn moves diagonally forward one space, either left \
+     or right. The Pawn can never move backwards. But what happens \
+     when a pawn reaches the other side? If the Pawn reaches the \
+     opposite side of the chessboard, it has the unique ability to \
+     promote to another piece. The pawn can become a Queen, Bishop, \
+     Rook, or Knight. There are no restrictions to how many pieces of \
+     a given type you can have via promotion.\n\
     \  \n\
     \  Objectives:\n\
     \  \n\
@@ -368,7 +368,10 @@ let rules () =
     \    1. The king and rook must not have moved thus far\n\
     \    2. There must not be any obstructing pieces between them\n\
     \    3. Remember, the king cannot castle into check (once castling \
-     is completed, the king cannot end up in check)."
+     is completed, the king cannot end up in check).\n\
+    \     \n\
+    \     \n\
+    \     "
 
 let () =
   rules ();

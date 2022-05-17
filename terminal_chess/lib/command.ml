@@ -210,7 +210,7 @@ let check_piece ipc str opc grid =
   | None -> false
   | Some pc ->
       (if get_level pc = Pawn then
-       pawn_check str pc.moved (get_color pc) grid
+       pawn_check str (have_moved pc) (get_color pc) grid
       else if get_level pc = Rook then rook_check str grid
       else if get_level pc = Bishop then bishop_check str grid
       else if get_level pc = Knight then knight_check str
@@ -323,7 +323,7 @@ let rec has_legal_move plist king grid =
           col = Char.escaped cmd.[3];
         }
       in
-      let moved_piece = { p with position = new_pos; moved = true } in
+      let moved_piece = { p with position = new_pos; moved = "true" } in
       if p = king then k := moved_piece;
       Some moved_piece |> Array.set o_r o_col;
       None |> Array.set i_r i_col;

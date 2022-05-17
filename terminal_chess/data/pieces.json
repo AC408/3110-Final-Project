@@ -2,12 +2,10 @@
   "pieces": [
     {
       "name": "blackrook1",
-      "position": [
-        {
-          "col": "a",
-          "row": 8
-        }
-      ],
+      "position": {
+        "col": "a",
+        "row": 8
+      },
       "color": "Black",
       "level": "Rook",
       "rep": "|  ♜   ",
@@ -15,12 +13,10 @@
     },
     {
       "name": "blackknight1",
-      "position": [
-        {
-          "col": "b",
-          "row": 8
-        }
-      ],
+      "position": {
+        "col": "b",
+        "row": 8
+      },
       "color": "Black",
       "level": "Knight",
       "rep": "|  ♞   ",
@@ -28,12 +24,10 @@
     },
     {
       "name": "blackbishop1",
-      "position": [
-        {
-          "col": "c",
-          "row": 8
-        }
-      ],
+      "position": {
+        "col": "c",
+        "row": 8
+      },
       "color": "Black",
       "level": "Bishop",
       "rep": "|  ♝   ",
@@ -41,12 +35,10 @@
     },
     {
       "name": "blackqueen",
-      "position": [
-        {
-          "col": "d",
-          "row": 8
-        }
-      ],
+      "position": {
+        "col": "d",
+        "row": 8
+      },
       "color": "Black",
       "level": "Queen",
       "rep": "|  ♛   ",
@@ -54,12 +46,10 @@
     },
     {
       "name": "blackking",
-      "position": [
-        {
-          "col": "e",
-          "row": 8
-        }
-      ],
+      "position": {
+        "col": "e",
+        "row": 8
+      },
       "color": "Black",
       "level": "King",
       "rep": "|  ♚   ",
@@ -67,12 +57,10 @@
     },
     {
       "name": "blackbishop2",
-      "position": [
-        {
-          "col": "f",
-          "row": 8
-        }
-      ],
+      "position": {
+        "col": "f",
+        "row": 8
+      },
       "color": "Black",
       "level": "Bishop",
       "rep": "|  ♝   ",
@@ -80,12 +68,10 @@
     },
     {
       "name": "blackknight2",
-      "position": [
-        {
-          "col": "g",
-          "row": 8
-        }
-      ],
+      "position": {
+        "col": "g",
+        "row": 8
+      },
       "color": "Black",
       "level": "Knight",
       "rep": "|  ♞   ",
@@ -93,12 +79,10 @@
     },
     {
       "name": "blackrook2",
-      "position": [
-        {
-          "col": "h",
-          "row": 8
-        }
-      ],
+      "position": {
+        "col": "h",
+        "row": 8
+      },
       "color": "Black",
       "level": "Rook",
       "rep": "|  ♜   ",
@@ -106,12 +90,10 @@
     },
     {
       "name": "blackpawn1",
-      "position": [
-        {
-          "col": "a",
-          "row": 7
-        }
-      ],
+      "position": {
+        "col": "a",
+        "row": 7
+      },
       "color": "Black",
       "level": "Pawn",
       "rep": "|  ♟   ",
@@ -119,12 +101,10 @@
     },
     {
       "name": "blackpawn2",
-      "position": [
-        {
-          "col": "b",
-          "row": 7
-        }
-      ],
+      "position": {
+        "col": "b",
+        "row": 7
+      },
       "color": "Black",
       "level": "Pawn",
       "rep": "|  ♟   ",
@@ -132,12 +112,10 @@
     },
     {
       "name": "blackpawn3",
-      "position": [
-        {
-          "col": "c",
-          "row": 7
-        }
-      ],
+      "position": {
+        "col": "c",
+        "row": 7
+      },
       "color": "Black",
       "level": "Pawn",
       "rep": "|  ♟   ",
@@ -145,12 +123,10 @@
     },
     {
       "name": "blackpawn4",
-      "position": [
-        {
-          "col": "d",
-          "row": 7
-        }
-      ],
+      "position": {
+        "col": "d",
+        "row": 7
+      },
       "color": "Black",
       "level": "Pawn",
       "rep": "|  ♟   ",
@@ -158,12 +134,10 @@
     },
     {
       "name": "blackpawn5",
-      "position": [
-        {
-          "col": "e",
-          "row": 7
-        }
-      ],
+      "position": {
+        "col": "e",
+        "row": 7
+      },
       "color": "Black",
       "level": "Pawn",
       "rep": "|  ♟   ",
@@ -171,12 +145,10 @@
     },
     {
       "name": "blackpawn6",
-      "position": [
-        {
-          "col": "f",
-          "row": 7
-        }
-      ],
+      "position": {
+        "col": "f",
+        "row": 7
+      },
       "color": "Black",
       "level": "Pawn",
       "rep": "|  ♟   ",
@@ -184,12 +156,10 @@
     },
     {
       "name": "blackpawn7",
-      "position": [
-        {
-          "col": "g",
-          "row": 7
-        }
-      ],
+      "position": {
+        "col": "g",
+        "row": 7
+      },
       "color": "Black",
       "level": "Pawn",
       "rep": "|  ♟   ",
@@ -197,12 +167,10 @@
     },
     {
       "name": "blackpawn8",
-      "position": [
-        {
-          "col": "h",
-          "row": 7
-        }
-      ],
+      "position": {
+        "col": "h",
+        "row": 7
+      },
       "color": "Black",
       "level": "Pawn",
       "rep": "|  ♟   ",
@@ -210,12 +178,10 @@
     },
     {
       "name": "whiterook1",
-      "position": [
-        {
-          "col": "a",
-          "row": 1
-        }
-      ],
+      "position": {
+        "col": "a",
+        "row": 1
+      },
       "color": "White",
       "level": "Rook",
       "rep": "|  ♖   ",
@@ -223,12 +189,10 @@
     },
     {
       "name": "whiteknight1",
-      "position": [
-        {
-          "col": "b",
-          "row": 1
-        }
-      ],
+      "position": {
+        "col": "b",
+        "row": 1
+      },
       "color": "White",
       "level": "Knight",
       "rep": "|  ♘   ",
@@ -236,12 +200,10 @@
     },
     {
       "name": "whitebishop1",
-      "position": [
-        {
-          "col": "c",
-          "row": 1
-        }
-      ],
+      "position": {
+        "col": "c",
+        "row": 1
+      },
       "color": "White",
       "level": "Bishop",
       "rep": "|  ♗   ",
@@ -249,12 +211,10 @@
     },
     {
       "name": "whitequeen",
-      "position": [
-        {
-          "col": "d",
-          "row": 1
-        }
-      ],
+      "position": {
+        "col": "d",
+        "row": 1
+      },
       "color": "White",
       "level": "Queen",
       "rep": "|  ♕   ",
@@ -262,12 +222,10 @@
     },
     {
       "name": "whiteking",
-      "position": [
-        {
-          "col": "e",
-          "row": 1
-        }
-      ],
+      "position": {
+        "col": "e",
+        "row": 1
+      },
       "color": "White",
       "level": "King",
       "rep": "|  ♔   ",
@@ -275,12 +233,10 @@
     },
     {
       "name": "whitebishop2",
-      "position": [
-        {
-          "col": "f",
-          "row": 1
-        }
-      ],
+      "position": {
+        "col": "f",
+        "row": 1
+      },
       "color": "White",
       "level": "Bishop",
       "rep": "|  ♗   ",
@@ -288,12 +244,10 @@
     },
     {
       "name": "whiteknight2",
-      "position": [
-        {
-          "col": "g",
-          "row": 1
-        }
-      ],
+      "position": {
+        "col": "g",
+        "row": 1
+      },
       "color": "White",
       "level": "Knight",
       "rep": "|  ♘   ",
@@ -301,12 +255,10 @@
     },
     {
       "name": "whiterook2",
-      "position": [
-        {
-          "col": "h",
-          "row": 1
-        }
-      ],
+      "position": {
+        "col": "h",
+        "row": 1
+      },
       "color": "White",
       "level": "Rook",
       "rep": "|  ♖   ",
@@ -314,12 +266,10 @@
     },
     {
       "name": "whitepawn1",
-      "position": [
-        {
-          "col": "a",
-          "row": 2
-        }
-      ],
+      "position": {
+        "col": "a",
+        "row": 2
+      },
       "color": "White",
       "level": "Pawn",
       "rep": "|  ♙   ",
@@ -327,12 +277,10 @@
     },
     {
       "name": "whitepawn2",
-      "position": [
-        {
-          "col": "b",
-          "row": 2
-        }
-      ],
+      "position": {
+        "col": "b",
+        "row": 2
+      },
       "color": "White",
       "level": "Pawn",
       "rep": "|  ♙   ",
@@ -340,12 +288,10 @@
     },
     {
       "name": "whitepawn3",
-      "position": [
-        {
-          "col": "c",
-          "row": 2
-        }
-      ],
+      "position": {
+        "col": "c",
+        "row": 2
+      },
       "color": "White",
       "level": "Pawn",
       "rep": "|  ♙   ",
@@ -353,12 +299,10 @@
     },
     {
       "name": "whitepawn4",
-      "position": [
-        {
-          "col": "d",
-          "row": 2
-        }
-      ],
+      "position": {
+        "col": "d",
+        "row": 2
+      },
       "color": "White",
       "level": "Pawn",
       "rep": "|  ♙   ",
@@ -366,12 +310,10 @@
     },
     {
       "name": "whitepawn5",
-      "position": [
-        {
-          "col": "e",
-          "row": 2
-        }
-      ],
+      "position": {
+        "col": "e",
+        "row": 2
+      },
       "color": "White",
       "level": "Pawn",
       "rep": "|  ♙   ",
@@ -379,12 +321,10 @@
     },
     {
       "name": "whitepawn6",
-      "position": [
-        {
-          "col": "f",
-          "row": 2
-        }
-      ],
+      "position": {
+        "col": "f",
+        "row": 2
+      },
       "color": "White",
       "level": "Pawn",
       "rep": "|  ♙   ",
@@ -392,12 +332,10 @@
     },
     {
       "name": "whitepawn7",
-      "position": [
-        {
-          "col": "g",
-          "row": 2
-        }
-      ],
+      "position": {
+        "col": "g",
+        "row": 2
+      },
       "color": "White",
       "level": "Pawn",
       "rep": "|  ♙   ",
@@ -405,12 +343,10 @@
     },
     {
       "name": "whitepawn8",
-      "position": [
-        {
-          "col": "h",
-          "row": 2
-        }
-      ],
+      "position": {
+        "col": "h",
+        "row": 2
+      },
       "color": "White",
       "level": "Pawn",
       "rep": "|  ♙   ",
