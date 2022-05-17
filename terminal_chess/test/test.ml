@@ -2,6 +2,7 @@ open OUnit2
 open Chess.Piece
 open Chess.Command
 open Chess.Board
+open Chess.Display
 
 (**These are formatted as piece options*)
 let wqtestopt =
@@ -43,16 +44,27 @@ let bptestopt =
 (**These are not written as options -- just pieces*)
 
 let wqtest = place_piece (Some ('d', 1)) White Queen "|  ♕   " true
+
 let wktest = place_piece (Some ('e', 1)) White King "|  ♔   " true
+
 let wbtest = place_piece (Some ('c', 1)) White Bishop "|  ♗   " true
+
 let wkntest = place_piece (Some ('b', 1)) White Knight "|  ♘   " true
+
 let wrtest = place_piece (Some ('a', 1)) White Rook "|  ♖   " true
+
 let wptest = place_piece (Some ('a', 2)) White Pawn "|  ♙   " true
+
 let bqtest = place_piece (Some ('d', 8)) Black Queen "|  ♛   " false
+
 let bktest = place_piece (Some ('e', 8)) Black King "|  ♚   " false
+
 let bbtest = place_piece (Some ('c', 8)) Black Bishop "|  ♝   " false
+
 let bkntest = place_piece (Some ('b', 8)) Black Knight "|  ♞   " false
+
 let brtest = place_piece (Some ('a', 8)) Black Rook "|  ♜   " false
+
 let bptest = place_piece (Some ('a', 7)) Black Pawn "|  ♟   " false
 let model1 = { moves = 0; turn = White }
 let model1b = { moves = 1; turn = Black }
@@ -74,6 +86,20 @@ let model9 = { moves = 17; turn = White }
 let model9b = { moves = 18; turn = Black }
 let model10 = { moves = 30; turn = Black }
 let model10b = { moves = 31; turn = White }
+
+let wqgrid = [| wqtestopt |]
+
+let wtestgrid =
+  [|
+    wqtestopt; wktestopt; wbtestopt; wkntestopt; wrtestopt; wptestopt;
+  |]
+
+let btestgrid =
+  [|
+    bqtestopt; bktestopt; bbtestopt; bkntestopt; brtestopt; bptestopt;
+  |]
+
+let testgrid = Array.append wtestgrid btestgrid
 
 (**[rep_tests name pieceopt output_rep] constructs an OUnit test named
    [name] that asserts the quality of [output_rep] with [rep pieceopt].*)
