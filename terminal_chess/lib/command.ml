@@ -6,7 +6,9 @@ open Display
 open Piece
 
 exception InvalidInput
+
 exception EmptyCommand
+
 exception InvalidQuit
 
 (* given a list of string, removes empty string element *)
@@ -88,18 +90,11 @@ let rec go_down str gate grid =
     match new_str with
     | [ row1; col1; row2; col2 ] ->
         let prev_loc = Char.escaped row1 ^ Char.escaped col1 in
-        if row2 < row1 then
-          go_down
-            (prev_loc
-            ^ string_of_int (Char.code row2 - Char.code '0' + 1)
-            ^ Char.escaped col2)
-            false grid
-        else
-          go_down
-            (prev_loc
-            ^ string_of_int (Char.code row2 - Char.code '0' - 1)
-            ^ Char.escaped col2)
-            false grid
+        let dir = if row2 < row1 then 1 else -1 in
+        let new_o_row = Char.code row2 - Char.code '0' + dir in
+        go_down
+          (prev_loc ^ string_of_int new_o_row ^ Char.escaped col2)
+          false grid
     | _ -> false
 
 let rec go_diagonal direction str gate grid =
@@ -114,20 +109,15 @@ let rec go_diagonal direction str gate grid =
     match new_str with
     | [ row1; col1; row2; col2 ] ->
         let prev_loc = Char.escaped row1 ^ Char.escaped col1 in
-        if row2 < row1 then
-          go_diagonal direction
-            (prev_loc
-            ^ (Char.code row2 - Char.code '0' + 1 |> string_of_int)
-            ^ (int_of_char col2 + diagonal_direction
-              |> Char.chr |> Char.escaped))
-            false grid
-        else
-          go_diagonal direction
-            (prev_loc
-            ^ (Char.code row2 - Char.code '0' - 1 |> string_of_int)
-            ^ (int_of_char col2 - diagonal_direction
-              |> Char.chr |> Char.escaped))
-            false grid
+        let hor_dir = if row2 < row1 then 1 else -1 in
+        let new_o_row = Char.code row2 - Char.code '0' + hor_dir in
+        let new_o_col =
+          int_of_char col2 + (diagonal_direction * hor_dir)
+          |> Char.chr |> Char.escaped
+        in
+        go_diagonal direction
+          (prev_loc ^ (new_o_row |> string_of_int) ^ new_o_col)
+          false grid
     | _ -> false
 
 let check_horizontal str grid =
@@ -205,23 +195,14 @@ let pawn_check input moved color grid =
 let castle i_p input o_p grid =
   match (i_p, o_p) with
   | Some i_p, Some o_p ->
-      if get_level i_p = King && get_level o_p = Rook then
-        if have_moved i_p || have_moved o_p then ("na", false)
-        else if input.[3] = 'h' then
-          if check_horizontal input grid then ("ksik", true)
-          else ("na", false)
-        else if input.[3] = 'a' then
-          if check_horizontal input grid then ("qsik", true)
-          else ("na", false)
-        else ("na", false)
-      else if get_level i_p = Rook && get_level o_p = King then
-        if have_moved i_p || have_moved o_p then ("na", false)
-        else if input.[1] = 'h' then
-          if check_horizontal input grid then ("ksir", true)
-          else ("na", false)
-        else if input.[1] = 'a' then
-          if check_horizontal input grid then ("qsir", true)
-          else ("na", false)
+      if have_moved i_p || have_moved o_p then ("na", false)
+      else if check_horizontal input grid = false then ("na", false)
+      else if
+        (get_level i_p = King && get_level o_p = Rook)
+        || (get_level i_p = King && get_level o_p = Rook)
+      then
+        if input.[3] = 'h' || input.[1] = 'h' then ("ksik", true)
+        else if input.[3] = 'a' || input.[1] = 'a' then ("qsik", true)
         else ("na", false)
       else ("na", false)
   | _, _ -> ("na", false)
@@ -334,18 +315,17 @@ let rec has_legal_move plist king grid =
       let a_bp = ref [] in
       let a_wp = ref [] in
       let copy_grid = Array.map Array.copy grid in
+      let i_r = check1 cmd copy_grid in
+      let i_col = Char.code cmd.[1] - Char.code 'a' in
       let o_r = check3 cmd copy_grid in
-      let moved_piece =
-        Piece.place_piece
-          (Some (cmd.[3], int_of_char cmd.[2] - int_of_char '0'))
-          (Piece.get_color p) (Piece.get_level p) (Piece.get_rep p) true
+      let o_col = Char.code cmd.[3] - Char.code 'a' in
+      let new_pos =
+        Some (cmd.[3], int_of_char cmd.[2] - int_of_char '0')
       in
+      let moved_piece = { p with position = new_pos; moved = true } in
       if p = king then k := moved_piece;
-      Some moved_piece
-      |> Array.set o_r (Char.code cmd.[3] - Char.code 'a');
-      None
-      |> Array.set (check1 cmd copy_grid)
-           (Char.code cmd.[1] - Char.code 'a');
+      Some moved_piece |> Array.set o_r o_col;
+      None |> Array.set i_r i_col;
       update_avail_lst a_wp a_bp copy_grid;
       if incheck !a_wp !a_bp !k copy_grid <> true then true
       else has_legal_move t king grid
@@ -367,11 +347,7 @@ and incheck w_plist b_plist king grid =
 
 let checkmated w_p_list b_p_list king grid =
   incheck w_p_list b_p_list king grid
-  (*using your pieces to check their king*)
-  && has_legal_move
-       (has_move w_p_list b_p_list king grid)
-       (*their pieces have moves*)
-       king grid
+  && has_legal_move (has_move w_p_list b_p_list king grid) king grid
      <> true
 
 let rec print_list = function
