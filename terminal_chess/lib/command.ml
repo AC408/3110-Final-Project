@@ -7,12 +7,6 @@ exception EmptyCommand
 
 exception InvalidQuit
 
-(* given a list of string, removes empty string element *)
-let rec remove_blank (strlist : string list) =
-  match strlist with
-  | [] -> []
-  | h :: t -> if h = "" then remove_blank t else h :: remove_blank t
-
 (* given a string, returns a list of chars equivalent to string *)
 let rec explode str =
   match str with
@@ -47,7 +41,8 @@ let check_quit t = if t = "quit" then true else false
 
 (* The string is split based on empty space and all empty space
    removed*)
-let parse str = String.split_on_char ' ' str |> remove_blank
+let parse str =
+  String.split_on_char ' ' str |> List.filter (fun x -> x <> "")
 
 (* The string is split based on empty space and all empty space removed
    and then checked to see if it is a valid move*)
@@ -216,37 +211,38 @@ let check_piece ipc str opc grid =
       else king_check str grid)
       || snd (castle ipc str opc grid)
 
+let match_clr_input i_p o_p op input grid =
+  match i_p with
+  | None -> false
+  | Some ip ->
+      if
+        snd (castle i_p input o_p grid) = false
+        && get_color op = get_color ip
+        || snd (castle i_p input o_p grid) = true
+           && get_color op <> get_color ip
+      then false
+      else true
+
 let color_checker i_p o_p input grid =
   match o_p with
   | None -> true
-  | Some op -> (
-      match i_p with
-      | None -> false
-      | Some ip ->
-          if
-            snd (castle i_p input o_p grid) = false
-            && get_color op = get_color ip
-            || snd (castle i_p input o_p grid) = true
-               && get_color op <> get_color ip
-          then false
-          else true)
+  | Some op -> match_clr_input i_p o_p op input grid
 
 (**If a white pawn moves from row 7 to row 8, or a black pawn moves from
    row 1 to row 2, then set it up for promotion.*)
+
+let match_promotion input i_p =
+  if get_level i_p = Pawn then
+    if
+      (input.[0] = '7' && get_color i_p = White && input.[2] = '8')
+      || (input.[0] = '2' && get_color i_p = Black && input.[2] = '1')
+    then true
+    else false
+  else false
+
 let promote_pawn input i_p =
   match i_p with
-  | Some i_p ->
-      if get_level i_p = Pawn then
-        if input.[0] = '7' then
-          if get_color i_p = White then
-            if input.[2] = '8' then true else false
-          else false
-        else if input.[0] = '2' then
-          if get_color i_p = Black then
-            if input.[2] = '1' then true else false
-          else false
-        else false
-      else false
+  | Some i_p -> match_promotion input i_p
   | None -> false
 
 let rec loop_y x y p ppos grid =

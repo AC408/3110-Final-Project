@@ -1,15 +1,16 @@
+(** How user commands will be parsed and executed on *)
+
 open Display
 open Piece
 
 exception InvalidInput
+(** Raised when an invalid input is detected*)
 
 exception EmptyCommand
+(** Raised when command is empty*)
 
 exception InvalidQuit
-
-val remove_blank : string list -> string list
-(**[remove_blank] takes in a list of strings [strlist] and removes empty
-   string elements.*)
+(** Raised when user wants to quit the game*)
 
 val explode : string -> char list
 (**[explode] takes in a string [str] and returns a list of chars

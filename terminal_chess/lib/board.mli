@@ -9,8 +9,10 @@ type model = {
 val model_move : model
 (** model value of the starting board of each game *)
 
-(** sends a message to the model to update the color and number of moves *)
-type change = Change
+type change =
+  | Change
+      (** sends a message to the model to update the color and number of
+          moves *)
 
 val get_turn : model -> string
 (** returns a string of whose turn it currently is for model 'board' *)

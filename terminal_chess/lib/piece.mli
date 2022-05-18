@@ -1,6 +1,5 @@
 (** How a chess piece will be represented. *)
 
-(** Level of each chess piece *)
 type level =
   | Pawn
   | Knight
@@ -9,17 +8,25 @@ type level =
   | Queen
   | King
 
+(** Level of each chess piece *)
+
 type color =
   | White
   | Black
+
+(** Color of each chess piece *)
 
 type position = {
   row : int;
   col : string;
 }
+(** Position of each chess piece *)
 
 exception NoPiece
+(** Raised when no piece found *)
+
 exception NoPosition
+(** Raised when no position found *)
 
 type piece = {
   name : string;
@@ -38,14 +45,24 @@ val pieces : t -> piece list
 (** [pieces t] is the list of pieces that [t] represents.*)
 
 val position_of_json : Yojson.Basic.t -> position
+(** [position_of_json] takes in a JSON and returns the position.
+    Requires: [j] is a valid JSON chess board representation. *)
+
 val piece_of_json : Yojson.Basic.t -> piece
+(** [position_of_json] takes in a JSON and returns the piece. Requires:
+    [j] is a valid JSON chess board representation. *)
+
 val t_from_json : Yojson.Basic.t -> t
+(** [position_of_json] takes in a JSON and returns the board. Requires:
+    [j] is a valid JSON chess board representation. *)
 
 val from_json : Yojson.Basic.t -> t
 (** [from_json j] is the set of pieces that [j] represents. Requires:
     [j] is a valid JSON chess board representation. *)
 
 val rep : piece option -> string
+(** [get_rep p] returns the rep of the piece option [p]. Raises NoPiece
+    if p is None*)
 
 val get_level : piece -> level
 (** [get_level p] returns the level of the piece [p]. *)

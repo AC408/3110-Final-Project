@@ -143,34 +143,63 @@ let bptest =
     "|  ♟   " "false"
 
 let model1 = { moves = 0; turn = White }
+
 let model1b = { moves = 1; turn = Black }
+
 let model2 = { moves = 2; turn = White }
+
 let model2b = { moves = 3; turn = Black }
+
 let model3 = { moves = 0; turn = Black }
+
 let model3b = { moves = 1; turn = White }
+
 let model4 = { moves = 5; turn = Black }
+
 let model4b = { moves = 6; turn = White }
+
 let model5 = { moves = 1; turn = White }
+
 let model5b = { moves = 2; turn = Black }
+
 let model6 = { moves = 100; turn = Black }
+
 let model6b = { moves = 101; turn = White }
+
 let model7 = { moves = 1000; turn = White }
+
 let model7b = { moves = 1001; turn = Black }
+
 let model8 = { moves = 15; turn = Black }
+
 let model8b = { moves = 16; turn = White }
+
 let model9 = { moves = 17; turn = White }
+
 let model9b = { moves = 18; turn = Black }
+
 let model10 = { moves = 30; turn = Black }
+
 let model10b = { moves = 31; turn = White }
+
 let cl1 = [ '('; 'a'; ','; '1'; ')' ]
+
 let cl2 = [ '('; 'b'; ','; '5'; ')' ]
+
 let cl3 = [ '('; '6'; ','; '*'; ')' ]
+
 let cl4 = [ '('; 'g'; ','; '9'; ')' ]
+
 let cl5 = [ '('; '5'; ','; ')'; ')' ]
+
 let cl6 = [ '('; '('; ','; ')'; ')' ]
+
 let cl7 = [ '('; 'j'; ','; '('; ')' ]
+
 let cl8 = [ '('; '4'; ','; '5'; ')' ]
+
 let cl9 = [ '('; 'm'; ','; 'm'; ')' ]
+
 let cl10 = [ '('; '*'; ','; '1'; ')' ]
 
 let wkgrid =
@@ -644,32 +673,6 @@ let parse_tests =
     parse_tests "multiple spaces" "   " [];
   ]
 
-(**[remove_blank_tests name strlist output_strlist] constructs an OUnit
-   test named [name] that asserts the quality of [output_strlist] with
-   [remove_blank strlist].*)
-let remove_blank_tests
-    (name : string)
-    (strlist : string list)
-    (output_strlist : string list) : test =
-  name >:: fun _ -> assert_equal output_strlist (remove_blank strlist)
-
-let remove_blank_tests =
-  [
-    remove_blank_tests "empty" [] [];
-    remove_blank_tests "all empty strings" [ ""; ""; "" ] [];
-    remove_blank_tests "one empty string" [ "" ] [];
-    remove_blank_tests "one element" [ "hi" ] [ "hi" ];
-    remove_blank_tests "multiple elements" [ "hi"; "everyone" ]
-      [ "hi"; "everyone" ];
-    remove_blank_tests "first string is empty" [ ""; "hi" ] [ "hi" ];
-    remove_blank_tests "last string is empty" [ "hi"; "" ] [ "hi" ];
-    remove_blank_tests "middle string is empty" [ "hi"; ""; "all" ]
-      [ "hi"; "all" ];
-    remove_blank_tests "alternating empty and filled"
-      [ "hi"; ""; "all"; ""; "!" ]
-      [ "hi"; "all"; "!" ];
-  ]
-
 (**[explode_tests name str output_charlist] constructs an OUnit test
    named [name] that asserts the quality of [output_charlist] with
    [explode strlist].*)
@@ -706,7 +709,6 @@ let tests =
            get_pos_tests;
            place_piece_tests;
            moved_tests;
-           remove_blank_tests;
            explode_tests;
            get_turn_tests;
            update_tests;
