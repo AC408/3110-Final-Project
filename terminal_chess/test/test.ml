@@ -4,6 +4,33 @@ open Chess.Command
 open Chess.Board
 open Chess.Display
 
+(**Test Plan: While many of our functions, like check and checkmate,
+   were better tested manually, by playing the game and setting up
+   specific situations, we created an OUnit suite for the cases that we
+   wanted to test automatically. Here is the difference between the two.
+   We used manual testing for processes and functions that were
+   reflected on the game board. For example, it was better to test
+   castling manually, since we could literally see whether the
+   implementation did its job or not. However, we used automatic testing
+   for the functions that are not directly accessible to the client. For
+   example, we tested update_turn manually, because the client doesn't
+   see the field [moved] when they are playing the game. This meant that
+   all of our functions in Piece and oard were tested in Ounit, as well
+   as a solid portion of those in Command. However, the remainder of the
+   functions in Command and Display were tested manually. We began with
+   black-box testing for all of our Ounit functions. After we completed
+   writing those cases, we felt that we had an understanding of all the
+   cases that the spec guaranteed. After that, we looked at the
+   implementation and made sure to add some elements of glass-box
+   testing, especially for our more intricate functions. This
+   demonstrates the correctness of the system for two reasons. First of
+   all, anything that is not directly visible by the client is
+   double-checked, so we know that everything is running as it should.
+   Secondly, our double-edged black-box and glass-box testing method
+   ensures that we were meeting the spec that we guaranteed to our
+   client, as well as taking into account every possible option for the
+   function as it is written and preparing for it. *)
+
 (**These are formatted as piece options*)
 let wqtestopt =
   Some
