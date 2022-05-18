@@ -6,7 +6,9 @@ open Display
 open Piece
 
 exception InvalidInput
+
 exception EmptyCommand
+
 exception InvalidQuit
 
 (* given a list of string, removes empty string element *)
@@ -197,7 +199,7 @@ let castle i_p input o_p grid =
       else if check_horizontal input grid = false then ("na", false)
       else if
         (get_level i_p = King && get_level o_p = Rook)
-        || (get_level i_p = King && get_level o_p = Rook)
+        || (get_level i_p = Rook && get_level o_p = King)
       then
         if input.[3] = 'h' || input.[1] = 'h' then ("ksik", true)
         else if input.[3] = 'a' || input.[1] = 'a' then ("qsik", true)

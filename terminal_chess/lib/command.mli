@@ -86,6 +86,9 @@ val has_move :
    [r1], [r2], [r3], [r4], [r5], [r6], [r7], [r8] and it returns whether
    the desired move is valid.*)
 
+val has_legal_move :
+  (piece * string) list -> piece -> piecerow array -> bool
+
 val incheck :
   piece list -> piece list -> piece -> piecerow array -> bool
 (**[incheck] takes in a piece list called [same_side_list] representing

@@ -156,9 +156,9 @@ let execute_castle input board moved_piece_i moved_piece_o =
     Array.set o_pr oc_rel_a moved_piece_i;
     Array.set i_pr ic_rel_a None)
   else (
+    set_castled_pieces input board moved_piece_i moved_piece_o;
     Array.set o_pr oc_rel_a None;
-    Array.set i_pr ic_rel_a None;
-    set_castled_pieces input board moved_piece_i moved_piece_o)
+    Array.set i_pr ic_rel_a None)
 
 let execute_promotion input moved_piece_i o_pr oc_rel_a =
   if Command.promote_pawn input moved_piece_i then (
@@ -195,18 +195,20 @@ and update_board new_board board =
   let avail_wp = ref [] in
   let avail_bp = ref [] in
   let new_board2 = update_game new_board avail_wp avail_bp in
-  let pckg =
-    if board.model.turn = White then (!bk, "White ") else (!wk, "Black ")
+  let opp_king = if board.model.turn = White then !bk else !wk in
+  let opp_clr =
+    if board.model.turn = White then "Black " else "White "
   in
-  let pckgopp = if snd pckg = "White" then "Black" else "White" in
-  if Command.incheck !avail_wp !avail_bp (fst pckg) board.grid then
-    print_endline (pckgopp ^ "Player Now In Check!")
+  if Command.incheck !avail_wp !avail_bp opp_king board.grid then
+    print_endline (opp_clr ^ "Player Now In Check!")
   else ();
-  if Command.has_move !avail_wp !avail_bp (fst pckg) board.grid = []
-  then (
-    print_endline (snd pckg ^ "Player Now In Stalemate!");
+  let moves =
+    Command.has_move !avail_wp !avail_bp opp_king board.grid
+  in
+  if Command.has_legal_move moves opp_king board.grid = false then (
+    print_endline (opp_clr ^ "Player Now In Stalemate!");
     false)
-  else if Command.checkmated !avail_wp !avail_bp (fst pckg) board.grid
+  else if Command.checkmated !avail_wp !avail_bp opp_king board.grid
   then (
     print_endline "Checkmate!";
     false)
