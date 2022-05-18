@@ -7,13 +7,13 @@ type model = {
 (**representation of the current board*)
 
 val model_move : model
-(**model value of the starting board of each game*)
+(** model value of the starting board of each game *)
 
-(**sends a message to the model to update the color and number of moves*)
+(** sends a message to the model to update the color and number of moves *)
 type change = Change
 
 val get_turn : model -> string
-(** returns a string of whose turn it currently is for model 'board'*)
+(** returns a string of whose turn it currently is for model 'board' *)
 
 val update_turn : model -> change -> model
 (** changes the player turn from White to Black (or vice versa). Adds 1

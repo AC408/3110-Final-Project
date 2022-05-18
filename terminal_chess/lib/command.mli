@@ -79,36 +79,41 @@ val has_move :
   piece ->
   piecerow array ->
   (piece * string) list
-(**[has_move] takes in a piece list called [same_side_list] representing
-   the list on the same side , a piece list called [opp_side_list]
-   representing the list on the opposite side, a piece [king]
-   representing the king piece, and 8 piecerow representing rooks called
-   [r1], [r2], [r3], [r4], [r5], [r6], [r7], [r8] and it returns whether
-   the desired move is valid.*)
+(**[has_move] takes in a piece list called [w_plist] representing the
+   list of white pieces, a piece list called [b_plist] representing the
+   list of white pieces, a piece [king] representing the king piece, and
+   a grid and it returns a (piece * string) list representing the list
+   of pieces and its corresponding moves that a player can make
+   disregarding the game state (check, etc). *)
 
 val has_legal_move :
   (piece * string) list -> piece -> piecerow array -> bool
+(**[has_legal_move] takes in a (piece * string) list representing the
+   list of pieces and its corresponding moves, a piece [king]
+   representing the king piece, a grid [grid], and returns whether these
+   moves are valid*)
 
 val incheck :
   piece list -> piece list -> piece -> piecerow array -> bool
-(**[incheck] takes in a piece list called [same_side_list] representing
-   the list on the same side , a piece list called [opp_side_list]
-   representing the list on the opposite side, a piece [king]
-   representing the king piece, and 8 piecerow representing rooks called
-   [r1], [r2], [r3], [r4], [r5], [r6], [r7], [r8] and it returns whether
-   the desired move is valid.*)
+(**[incheck] takes in a piece list called [w_plist] representing the
+   list of white pieces, a piece list called [b_plist] representing the
+   list of black pieces, a piece [king] representing the king piece, and
+   a grid [grid] and it returns whether a player is in check.*)
 
 val checkmated :
   piece list -> piece list -> piece -> piecerow array -> bool
-(**[checkmated] takes in a piece list called [same_side_list]
-   representing the list on the same side , a piece list called
-   [opp_side_list] representing the list on the opposite side, a piece
-   [king] representing the king piece, and 8 piecerow representing rooks
-   called [r1], [r2], [r3], [r4], [r5], [r6], [r7], [r8] and it returns
-   a boolean [bool] in accordance to the checkmate. *)
+(**[checkmated] takes in a piece list called [w_p_list] representing the
+   list of white pieces, a piece list called [b_p_list] representing the
+   list of black pieces, a piece [king] representing the king piece, and
+   a grid [grid] and it returns whether a player is in checkmate. *)
 
 val update_avail_lst :
   piece list ref -> piece list ref -> piece option array array -> unit
+(**[update_avail_lst] takes in a piece list ref called [a_wp]
+   representing the list of white pieces, a piece list ref called [a_bp]
+   representing the list of black pieces, and updates a_wp and a_bp
+   according to whether theres a piece of that color still on the board.
+   It returns unit. *)
 
 val print_list : string list -> unit
 (**[print_list] takes in a list of strings and prints each element,

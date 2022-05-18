@@ -97,68 +97,41 @@ let wrong_colr () =
     "Sorry, you can't capture one of your own pieces! (or that's not a \
      valid castling, sorry.)"
 
-let new_p_i i_pr ic_rel_a input =
-  match Array.get i_pr ic_rel_a with
+let new_p pr col input is_input =
+  match Array.get pr col with
   | None -> None
   | Some piece ->
-      let new_pos =
-        {
-          row = int_of_char input.[2] - int_of_char '0';
-          col = Char.escaped input.[3];
-        }
+      let new_p =
+        if is_input then
+          let new_pos =
+            {
+              row = int_of_char input.[2] - int_of_char '0';
+              col = Char.escaped input.[3];
+            }
+          in
+          { piece with position = new_pos; moved = "true" }
+        else { piece with moved = "true" }
       in
-      let new_p = { piece with position = new_pos; moved = "true" } in
       if get_level new_p = King then
         if get_color new_p = White then Display.wk := new_p
         else Display.bk := new_p;
       Some new_p
 
-let new_p_o o_pr oc_rel_a =
-  match Array.get o_pr oc_rel_a with
-  | None -> None
-  | Some piece ->
-      let new_p = { piece with moved = "true" } in
-      if get_level new_p = King then
-        if get_color new_p = White then Display.wk := new_p
-        else Display.bk := new_p;
-      Some new_p
-
-let set_castled_pieces input board moved_piece_i moved_piece_o =
-  let oc_rel_a = Char.code input.[3] - Char.code 'a' in
-  let ic_rel_a = Char.code input.[1] - Char.code 'a' in
-  let i_pr = Command.check1 input board.grid in
-  let o_pr = Command.check3 input board.grid in
-  let i_p = Array.get i_pr ic_rel_a in
-  let o_p = Array.get o_pr oc_rel_a in
+let execute_castle input i_p o_p o_pr board mp_i mp_o =
   match fst (Command.castle i_p input o_p board.grid) with
   | "ksir" ->
-      Array.set o_pr 6 moved_piece_o;
-      Array.set o_pr 5 moved_piece_i
+      Array.set o_pr 6 mp_o;
+      Array.set o_pr 5 mp_i
   | "qsir" ->
-      Array.set o_pr 3 moved_piece_i;
-      Array.set o_pr 2 moved_piece_o
+      Array.set o_pr 3 mp_i;
+      Array.set o_pr 2 mp_o
   | "ksik" ->
-      Array.set o_pr 6 moved_piece_i;
-      Array.set o_pr 5 moved_piece_o
+      Array.set o_pr 6 mp_i;
+      Array.set o_pr 5 mp_o
   | "qsik" ->
-      Array.set o_pr 3 moved_piece_o;
-      Array.set o_pr 2 moved_piece_i
+      Array.set o_pr 3 mp_o;
+      Array.set o_pr 2 mp_i
   | _ -> failwith "castle function error"
-
-let execute_castle input board moved_piece_i moved_piece_o =
-  let oc_rel_a = Char.code input.[3] - Char.code 'a' in
-  let ic_rel_a = Char.code input.[1] - Char.code 'a' in
-  let i_pr = Command.check1 input board.grid in
-  let o_pr = Command.check3 input board.grid in
-  let i_p = Array.get i_pr ic_rel_a in
-  let o_p = Array.get o_pr oc_rel_a in
-  if snd (Command.castle i_p input o_p board.grid) = false then (
-    Array.set o_pr oc_rel_a moved_piece_i;
-    Array.set i_pr ic_rel_a None)
-  else (
-    set_castled_pieces input board moved_piece_i moved_piece_o;
-    Array.set o_pr oc_rel_a None;
-    Array.set i_pr ic_rel_a None)
 
 let execute_promotion input moved_piece_i o_pr oc_rel_a =
   if Command.promote_pawn input moved_piece_i then (
@@ -200,13 +173,13 @@ and update_board new_board board =
     if board.model.turn = White then "Black " else "White "
   in
   if Command.incheck !avail_wp !avail_bp opp_king board.grid then
-    print_endline (opp_clr ^ "Player Now In Check!")
+    opp_clr ^ "Player Now In Check!" |> print_endline
   else ();
   let moves =
     Command.has_move !avail_wp !avail_bp opp_king board.grid
   in
   if Command.has_legal_move moves opp_king board.grid = false then (
-    print_endline (opp_clr ^ "Player Now In Stalemate!");
+    opp_clr ^ "Player Now In Stalemate!" |> print_endline;
     false)
   else if Command.checkmated !avail_wp !avail_bp opp_king board.grid
   then (
@@ -222,9 +195,15 @@ and execute_cmd input board oc_rel_a ic_rel_a i_p o_p i_pr o_pr =
     then { board with graveyard = rep o_p :: board.graveyard }
     else board
   in
-  let moved_piece_i = new_p_i i_pr ic_rel_a input in
-  let moved_piece_o = new_p_o o_pr oc_rel_a in
-  execute_castle input board moved_piece_i moved_piece_o;
+  let moved_piece_i = new_p i_pr ic_rel_a input true in
+  let moved_piece_o = new_p o_pr oc_rel_a input false in
+  if snd (Command.castle i_p input o_p board.grid) = false then (
+    Array.set o_pr oc_rel_a moved_piece_i;
+    Array.set i_pr ic_rel_a None)
+  else (
+    execute_castle input i_p o_p o_pr board moved_piece_i moved_piece_o;
+    Array.set o_pr oc_rel_a None;
+    Array.set i_pr ic_rel_a None);
   execute_promotion input moved_piece_i o_pr oc_rel_a;
   update_board new_board board
 

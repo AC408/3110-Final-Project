@@ -1,8 +1,4 @@
 open Display
-(**TODO: this is the place to parse strings unrelated to main menu ->
-   interact with backend (board, piece, etc) -> passed to frontend
-   (display). *)
-
 open Piece
 
 exception InvalidInput
@@ -70,9 +66,10 @@ let check3 (str : string) grid =
   if row < 0 || row > 8 then raise InvalidInput else Array.get grid row
 
 let rec go_left lower_col upper_col row =
-  if lower_col = upper_col - 1 || lower_col = upper_col then true
-  else if Array.get row (upper_col - 1) <> None then false
-  else go_left lower_col (upper_col - 1) row
+  let new_col = upper_col - 1 in
+  if lower_col = new_col || lower_col = upper_col then true
+  else if new_col |> Array.get row <> None then false
+  else go_left lower_col new_col row
 
 let exists_in_between str grid gate =
   gate = false
@@ -112,7 +109,8 @@ let rec go_diagonal direction str gate grid =
         let hor_dir = if row2 < row1 then 1 else -1 in
         let new_o_row = Char.code row2 - Char.code '0' + hor_dir in
         let new_o_col =
-          int_of_char col2 + (diagonal_direction * hor_dir)
+          diagonal_direction * hor_dir
+          |> ( + ) (int_of_char col2)
           |> Char.chr |> Char.escaped
         in
         go_diagonal direction
@@ -182,9 +180,7 @@ let pawn_check input moved color grid =
   let elt = Array.get (check3 input grid) int_rel_to_a in
   if row_diff = 1 * sign && abs col_diff <= 1 then
     match elt with
-    | None ->
-        check_vertical input grid
-        (* this means that the element is none -> can't go diagonally *)
+    | None -> check_vertical input grid
     | Some _ -> check_diagonal input grid
   else if (row_diff = 2 * sign && col_diff = 0) && moved = false then
     match elt with
@@ -262,11 +258,9 @@ let rec loop_y x y p ppos grid =
         ^ (y + Char.code 'a' |> Char.chr |> Char.escaped)
       in
       let o_pr = check3 string_cmd grid in
-      (*output piecerow*)
       let o_p =
         Char.code string_cmd.[3] - Char.code 'a' |> Array.get o_pr
       in
-      (*output piece*)
       let new_y = curr_y + 1 in
       if
         check_piece (Some p) string_cmd o_p grid
