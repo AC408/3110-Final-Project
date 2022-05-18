@@ -178,12 +178,11 @@ and update_board new_board board =
   let moves =
     Command.has_move !avail_wp !avail_bp opp_king board.grid
   in
-  if Command.has_legal_move moves opp_king board.grid = false then (
-    opp_clr ^ "Player Now In Stalemate!" |> print_endline;
-    false)
-  else if Command.checkmated !avail_wp !avail_bp opp_king board.grid
-  then (
+  if Command.checkmated !avail_wp !avail_bp opp_king board.grid then (
     print_endline "Checkmate!";
+    false)
+  else if Command.has_legal_move moves opp_king board.grid = false then (
+    opp_clr ^ "Player Now In Stalemate!" |> print_endline;
     false)
   else mover_init new_board2
 
